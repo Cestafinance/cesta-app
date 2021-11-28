@@ -1,0 +1,15 @@
+export const ChainID = {
+    ETHEREUM: 1,
+    KOVAN: 42,
+    MATIC: 137,
+    MUMBAI: 80001,
+    BSCTEST: 97,
+    BSC: 56,
+    FANTOM: 250,
+    FANTOMTEST: 4002,
+    AVALANCHE: 43114,
+    FUJI: 43113,
+    ARBITRUM: 42161,
+    ARBITRUMTEST: 421611,
+    RINKEBY: 4
+};
