@@ -25,7 +25,7 @@ import Strategy from "./Strategy";
 const useStyles = makeStyles((theme) => ({
     mainContainer: {
         background: theme.palette.app.main,
-        width: `96%`,
+        width: `100%`,
         color: "white",
         padding: "60px 0px 0px 240px",
         [theme.breakpoints.down('sm')]: {

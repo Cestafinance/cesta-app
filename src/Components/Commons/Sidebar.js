@@ -19,55 +19,121 @@ import {
     Menu as MenuIcon,
 
 } from '@mui/icons-material';
+import {
+    useLocation,
+    NavLink
+} from 'react-router-dom';
+import {
+    MenuList
+} from '../../Constants/mains';
+
+
+import CestaLogo from '../../assets/commons/logo.png';
+import {makeStyles, styled} from '@mui/styles';
+import {useEffect} from "react";
 
 const drawerWidth = 240;
 
+const useStyles = makeStyles(theme => ({
+    logo: {
+        height: "50px"
+    },
+    menuIcon: {
+        height: '18px'
+    },
+    menuName: {
+        fontFamily: "Inter",
+        fontStyle: "normal",
+        fontWeight: "normal",
+        fontSize: "14px",
+        lineHeight: "14px",
+        color: "#FFFFFF"
+    },
+    activeMenu: {
+        background: '#375894 !important'
+    }
+}));
+
+const StyledName = styled(Typography)(({theme}) => ({
+    '&.MuiTypography-root': {
+        fontFamily: "Inter",
+        fontStyle: "normal",
+        fontWeight: "normal",
+        fontSize: "14px",
+        lineHeight: "14px",
+        color: "#FFFFFF"
+    }
+}));
+
+const StyledList = styled(List)((({theme}) => ({
+    '&.MuiList-root': {}
+})));
+
+const StyledListItem = styled(ListItem)((({theme}) => ({
+    '& .MuiListItemIcon-root': {
+        minWidth: "40px",
+        textDecoration: 'none !important'
+    }
+})));
+
 function SideBar(props) {
-    const { window } = props;
+    const {window} = props;
     const [mobileOpen, setMobileOpen] = React.useState(false);
+    const [menuLogs, SetMenuLogos] = React.useState({});
+    const classes = useStyles();
+
+    const location = useLocation();
 
     const handleDrawerToggle = () => {
         setMobileOpen(!mobileOpen);
     };
 
+    const getMenuLogos = async () => {
+        let logos = {};
+        for (let i = 0; i < MenuList.length; i++) {
+            let image = await import(`../../assets/sideMenu/${MenuList[i].name}.png`);
+            logos[MenuList[i].name] = image.default;
+        }
+        SetMenuLogos(logos)
+    }
+
+    useEffect(() => {
+        getMenuLogos();
+    }, [])
+
     const drawer = (
         <div>
-            <Toolbar />
-            <Divider />
-            <List>
-                {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
-                    <ListItem button key={text}>
-                        <ListItemIcon>
-                            {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-                        </ListItemIcon>
-                        <ListItemText primary={text} />
-                    </ListItem>
+            <Toolbar/>
+            <Divider/>
+            <img src={CestaLogo} alt="" className={classes.logo}/>
+            <StyledList>
+                {MenuList.map((menu, index) => (
+                    <NavLink to={menu.path}>
+                    <StyledListItem button key={index}
+                                    className={location.pathname === menu.path ? classes.activeMenu : ''}>
+                            <ListItemIcon>
+                                <img src={menuLogs[menu.name]} alt="" className={classes.menuIcon}/>
+                            </ListItemIcon>
+                            <StyledName>
+                                {menu.label}
+                            </StyledName>
+                    </StyledListItem>
+                    </NavLink>
                 ))}
-            </List>
-            <Divider />
-            <List>
-                {['All mail', 'Trash', 'Spam'].map((text, index) => (
-                    <ListItem button key={text}>
-                        <ListItemIcon>
-                            {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-                        </ListItemIcon>
-                        <ListItemText primary={text} />
-                    </ListItem>
-                ))}
-            </List>
+            </StyledList>
         </div>
     );
 
     const container = window !== undefined ? () => window().document.body : undefined;
 
     return (
-        <Box sx={{ display: 'flex' }}>
-            <CssBaseline />
+        <Box sx={{display: 'flex'}}>
+            <CssBaseline/>
             <AppBar
                 position="fixed"
                 sx={{
-                    width: { md: `calc(100% - ${drawerWidth}px)` },
-                    ml: { sm: `${drawerWidth}px` },
+                    width: {md: `calc(100% - ${drawerWidth}px)`},
+                    ml: {sm: `${drawerWidth}px`},
                     background: "transparent",
                     boxShadow: "none"
                 }}
@@ -78,15 +144,15 @@ function SideBar(props) {
                         aria-label="open drawer"
                         edge="start"
                         onClick={handleDrawerToggle}
-                        sx={{ mr: 2, display: { sm: 'none' } }}
+                        sx={{mr: 2, display: {sm: 'none'}}}
                     >
-                        <MenuIcon />
+                        <MenuIcon/>
                     </IconButton>
                 </Toolbar>
             </AppBar>
             <Box
                 component="nav"
-                sx={{ width: { sm: drawerWidth }, flexShrink: { sm: 0 } }}
+                sx={{width: {sm: drawerWidth}, flexShrink: {sm: 0}}}
                 aria-label="mailbox folders"
             >
                 {/* The implementation can be swapped with js to avoid SEO duplication of links. */}
@@ -99,8 +165,8 @@ function SideBar(props) {
                         keepMounted: true, // Better open performance on mobile.
                     }}
                     sx={{
-                        display: { xs: 'block', sm: 'none' },
-                        '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth },
+                        display: {xs: 'block', sm: 'none'},
+                        '& .MuiDrawer-paper': {boxSizing: 'border-box', width: drawerWidth},
                     }}
                 >
                     {drawer}
@@ -108,11 +174,13 @@ function SideBar(props) {
                 <Drawer
                     variant="permanent"
                     sx={{
-                        display: { xs: 'none', sm: 'block' },
-                        '& .MuiDrawer-paper': {  width: drawerWidth,
+                        display: {xs: 'none', sm: 'block'},
+                        '& .MuiDrawer-paper': {
+                            width: drawerWidth,
                             boxSizing: 'border-box',
-                            background: '#273E70',
-                            boxShadow: '0px 0px 30px #15023b' },
+                            background: 'rgba(27, 32, 60, 1)',
+                            boxShadow: '0px 0px 30px #15023b'
+                        },
                     }}
                     open
                 >

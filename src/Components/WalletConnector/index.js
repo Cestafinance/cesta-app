@@ -298,7 +298,7 @@ function App({
 
     // handle logic to recognize the connector currently being activated
     const [activatingConnector, setActivatingConnector] = React.useState();
-    const [open, SetOpen] = React.useState(true);
+    const [open, SetOpen] = React.useState(false);
     const [walletImages, setWalletImages] = React.useState({});
     React.useEffect(() => {
         if (activatingConnector && activatingConnector === connector) {
