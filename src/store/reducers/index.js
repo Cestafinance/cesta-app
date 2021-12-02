@@ -1,5 +1,6 @@
 import {combineReducers} from 'redux';
 import web3 from './web3';
+import stableCoins from './stableCoins';
 
 function app(state={
     theme: 'dark'
@@ -20,6 +21,7 @@ function app(state={
 const rootReduces = combineReducers({
     app,
     web3,
+    stableCoins
 });
 
 export default rootReduces;

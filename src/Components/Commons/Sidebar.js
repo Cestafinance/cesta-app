@@ -108,7 +108,7 @@ function SideBar(props) {
             <img src={CestaLogo} alt="" className={classes.logo}/>
             <StyledList>
                 {MenuList.map((menu, index) => (
-                    <NavLink to={menu.path}>
+                    <NavLink to={menu.path} key={index}>
                     <StyledListItem button key={index}
                                     className={location.pathname === menu.path ? classes.activeMenu : ''}>
                             <ListItemIcon>

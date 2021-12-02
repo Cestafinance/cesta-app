@@ -6,6 +6,7 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import configureStore from './store/configureStore';
 import CustomThemeProvider from './themes/CustomThemeProvider';
+import 'typeface-inter';
 
 const store = configureStore();
 

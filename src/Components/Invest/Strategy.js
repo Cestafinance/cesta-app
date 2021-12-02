@@ -1,4 +1,4 @@
-import {Fragment} from 'react';
+import {Fragment, useState} from 'react';
 
 import {
     Accordion,
@@ -88,18 +88,28 @@ const RoiLabel = styled(Typography)((theme) => ({
 
 
 function Strategy({
-                    asset
+                      strategyData,
+                      strategyContract,
+                      vaultContract
                   }) {
     const classes = useStyles();
+
+    const [isExpanded, SetIsExpanded] = useState(false);
+
     return <Fragment>
-        <StyledAccordion>
+        <StyledAccordion
+            expanded={isExpanded}
+            onChange={() => {
+                SetIsExpanded(!isExpanded)
+            }}
+        >
             <StyledAccordionSummary
                 expandIcon={<ExpandMoreIcon fill={'red'}/>}
                 aria-controls="panel1a-content"
                 id="panel1a-header"
             >
                 <Grid container>
-                    <Grid xs={3}>
+                    <Grid item xs={3}>
                         <img src={Asset1} className={classes.assetImages} alt=""/>
                         <img src={Asset2} className={classes.assetImages} alt=""/>
                         <img src={Asset3} className={classes.assetImages} alt=""/>
@@ -107,17 +117,17 @@ function Strategy({
                             Investing Strategy #1
                         </TokenName>
                     </Grid>
-                    <Grid xs={3}>
+                    <Grid item xs={3}>
                         <ValueLabel>
                             $12345678.89
                         </ValueLabel>
                     </Grid>
-                    <Grid xs={3}>
+                    <Grid item xs={3}>
                         <ValueLabel>
                             $12345678.89
                         </ValueLabel>
                     </Grid>
-                    <Grid xs={3}>
+                    <Grid item xs={3}>
                         <RoiLabel>
                             47%
                         </RoiLabel>
@@ -125,7 +135,7 @@ function Strategy({
                 </Grid>
             </StyledAccordionSummary>
             <AccordionDetails>
-                <StrategyDetails/>
+                <StrategyDetails isExpanded={isExpanded} strategyData={strategyData} strategyContract={strategyContract} vaultContract={vaultContract}/>
             </AccordionDetails>
         </StyledAccordion>
     </Fragment>

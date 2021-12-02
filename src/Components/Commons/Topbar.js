@@ -22,7 +22,7 @@ const useStyles = makeStyles(theme => ({
     headerContainer: {
         verticalAlign: "top",
         width: "calc(100% - 240px)",
-        height: "60px",
+        height: "80px",
         display: "flex",
         padding: "40px 80px 0px 80px",
         background: theme.palette.app.main,

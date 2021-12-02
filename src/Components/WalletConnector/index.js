@@ -241,7 +241,7 @@ function Balance({
 
         let web3 = await loadWeb3(dispatch, provider);
         await loadAccount(dispatch, account, chainId, connectorName);
-        // loadContracts(web3, chainId);
+        loadContracts(web3, chainId);
     }
 
     React.useEffect(() => {

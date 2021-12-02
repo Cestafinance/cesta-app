@@ -16,10 +16,13 @@ export const ChainID = {
     RINKEBY: 4
 };
 
+
 export const networkMap = {
     42:'kovan',
     1: 'mainnet',
-    137: "polygon"
+    137: 'polygon',
+    43113: 'fuji',
+    42161: 'arbitrum'
 }
 
 
