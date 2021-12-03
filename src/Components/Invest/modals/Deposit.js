@@ -110,7 +110,6 @@ function DepositTemplate({
         const isApprovalNeeded = await checkAllowance(stableCoinsContractData.contract, vault.address, account, web3, amount * (10 ** stableCoinsContractData.decimals));
         SetNeedStrategyApproval(isApprovalNeeded.needApproval);
         SetHasApproved(!isApprovalNeeded.needApproval);
-        debugger;
         SetCheckingForApproval(false);
     }
 

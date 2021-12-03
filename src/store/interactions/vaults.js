@@ -30,7 +30,7 @@ export const getDepositAmountFromContract = async (contract, address) => {
     }
 }
 
-export const getPricePerFullShare = async(contract, vaultSymbol) => {
+export const getPricePerFullShare = async(contract) => {
     let pricePerFullShare = 0;
 
     try {
