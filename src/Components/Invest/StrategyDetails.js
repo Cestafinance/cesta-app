@@ -110,13 +110,11 @@ function StrategyDetails({
     const [selectedTab, SetSelectedTab] = useState(0);
     const [coinBalances, SetCoinBalances] = useState({});
     const [stableCoinLogos, SetStableCoinLogo] = useState({});
-    const coins = [{
-        percentage: '50%',
-        label: 'ETH'
-    }, {
-        percentage: '50%',
-        label: 'BTC'
-    }];
+    const coins = [
+        {percent:33.33,tokenId:"dai",label:"DAI",link:"https://www.coingecko.com/en/coins/dai",color:"#F8BD60"},
+        {percent:33.33,tokenId:"tether",label:"USDT",link:"https://www.coingecko.com/en/coins/tether",color:"#26A17B"},
+        {percent:33.33,tokenId:"usd-coin",label:"USDC",link:"https://www.coingecko.com/en/coins/usd-coin",color:"#2775CA"}
+    ];
 
     const onTimeRangeSelect = (value) => {
         setSelectedTimeRange(value);

@@ -26,7 +26,9 @@ const useStyles = makeStyles(theme => ({
         color: '#FFFFFF',
     },
     displayFlex: {
-        display: 'flex'
+        display: 'flex',
+        width: "100%",
+        alignItems: "stretch"
     },
     firstBlock: {
         borderTopLeftRadius: '8px',
@@ -49,11 +51,11 @@ function MultiColorBar({
         <div className={classes.displayFlex}>
             {coins.map((coin, index) => {
                 return <div key={index}
-                            className={classes.barBlock + ' ' + (index === 0 ? classes.firstBlock : '') + ' ' + (index === (coin.length - 1) ? classes.lastBlock : '')}
-                            style={{width: coin.percentage, background: colors[index]}}>
+                            className={classes.barBlock + ' ' + (index === 0 ? classes.firstBlock : '') + ' ' + (index === (coins.length - 1) ? classes.lastBlock : '')}
+                            style={{width: `${coin.percent}%`, background: coin.color}}>
                     <div className={classes.labelName}>
                         <span className={classes.colorIndicator}
-                              style={{background: colors[index]}}>&nbsp;&nbsp;&nbsp;&nbsp;</span> {coin.label} {coin.percentage}
+                              style={{background: coin.color}}>&nbsp;&nbsp;&nbsp;&nbsp;</span> {coin.label} {coin.percent}%
                     </div>
                 </div>
             })}

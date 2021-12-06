@@ -56,7 +56,8 @@ export default function StrategyChart({
             toolbar: {
                 show: false,
             },
-            foreColor: '#ffffff'
+            foreColor: '#ffffff',
+            width: '100%'
         },
         grid: {
             show: false,
