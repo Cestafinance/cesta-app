@@ -15,7 +15,6 @@ import {
     Tab,
 } from '@mui/material';
 import {makeStyles, styled} from '@mui/styles';
-import Chart from 'react-apexcharts';
 import MultiColorBar from '../Commons/MultiColorBar';
 import Deposit from './Deposit';
 import WithDraw from './Withdraw';
@@ -32,6 +31,8 @@ import {
 import {
     GraphTimeRanges
 } from '../../Constants/mains';
+
+import StrategyChart from './Chart';
 
 const useStyles = makeStyles((theme) => ({
     roundBorder: {
@@ -105,7 +106,7 @@ function StrategyDetails({
     const account = useSelector(accountSelector);
     const stableCoins = useSelector(stableCoinsSelector);
 
-    const [selectedTimeRange, setSelectedTimeRange] = useState('1d');
+    const [selectedTimeRange, setSelectedTimeRange] = useState('7d');
     const [selectedTab, SetSelectedTab] = useState(0);
     const [coinBalances, SetCoinBalances] = useState({});
     const [stableCoinLogos, SetStableCoinLogo] = useState({});
@@ -198,48 +199,7 @@ function StrategyDetails({
                             </Box>
                         </Grid>
                         <Grid item xs={12}>
-                            <Chart type={'area'} options={{
-                                chart: {
-                                    id: "basic-bar",
-                                    toolbar: {
-                                        show: false,
-                                    },
-                                },
-                                grid: {
-                                    show: false,
-                                },
-                                stroke: {
-                                    curve: 'smooth',
-                                },
-                                xaxis: {
-                                    categories: [1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998]
-                                },
-                                yaxis: {
-                                    opposite: true
-                                },
-                                dataLabels: {
-                                    enabled: false,
-                                },
-                                noData: {
-                                    text: undefined,
-                                    align: 'center',
-                                    verticalAlign: 'middle',
-                                    offsetX: 0,
-                                    offsetY: 0,
-                                    style: {
-                                        color: undefined,
-                                        fontSize: '14px',
-                                        fontFamily: undefined,
-                                    },
-                                },
-                            }}
-                                   series={[
-                                       {
-                                           name: "series-1",
-                                           data: [30, 40, 45, 50, 49, 60, 70, 91]
-                                       }
-                                   ]}
-                            />
+                            <StrategyChart {... {strategyData,isExpanded,selectedTimeRange}} />
                         </Grid>
                     </Grid>
                 </Box>
