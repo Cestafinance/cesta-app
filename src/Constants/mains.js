@@ -44,14 +44,11 @@ export const MenuList = [{
 }];
 
 export const GraphTimeRanges = [{
-    label: '1D',
-    value: '1d'
-}, {
     label: '1W',
     value: '7d'
 }, {
     label: '1M',
-    value: '1m'
+    value: '30d'
 }, {
     label: '6M',
     value: '6m'
