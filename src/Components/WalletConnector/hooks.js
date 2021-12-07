@@ -1,23 +1,29 @@
-import { useState, useEffect } from 'react'
-import { useWeb3React } from '@web3-react/core'
+import {useState, useEffect} from 'react'
+import {useWeb3React} from '@web3-react/core'
 
-import { injected } from './connectors'
+import {injected} from './connectors';
+import {
+    getConnectionStatus
+} from '../../store/local';
 
 export function useEagerConnect() {
-    const { activate, active } = useWeb3React()
+    const {activate, active} = useWeb3React()
 
     const [tried, setTried] = useState(false)
 
     useEffect(() => {
-        injected.isAuthorized().then((isAuthorized) => {
-            if (isAuthorized) {
-                activate(injected, undefined, true).catch(() => {
+        let status = getConnectionStatus();
+        if (status && status.source === 'metaMask' && status.connected) {
+            injected.isAuthorized().then((isAuthorized) => {
+                if (isAuthorized) {
+                    activate(injected, undefined, true).catch(() => {
+                        setTried(true)
+                    })
+                } else {
                     setTried(true)
-                })
-            } else {
-                setTried(true)
-            }
-        })
+                }
+            })
+        }
     }, []) // intentionally only running on mount (make sure it's only mounted once :))
 
     // if the connection worked, wait until we get confirmation of that to flip the flag
@@ -31,10 +37,10 @@ export function useEagerConnect() {
 }
 
 export function useInactiveListener(suppress = false) {
-    const { active, error, activate } = useWeb3React()
+    const {active, error, activate} = useWeb3React()
 
     useEffect(() => {
-        const { ethereum } = window
+        const {ethereum} = window
         if (ethereum && ethereum.on && !active && !error && !suppress) {
             const handleConnect = () => {
                 console.log("Handling 'connect' event")

@@ -2,13 +2,19 @@ import React, { Fragment, useState, useEffect, useContext } from "react";
 import { useLocation } from 'react-router-dom';
 
 import { makeStyles, styled } from '@mui/styles';
-import { Typography, Switch } from '@mui/material';
+import { Typography } from '@mui/material';
 import {ArrowDropDown} from '@mui/icons-material';
 import { useDispatch, useSelector } from 'react-redux';
 
 import {
-    networkMap
+    networkMap,
+    networkScanUrl
 } from '../../Constants/mains';
+import NetworkSelection from './NetworkSelection';
+import {
+    changeWalletAction,
+    disconnectWallet as disconnectWalletAction
+} from '../../store/actions/web3';
 
 
 import { networkIdSelector, accountSelector, sourceSelector } from "../../store/selectors/web3";
@@ -66,17 +72,17 @@ const useStyles = makeStyles(theme => ({
         padding: "25px"
     },
     networkDropDown: {
-        width: "40px",
+        width: "150px",
         padding: "8px",
         background: "rgba(57, 198, 228, 0.08)",
         borderRadius: "23px",
         cursor: "pointer",
-        marginRight: "10px"
+        marginRight: "10px",
+        color: '#FFFFFF'
     },
     networkLogo: {
-        height: "14px",
+        height: "24px",
         position: "absolute",
-        marginTop: "6px"
     },
     networkOptionsLogo: {
         height: "14px",
@@ -87,8 +93,21 @@ const useStyles = makeStyles(theme => ({
         marginLeft: "16px"
     },
     dropDownIcon: {
-        top: "32%",
-        right: "13%",
+        display: 'none',
+        [theme.breakpoints.up('md')]: {
+            display: 'flex',
+        },
+        top: "60%",
+        right: "300px",
+        position: "absolute",
+    },
+    dropDownIconAccount: {
+        display: 'none',
+        [theme.breakpoints.up('md')]: {
+            display: 'flex',
+        },
+        top: "60%",
+        right: "100px",
         position: "absolute",
     },
     sectionDesktop: {
@@ -96,7 +115,7 @@ const useStyles = makeStyles(theme => ({
         [theme.breakpoints.up('md')]: {
             display: 'flex',
         },
-        width: "10%",
+        width: "200px",
         padding: "8px",
         background: "rgba(57, 198, 228, 0.08)",
         borderRadius: "23px",
@@ -105,8 +124,39 @@ const useStyles = makeStyles(theme => ({
     },
     sourceLogo: {
         height: "20px",
-        marginRight: "8px"
+        marginRight: "8px",
+        marginTop: '2px'
     },
+    menuDropDown: {
+        position: "absolute",
+        float: "right",
+        right: "82px",
+        top: "105%",
+        background: "rgba(57, 198, 228, 0.08)",
+        borderRadius: "23px",
+        width: "200px"
+    },
+    optionsList: {
+        color: "white",
+        padding: "10px 0 5px 15px",
+        cursor: "pointer"
+    },
+}));
+
+const SelectedNetwork = styled(Typography)((theme) =>({
+    '&.MuiTypography-root': {
+        marginLeft: "25px",
+        color: '#FFFFFF',
+        textTransform: 'uppercase'
+
+    }
+}));
+
+const AccountAddress = styled(Typography)((theme) =>({
+    '&.MuiTypography-root': {
+       width: "70%"
+
+    }
 }));
 
 const NetworkSelectButton = styled('div')(({ theme }) => ({
@@ -126,8 +176,10 @@ function Topbar() {
     const [openOptions, SetOpenOptions] = React.useState(false);
     const [imageData, setImageData] = React.useState(null);
     const [networkImages, setNetworkImages] = React.useState({});
+    const [isNetworkSelectOpen, SetNetworkSelectOpen] = React.useState(false);
 
     const classes = useStyles();
+    const dispatch = useDispatch();
     const networkId = useSelector(networkIdSelector);
     const account = useSelector(accountSelector);
     const source = useSelector(sourceSelector);
@@ -138,7 +190,7 @@ function Topbar() {
     }, []);
 
     const handleNetworkSelectionOption = () => {
-
+        SetNetworkSelectOpen(!isNetworkSelectOpen);
     }
 
     const getNetworkImage = async (name) => {
@@ -169,24 +221,56 @@ function Topbar() {
         setNetworkImages({...imageObj});
     }
 
+    const changeWallet = () => {
+        dispatch(changeWalletAction());
+    }
+
+    const disconnectWallet = () => {
+        dispatch(disconnectWalletAction());
+
+    }
+
+    const openEtherScanLink = () => {
+        let url = networkScanUrl[networkId];
+        window.open(`${url}address/${account}`, '_blank').focus()
+    }
+
     return <Fragment>
         <div className={classes.headerContainer}>
             <div className={classes.header}>
                 <div className={classes.grow}>
-
+                    <NetworkSelection
+                        open={isNetworkSelectOpen}
+                        handleClose={handleNetworkSelectionOption}
+                        networkImages={networkImages}
+                        title={!networkMap[networkId]}
+                    />
+                    {openOptions && <div className={classes.menuDropDown}>
+                        <Typography variant="body1" className={classes.optionsList} noWrap onClick={changeWallet}>
+                            Change wallet
+                        </Typography>
+                        <Typography variant="body1" className={classes.optionsList} noWrap onClick={disconnectWallet}>
+                            Disconnect
+                        </Typography>
+                        <Typography variant="body1" className={classes.optionsList} noWrap onClick={openEtherScanLink}>
+                            View On Etherscan
+                        </Typography>
+                    </div>}
                 </div>
-                {account && <div className={classes.networkDropDown} onClick={handleNetworkSelectionOption}>
+                {account && <NetworkSelectButton className={classes.networkDropDown} onClick={handleNetworkSelectionOption}>
                     <img src={networkImages[networkMap[networkId]]} alt="" className={classes.networkLogo}/>
-                    <Typography variant="body1" className={classes.selectedNetwork} noWrap>
-                        &nbsp;
-                    </Typography>
+                    <SelectedNetwork variant="body1" noWrap>
+                        {networkMap[networkId]}&nbsp;
+                    </SelectedNetwork>
                     <ArrowDropDown className={classes.dropDownIcon}/>
-                </div>}
+                </NetworkSelectButton>}
                 {account && <div className={classes.sectionDesktop} onClick={() => SetOpenOptions(!openOptions)}>
                     <img src={imageData} alt="" className={classes.sourceLogo}/>
-                    <Typography variant="body1" noWrap>
+                    <AccountAddress variant="body1" noWrap>
                         {account}
-                    </Typography>
+                    </AccountAddress>
+                    <ArrowDropDown className={classes.dropDownIconAccount}/>
+
                 </div>}
             </div>
         </div>

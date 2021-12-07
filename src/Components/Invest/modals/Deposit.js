@@ -99,6 +99,8 @@ function DepositTemplate({
     const [isDepositing, SetDepositing] = useState(false);
     const [depositError, SetDepositError] =useState(false);
     const [depositCompleted, SetDepositCompleted] = useState(false);
+    const [slippageWarningNeeded, SetSlippageWarningNeeded] = useState(true);
+    const [slippageAccepted, SetSlippageAcceptance] = useState(false);
     const [feeInfo, SetFeeInformation] = useState({
         feePercentage: 0,
         fees: 0,
@@ -119,6 +121,7 @@ function DepositTemplate({
     const getFeeInfo = async () => {
         SetCalculatingFees(true);
         const feeDataResponse = await calculateFee(vault.contract, strategyInfo.type, (amount * (10 ** stableCoinsContractData.decimals)));
+
         if (!feeDataResponse.success) {
             SetCalculatingFees(false);
             return null;
@@ -140,6 +143,7 @@ function DepositTemplate({
         SetIsApproving(false);
         SetHasApproved(approvalData.success);
         SetIsApprovalError(!approvalData.success)
+        SetNeedStrategyApproval(!approvalData.success);
     }
 
     const depositAmount = async () => {
@@ -236,9 +240,11 @@ function DepositTemplate({
             padding: '15px'
 
         }}>
-            <Box sx={{display: 'flex'}}>
+            {slippageWarningNeeded && <Box sx={{display: 'flex'}}>
                 <Box>
-                    <Checkbox/>
+                    <Checkbox onChange={(event) => {
+                        SetSlippageAcceptance(event.target.checked);
+                    }}/>
                 </Box>
                 <Box>
                     <Typography>
@@ -246,7 +252,7 @@ function DepositTemplate({
                     </Typography>
                 </Box>
 
-            </Box>
+            </Box>}
             {needStrategyApproval && <Box sx={{display: 'flex'}}>
                 <Box sx={{width: '70%'}}>
                     Allow your USDT to be deposited
@@ -259,7 +265,8 @@ function DepositTemplate({
                 </Box>
             </Box>}
             <Box sx={{textAlign: 'center'}}>
-                <DepositButton disabled={checkingForApproval || calculatingFees || !hasApproved} onClick={depositAmount}>
+                <DepositButton disabled={checkingForApproval || calculatingFees || !hasApproved || (slippageWarningNeeded &&
+                    !slippageAccepted)} onClick={depositAmount}>
                     {isDepositing? <CircularProgress size={20}/>: 'DEPOSIT'}
                 </DepositButton>
             </Box>
