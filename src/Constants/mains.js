@@ -19,9 +19,10 @@ export const ChainID = {
 
 export const networkMap = {
     42:'kovan',
-    1: 'mainnet',
+    1: 'ethereum',
     137: 'polygon',
     43113: 'fuji',
+    43114: 'avalanche',
     42161: 'arbitrum'
 }
 
@@ -56,4 +57,10 @@ export const GraphTimeRanges = [{
     label: '1Y',
     value: '1y'
 }];
+
+export const networkScanUrl = {
+    42:'https://kovan.etherscan.io/',
+    1: 'https://etherscan.io/',
+    137: "https://polygonscan.com/"
+}
 

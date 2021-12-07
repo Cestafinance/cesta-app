@@ -53,6 +53,10 @@ const StyledTableCell = styled(TableCell)(({theme}) => ({
     color: "white"
 }));
 
+const StrategyTableCell = styled(TableCell)(({theme}) => ({
+    borderBottom: 'none'
+}));
+
 const StyledTableContainer = styled(TableContainer)(({theme}) => ({
     '&.MuiPaper-root': {
         backgroundColor: theme.palette.app.main,
@@ -74,6 +78,9 @@ function Invest() {
 
     const loadStrategies = async () => {
         if (!networkId) {
+            SetStrategyContracts({});
+            SetVaultContracts({});
+            SetStrategies([]);
             return;
         }
         const response = await getAllStrategies(networkMap[networkId]);
@@ -122,8 +129,11 @@ function Invest() {
     }
 
     useEffect(() => {
+        SetStrategyContracts({});
+        SetVaultContracts({});
+        SetStrategies([]);
         loadStrategies();
-    }, []);
+    }, [networkId]);
 
     return <div className={classes.mainContainer}>
         <Grid container>
@@ -156,9 +166,9 @@ function Invest() {
                                     key={index}
                                     sx={{'&:last-child td, th': {border: 0}}}
                                 >
-                                    <TableCell colSpan={4}>
+                                    <StrategyTableCell colSpan={4}>
                                         <Strategy strategyData={strategy} strategyContract={strategyContracts[strategy.address.toLowerCase()]} vaultContract={vaultContracts[strategy.vaultInfo.address.toLowerCase()]}/>
-                                    </TableCell>
+                                    </StrategyTableCell>
                                 </TableRow>
                             })}
 

@@ -59,6 +59,8 @@ function WithdrawTemplate({
     const classes = useStyles();
 
     const [isWithdrawing, SetIsWithdrawing] = useState(false);
+    const [slippageWarningNeeded, SetSlippageWarningNeeded] = useState(true);
+    const [slippageAccepted, SetSlippageAcceptance] = useState(false);
     const {getTokenPriceMin} = useTokenMinPrice()
 
     const withDrawNow = async () => {
@@ -137,20 +139,21 @@ function WithdrawTemplate({
             padding: '15px'
 
         }}>
-            <Box sx={{display: 'flex'}}>
+            {slippageWarningNeeded && <Box sx={{display: 'flex'}}>
                 <Box>
-                    <Checkbox/>
+                    <Checkbox onChange={(event) => {
+                        SetSlippageAcceptance(event.target.checked);
+                    }}/>
                 </Box>
                 <Box>
                     <Typography>
                         I understand that my deposit may experience high slippage due to low liqudity
                     </Typography>
                 </Box>
-
-            </Box>
+            </Box>}
 
             <Box sx={{textAlign: 'center'}}>
-                <DepositButton disabled={false} onClick={withDrawNow}>
+                <DepositButton disabled={slippageWarningNeeded && !slippageAccepted} onClick={withDrawNow}>
                     {isWithdrawing ? <CircularProgress size={20}/> : 'WITHDRAW'}
                 </DepositButton>
             </Box>
