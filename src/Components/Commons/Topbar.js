@@ -5,7 +5,7 @@ import { makeStyles, styled } from '@mui/styles';
 import { Typography } from '@mui/material';
 import {ArrowDropDown} from '@mui/icons-material';
 import { useDispatch, useSelector } from 'react-redux';
-
+import online from '../../assets/commons/online.png';
 import {
     networkMap,
     networkScanUrl
@@ -30,7 +30,7 @@ const useStyles = makeStyles(theme => ({
         width: "calc(100% - 240px)",
         height: "80px",
         display: "flex",
-        padding: "40px 80px 0px 80px",
+        padding: "20px 80px 0px 80px",
         background: theme.palette.app.main,
         position: "fixed",
         left: "240px",
@@ -72,7 +72,9 @@ const useStyles = makeStyles(theme => ({
         padding: "25px"
     },
     networkDropDown: {
-        width: "150px",
+        display: "flex",
+        alignItems:"center",
+        width: "12rem",
         padding: "8px",
         background: "rgba(57, 198, 228, 0.08)",
         borderRadius: "23px",
@@ -81,11 +83,11 @@ const useStyles = makeStyles(theme => ({
         color: '#FFFFFF'
     },
     networkLogo: {
-        height: "24px",
+        height: "1.75rem",
         position: "absolute",
     },
     networkOptionsLogo: {
-        height: "14px",
+        height: "1.5rem",
         position: "absolute",
         marginTop: "13px"
     },
@@ -97,8 +99,8 @@ const useStyles = makeStyles(theme => ({
         [theme.breakpoints.up('md')]: {
             display: 'flex',
         },
-        top: "60%",
-        right: "300px",
+        top: "48%",
+        right: "320px",
         position: "absolute",
     },
     dropDownIconAccount: {
@@ -106,7 +108,7 @@ const useStyles = makeStyles(theme => ({
         [theme.breakpoints.up('md')]: {
             display: 'flex',
         },
-        top: "60%",
+        top: "48%",
         right: "100px",
         position: "absolute",
     },
@@ -115,12 +117,13 @@ const useStyles = makeStyles(theme => ({
         [theme.breakpoints.up('md')]: {
             display: 'flex',
         },
-        width: "200px",
+        width: "14rem",
         padding: "8px",
         background: "rgba(57, 198, 228, 0.08)",
         borderRadius: "23px",
         cursor: "pointer",
-        color: '#FFFFFF'
+        color: '#FFFFFF',
+        
     },
     sourceLogo: {
         height: "20px",
@@ -139,8 +142,18 @@ const useStyles = makeStyles(theme => ({
     optionsList: {
         color: "white",
         padding: "10px 0 5px 15px",
-        cursor: "pointer"
+        cursor: "pointer",
+        height: "1.75rem",
+        marginRight: "0.75rem",        
     },
+    userAddress: {
+       width:"6rem",
+       marginRight: "0.75rem",
+    },
+    onlineIcon: {
+        height:"0.75rem",
+        marginLeft: "0.75rem",
+    },    
 }));
 
 const SelectedNetwork = styled(Typography)((theme) =>({
@@ -186,8 +199,11 @@ function Topbar() {
 
     useEffect(() => {
         getNetworkImages();
-        getImageData(source);
     }, []);
+
+    useEffect(() => {
+        getImageData(source);
+    }, [source]);
 
     const handleNetworkSelectionOption = () => {
         SetNetworkSelectOpen(!isNetworkSelectOpen);
@@ -266,11 +282,12 @@ function Topbar() {
                 </NetworkSelectButton>}
                 {account && <div className={classes.sectionDesktop} onClick={() => SetOpenOptions(!openOptions)}>
                     <img src={imageData} alt="" className={classes.sourceLogo}/>
-                    <AccountAddress variant="body1" noWrap>
+                    <AccountAddress variant="body1" noWrap onClick={() => SetOpenOptions(!openOptions)}>
                         {account}
                     </AccountAddress>
                     <ArrowDropDown className={classes.dropDownIconAccount}/>
 
+                    {/*<img src={online} alt="" className={classes.onlineIcon}/>*/}
                 </div>}
             </div>
         </div>

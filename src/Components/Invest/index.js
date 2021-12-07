@@ -60,7 +60,8 @@ const StrategyTableCell = styled(TableCell)(({theme}) => ({
 const StyledTableContainer = styled(TableContainer)(({theme}) => ({
     '&.MuiPaper-root': {
         backgroundColor: theme.palette.app.main,
-        padding: '10px'
+        padding: '10px',
+        overflowY:'hidden'
     }
 }))
 
