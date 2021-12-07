@@ -22,9 +22,11 @@ import {
 } from '../../../store/interactions/stableCoins';
 import {
     calculateFee,
-    depositToken
+    depositToken,
+    depositTokenThreeParam
 } from '../../../store/interactions/vaults';
 import {useSelector} from "react-redux";
+import {useTokenMinPriceDeposit} from '../TokenMinPrice/hooks';
 
 const LabelMessage = styled(Typography)(({theme}) => ({
     fontFamily: 'Inter',
@@ -104,6 +106,7 @@ function DepositTemplate({
     });
 
     const web3 = useSelector(web3Selector);
+    const {getTokenPriceMin} = useTokenMinPriceDeposit()
 
     const checkAllowanceApprovalNeeded = async () => {
         SetCheckingForApproval(true);
@@ -142,7 +145,15 @@ function DepositTemplate({
     const depositAmount = async () => {
         SetDepositing(true);
         const valueData = amount * (10 ** stableCoinsContractData.decimals);
-        const depositStatus = await depositToken(vault.contract, valueData.toString(), stableCoinsContractData.address, account);
+
+        const tokenMinPrice = await getTokenPriceMin({
+            strategy: strategyInfo,
+            depositERC20Address: stableCoinsContractData.address,
+            depositAmount: valueData.toString()
+        });
+        
+        const depositStatus = await depositTokenThreeParam(vault.contract, valueData.toString(), stableCoinsContractData.address,  tokenMinPrice, account);
+    
         SetDepositing(false);
         if(depositStatus.success) {
             SetDepositError(false);

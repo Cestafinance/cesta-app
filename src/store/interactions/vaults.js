@@ -130,6 +130,31 @@ export const depositToken = (contract, amount, token, account) => {
     })
 }
 
+export const depositTokenThreeParam = (contract, amount, token, tokenPriceMin, account) => {
+    return new Promise((resolve, reject) => {
+        contract.methods
+            .deposit(amount, token, tokenPriceMin)
+            .send({
+                from: account,
+            })
+            .on("transactionHash", function (txnHash) {
+                console.log(txnHash);
+            })
+            .on("receipt", function (receipt) {
+                console.log(receipt);
+                return resolve({
+                    success: true,
+                    receipt
+                })
+            })
+            .on("error", function (error) {
+                return resolve({
+                    success: false
+                })
+            })
+    })
+}
+
 export const withdrawToken = (contract, amount, token, account) => {
     return new Promise((resolve, reject) => {
         contract.methods

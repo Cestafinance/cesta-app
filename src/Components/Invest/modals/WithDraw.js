@@ -1,12 +1,10 @@
 import {Box, Button, Checkbox, CircularProgress, Grid, Typography} from '@mui/material';
 import {makeStyles, styled} from '@mui/styles';
 import {useState} from 'react';
-
-import {useTokenMinPrice} from '../TokenMinPrice/hooks';
+import {useTokenMinPriceWithdraw} from '../TokenMinPrice/hooks';
 import {
     withdrawTokenThreeParam
 } from '../../../store/interactions/vaults';
-
 
 const LabelMessage = styled(Typography)(({theme}) => ({
     fontFamily: 'Inter',
@@ -59,19 +57,19 @@ function WithdrawTemplate({
     const classes = useStyles();
 
     const [isWithdrawing, SetIsWithdrawing] = useState(false);
-    const {getTokenPriceMin} = useTokenMinPrice()
+    const {getTokenPriceMin} = useTokenMinPriceWithdraw()
 
     const withDrawNow = async () => {
 
         SetIsWithdrawing(true);
 
         const tokenMinPrice = await getTokenPriceMin({
-            asset: strategyInfo,
+            strategy: strategyInfo,
             withdrawERC20Address: stableCoinsContractData.address,
             shareToWithdraw: shares.toString()
         });
 
-        const status = await withdrawTokenThreeParam(vault.contract, shares.toString(), stableCoinsContractData.address, tokenMinPrice, account);
+        const status = await withdrawTokenThreeParam(vault.contract, shares.toString() , stableCoinsContractData.address, tokenMinPrice, account);
 
         SetIsWithdrawing(false);
 
