@@ -5,7 +5,7 @@ import { makeStyles, styled } from '@mui/styles';
 import { Typography, Switch } from '@mui/material';
 import {ArrowDropDown} from '@mui/icons-material';
 import { useDispatch, useSelector } from 'react-redux';
-
+import online from '../../assets/commons/online.png';
 import {
     networkMap
 } from '../../Constants/mains';
@@ -66,7 +66,10 @@ const useStyles = makeStyles(theme => ({
         padding: "25px"
     },
     networkDropDown: {
-        width: "40px",
+        display: "flex",
+        justifyContent:"center",
+        alignItems:"center",
+        width: "12rem",
         padding: "8px",
         background: "rgba(57, 198, 228, 0.08)",
         borderRadius: "23px",
@@ -74,12 +77,12 @@ const useStyles = makeStyles(theme => ({
         marginRight: "10px"
     },
     networkLogo: {
-        height: "14px",
+        height: "1.75rem",
         position: "absolute",
         marginTop: "6px"
     },
     networkOptionsLogo: {
-        height: "14px",
+        height: "1.5rem",
         position: "absolute",
         marginTop: "13px"
     },
@@ -95,18 +98,29 @@ const useStyles = makeStyles(theme => ({
         display: 'none',
         [theme.breakpoints.up('md')]: {
             display: 'flex',
+            justifyContent:"left",
+            alignItems:"center", 
         },
-        width: "10%",
+        width: "14rem",
         padding: "8px",
         background: "rgba(57, 198, 228, 0.08)",
         borderRadius: "23px",
         cursor: "pointer",
-        color: '#FFFFFF'
+        color: '#FFFFFF',
+        
     },
     sourceLogo: {
-        height: "20px",
-        marginRight: "8px"
+        height: "1.75rem",
+        marginRight: "0.75rem",        
     },
+    userAddress: {
+       width:"6rem",
+       marginRight: "0.75rem",
+    },
+    onlineIcon: {
+        height:"0.75rem",
+        marginLeft: "0.75rem",
+    },    
 }));
 
 const NetworkSelectButton = styled('div')(({ theme }) => ({
@@ -178,15 +192,16 @@ function Topbar() {
                 {account && <div className={classes.networkDropDown} onClick={handleNetworkSelectionOption}>
                     <img src={networkImages[networkMap[networkId]]} alt="" className={classes.networkLogo}/>
                     <Typography variant="body1" className={classes.selectedNetwork} noWrap>
-                        &nbsp;
+                        {"Name of Network"}
                     </Typography>
                     <ArrowDropDown className={classes.dropDownIcon}/>
                 </div>}
                 {account && <div className={classes.sectionDesktop} onClick={() => SetOpenOptions(!openOptions)}>
                     <img src={imageData} alt="" className={classes.sourceLogo}/>
-                    <Typography variant="body1" noWrap>
+                    <Typography  className={classes.userAddress}noWrap>
                         {account}
                     </Typography>
+                    <img src={online} alt="" className={classes.onlineIcon}/>
                 </div>}
             </div>
         </div>
