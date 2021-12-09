@@ -66,7 +66,7 @@ const StyledButton = styled(Button)(({theme}) => ({
 
 function Deposit({
                      strategyData,
-                     strategyContract,
+                     getStableCoinWalletDetails,
                      vaultContract,
                      coinBalances,
                      stableCoinLogos
@@ -137,7 +137,7 @@ function Deposit({
                 }} onClick={() => SetOpenCoinSelecting(!openCoinSelection)}>
                     <Box sx={{
                         position: 'absolute',
-                        right: '125px',
+                        right: '135px',
                         marginLeft: 'auto',
                         marginTop: '-38px',
                         float: 'right'
@@ -147,7 +147,7 @@ function Deposit({
                     </Box>
                     <Box sx={{
                         position: 'absolute',
-                        right: '75px',
+                        right: '85px',
                         marginLeft: 'auto',
                         marginTop: '-37px',
                         float: 'right'
@@ -156,7 +156,7 @@ function Deposit({
                     </Box>
                     <Box sx={{
                         position: 'absolute',
-                        right: '50px',
+                        right: '60px',
                         marginLeft: 'auto',
                         marginTop: '-39px',
                         float: 'right'
@@ -234,6 +234,8 @@ function Deposit({
                         strategyInfo={strategyData}
                         amount={depositAmount}
                         vault={vaultContract}
+                        closeDialog={handleClose}
+                        getStableCoinWalletDetails={getStableCoinWalletDetails}
                         logo={stableCoinLogos[strategyData.tokens[selectedCoinIndex]]}
                         stableCoinsContractData={stableCoinsContracts[strategyData.erc20addresses[selectedCoinIndex].toLowerCase()]}
                         account={account}

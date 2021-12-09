@@ -4,6 +4,7 @@ import { getChartSeries, getLineChartCategorise} from "../../Util/chartUtil";
 import CircularProgress from '@mui/material/CircularProgress';
 import Chart from 'react-apexcharts';
 import { Typography } from "@mui/material";
+import {makeStyles} from '@mui/styles';
 
 const TICK_AMOUNT = {
     "7d": 7,
@@ -11,6 +12,16 @@ const TICK_AMOUNT = {
     "6m": 15,
     "1y": 15
 }
+
+const useStyles = makeStyles(({theme}) => ({
+    chartContainer: {
+        // '& #basic-bar': {
+        //    '& .apexchart-canvas' :{
+        //        width: "800px"
+        //    }
+        // }
+    }
+}));
 
 function LoadingContainer(){
     return <div style={{minHeight: "390px", display: "flex", alignItems:"center", justifyContent: "center", flexDirection: "column"}}>
@@ -28,6 +39,8 @@ export default function StrategyChart({
     const [chartCategories, setChartCategories ] = useState([]);
     const [tickAmount, setTickAmount] = useState(7);
     const [loading, setLoading] = useState(false);
+
+    const classes = useStyles();
    
     useEffect(() => {
         async function getChartData () {
@@ -50,9 +63,10 @@ export default function StrategyChart({
         }
     }, [isExpanded, selectedTimeRange])
 
-    return loading ? <LoadingContainer/>:  <Chart type={'area'} options={{
+    return loading ? <LoadingContainer/>: <div className={classes.chartContainer}>
+        <Chart type={'line'} options={{
         chart: {
-            id: "basic-bar",
+            id: "basicbar",
             toolbar: {
                 show: false,
             },
@@ -78,11 +92,17 @@ export default function StrategyChart({
         yaxis: {
             opposite: true,
             title: {
-                text: "Performance(%)",
+                text: "Performance (%)",
                 rotate: -90,
                 offsetX: 0,
                 offsetY: 0,
             },
+            labels: {
+                formatter: function(value) {
+
+                    return Number(value).toFixed(2);
+                }
+            }
         },
         dataLabels: {
             enabled: false,
@@ -101,5 +121,6 @@ export default function StrategyChart({
         },
         }}
         series={chartData}
-    />;
+    />
+    </div> ;
 }

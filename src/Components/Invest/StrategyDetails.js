@@ -31,6 +31,9 @@ import {
 import {
     GraphTimeRanges
 } from '../../Constants/mains';
+import {
+    getStrategyCoinDistribution
+} from '../../Services/contracts';
 
 import StrategyChart from './Chart';
 
@@ -110,11 +113,7 @@ function StrategyDetails({
     const [selectedTab, SetSelectedTab] = useState(0);
     const [coinBalances, SetCoinBalances] = useState({});
     const [stableCoinLogos, SetStableCoinLogo] = useState({});
-    const coins = [
-        {percent:33.33,tokenId:"dai",label:"DAI",link:"https://www.coingecko.com/en/coins/dai",color:"#F8BD60"},
-        {percent:33.33,tokenId:"tether",label:"USDT",link:"https://www.coingecko.com/en/coins/tether",color:"#26A17B"},
-        {percent:33.33,tokenId:"usd-coin",label:"USDC",link:"https://www.coingecko.com/en/coins/usd-coin",color:"#2775CA"}
-    ];
+    const [coinDistributionData, SetCoinDistributionData] = useState([]);
 
     const onTimeRangeSelect = (value) => {
         setSelectedTimeRange(value);
@@ -135,7 +134,7 @@ function StrategyDetails({
         for (let i = 0; i < strategyData.erc20addresses.length; i++) {
             const address = strategyData.erc20addresses[i].toLowerCase();
             const balance = await getWalletAmount(stableCoins[address].contract, account);
-            sbData[stableCoins[address].symbol] = (balance/(10 ** stableCoins[address].decimals)).toFixed(4);
+            sbData[stableCoins[address].symbol] = (balance / (10 ** stableCoins[address].decimals)).toFixed(4);
         }
         SetCoinBalances(sbData);
 
@@ -147,9 +146,21 @@ function StrategyDetails({
         SetStableCoinLogo(imgData);
     }
 
+    const getCoinDistribution = async () => {
+        try {
+            const distributionResponse = await getStrategyCoinDistribution(strategyData.performanceId);
+            const distributionData = distributionResponse.data;
+            SetCoinDistributionData(distributionData);
+
+        } catch (Err) {
+            console.log(Err);
+        }
+    }
+
     useEffect(() => {
         if (isExpanded) {
             getStableCoinWalletDetails();
+            getCoinDistribution()
         }
     }, [isExpanded]);
 
@@ -159,20 +170,33 @@ function StrategyDetails({
             columnSpacing={3}
             rowSpacing={1}
         >
-            <Grid item xs={12} className={classes.roundBorder}>
-                <Grid
-                    container
-                >
-                    <Grid item xs={6}>
-                        <StrategyDescription>
-                            A balanced crypto portfolio with yield farming rewards
-                            A basket of 3 DeFi publicly strong token been known to invest in.
-                        </StrategyDescription>
+            <Grid item xs={12}>
+                <Box sx={{
+                    border: '1px solid rgba(255, 255, 255, 0.2)',
+                    borderRadius: '20px',
+                    padding: '20px',
+                }}>
+                    <Grid
+                        container
+                    >
+                        <Grid item xs={6}>
+                            <Box sx={{
+                                padding: '20px',
+                            }}>
+                                <StrategyDescription>
+                                    {strategyData.description}
+                                </StrategyDescription>
+                            </Box>
+                        </Grid>
+                        <Grid item xs={6}>
+                            <Box sx={{
+                                padding: '20px 20px 0 20px',
+                            }}>
+                                <MultiColorBar coins={coinDistributionData}/>
+                            </Box>
+                        </Grid>
                     </Grid>
-                    <Grid item xs={6}>
-                        <MultiColorBar coins={coins}/>
-                    </Grid>
-                </Grid>
+                </Box>
             </Grid>
             <Grid item md={6} sm={12} className={classes.paddingGrid}>
                 <Box sx={{
@@ -197,7 +221,7 @@ function StrategyDetails({
                             </Box>
                         </Grid>
                         <Grid item xs={12}>
-                            <StrategyChart {... {strategyData,isExpanded,selectedTimeRange}} />
+                            <StrategyChart {...{strategyData, isExpanded, selectedTimeRange}} />
                         </Grid>
                     </Grid>
                 </Box>
@@ -207,6 +231,7 @@ function StrategyDetails({
                     border: '1px solid rgba(255, 255, 255, 0.2)',
                     borderRadius: '20px',
                     padding: '20px',
+                    height: '100%'
                 }}>
                     <StyledTabs
                         value={selectedTab}
@@ -223,12 +248,14 @@ function StrategyDetails({
                                                    strategyContract={strategyContract}
                                                    vaultContract={vaultContract}
                                                    coinBalances={coinBalances}
+                                                   getStableCoinWalletDetails={getStableCoinWalletDetails}
                                                    stableCoinLogos={stableCoinLogos}
                     />}
                     {selectedTab === 1 && <WithDraw strategyData={strategyData}
                                                     strategyContract={strategyContract}
                                                     vaultContract={vaultContract}
                                                     coinBalances={coinBalances}
+                                                    getStableCoinWalletDetails={getStableCoinWalletDetails}
                                                     stableCoinLogos={stableCoinLogos}
                     />}
                 </Box>

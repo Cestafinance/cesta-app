@@ -5,6 +5,7 @@ import {useTokenMinPriceWithdraw} from '../TokenMinPrice/hooks';
 import {
     withdrawTokenThreeParam
 } from '../../../store/interactions/vaults';
+import DoneMark from '../../../assets/commons/done.png';
 
 const LabelMessage = styled(Typography)(({theme}) => ({
     fontFamily: 'Inter',
@@ -51,12 +52,16 @@ function WithdrawTemplate({
                               stableCoinsContractData,
                               strategyInfo,
                               vault,
-                              account
+                              account,
+                              getShareAndUSDValue,
+                              closeDialog
                           }) {
 
     const classes = useStyles();
 
     const [isWithdrawing, SetIsWithdrawing] = useState(false);
+    const [withdrawCompleted, SetWithdrawCompleted] = useState(false);
+    const [withdrawError, SetWithdrawError] = useState(false);
    
     const [slippageWarningNeeded, SetSlippageWarningNeeded] = useState(true);
     const [slippageAccepted, SetSlippageAcceptance] = useState(false);
@@ -75,6 +80,16 @@ function WithdrawTemplate({
         const status = await withdrawTokenThreeParam(vault.contract, shares.toString() , stableCoinsContractData.address, tokenMinPrice, account);
 
         SetIsWithdrawing(false);
+        if(status.success) {
+            SetWithdrawCompleted(true);
+            SetWithdrawError(false);
+            getShareAndUSDValue();
+            setTimeout(() => {
+                closeDialog();
+            }, 2000)
+        } else {
+            SetWithdrawError(true);
+        }
 
     }
 
@@ -101,7 +116,6 @@ function WithdrawTemplate({
                         <Box sx={{display: 'flex'}}>
                             <Box sx={{width: '10%'}}>
                                 <img src={logo} className={classes.logo} alt=""/>
-
                             </Box>
                             <Box>
                                 {symbol}
@@ -151,9 +165,32 @@ function WithdrawTemplate({
                 </Box>
             </Box>}
 
+            {isWithdrawing && <Box sx={{display: 'flex', textAlign: 'center'}}>
+                <Box sx={{width: '100%'}}>
+                    Withdrawing your {symbol} <br/>
+                    from {strategyInfo.name} <br/>
+                </Box>
+            </Box>}
+
+            {withdrawCompleted && <Box sx={{display: 'flex', textAlign: 'center'}}>
+                <Box sx={{width: '100%'}}>
+                    Your {symbol} has been withdrawn <br/>
+                    from {strategyInfo.name} <br/>
+                    successfully.
+                </Box>
+            </Box>}
+
+            {withdrawError && <Box sx={{display: 'flex', textAlign: 'center', color: 'red'}}>
+                <Box sx={{width: '100%'}}>
+                    Failed to withdraw {symbol} <br/>
+                    from {strategyInfo.name}. <br/>
+                    Please try again.
+                </Box>
+            </Box>}
+
             <Box sx={{textAlign: 'center'}}>
                 <DepositButton disabled={slippageWarningNeeded && !slippageAccepted} onClick={withDrawNow}>
-                    {isWithdrawing ? <CircularProgress size={20}/> : 'WITHDRAW'}
+                    {isWithdrawing ? <CircularProgress size={20}/> : withdrawCompleted ? <img src={DoneMark} alt="Done"/>:'WITHDRAW'}
                 </DepositButton>
             </Box>
 
