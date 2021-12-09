@@ -154,8 +154,8 @@ function Invest() {
               <TableHead>
                 <TableRow>
                   <StyledTableCell align="left">Name</StyledTableCell>
-                  <StyledTableCell align="left">Staked</StyledTableCell>
-                  <StyledTableCell align="left">Liquidity</StyledTableCell>
+                  <StyledTableCell align="right">Staked</StyledTableCell>
+                  <StyledTableCell align="center">Liquidity</StyledTableCell>
                   <StyledTableCell align="left">ROI</StyledTableCell>
                 </TableRow>
               </TableHead>

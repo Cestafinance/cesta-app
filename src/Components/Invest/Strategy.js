@@ -31,6 +31,12 @@ const useStyles = makeStyles((theme) => ({
     marginLeft: "-10px",
     borderRadius: "50%",
   },
+  // strategyContainer: {
+  //   display: "flex",
+  //   flexDirection: "row",
+  //   justifyContent: "space-between",
+  //   alignItems: "center",
+  // },
 }));
 
 const StyledAccordionSummary = styled(AccordionSummary)(({ theme }) => ({
@@ -46,12 +52,12 @@ const TokenName = styled(Typography)((theme) => ({
     fontFamily: "Inter",
     fontStyle: "normal",
     fontWeight: "bold",
-    fontSize: "14px",
-    lineHeight: "18px",
+    fontSize: "1rem",
+    lineHeight: "1rem",
     alignItems: "center",
     position: "absolute",
     top: "28%",
-    left: "10%",
+    left: "12%",
     color: "#FFFFFF",
   },
 }));
@@ -61,11 +67,27 @@ const ValueLabel = styled(Typography)((theme) => ({
     fontFamily: "Inter",
     fontStyle: "normal",
     fontWeight: "normal",
-    fontSize: "18px",
-    lineHeight: "18px",
-    alignItems: "left",
+    fontSize: "1rem",
+    lineHeight: "1rem",
+    alignItems: "right",
     position: "absolute",
     top: "28%",
+    left: "42%",
+    color: "#FFFFFF",
+  },
+}));
+
+const LiquidityLabel = styled(Typography)((theme) => ({
+  "&.MuiTypography-root": {
+    fontFamily: "Inter",
+    fontStyle: "normal",
+    fontWeight: "normal",
+    fontSize: "1rem",
+    lineHeight: "1rem",
+    alignItems: "center",
+    position: "absolute",
+    top: "28%",
+    left: "62%",
     color: "#FFFFFF",
   },
 }));
@@ -80,6 +102,7 @@ const RoiLabel = styled(Typography)((theme) => ({
     alignItems: "right",
     position: "absolute",
     top: "28%",
+    right: "13%",
     color: "#15C73E",
   },
 }));
@@ -102,8 +125,8 @@ function Strategy({ strategyData, strategyContract, vaultContract }) {
           aria-controls="panel1a-content"
           id="panel1a-header"
         >
-          <Grid container>
-            <Grid item xs={3}>
+          <Grid container className={classes.strategyContainer}>
+            <Grid item xs={4}>
               <img src={Asset1} className={classes.assetImages} alt="" />
               <img src={Asset2} className={classes.assetImages} alt="" />
               <img src={Asset3} className={classes.assetImages} alt="" />
@@ -113,9 +136,9 @@ function Strategy({ strategyData, strategyContract, vaultContract }) {
               <ValueLabel>$12345678.89</ValueLabel>
             </Grid>
             <Grid item xs={3}>
-              <ValueLabel>$12345678.89</ValueLabel>
+              <LiquidityLabel>$12345678.89</LiquidityLabel>
             </Grid>
-            <Grid item xs={3}>
+            <Grid item xs={2}>
               <RoiLabel>47%</RoiLabel>
             </Grid>
           </Grid>
