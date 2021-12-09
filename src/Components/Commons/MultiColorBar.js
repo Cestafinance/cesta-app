@@ -7,7 +7,10 @@ import {makeStyles} from '@mui/styles';
 const useStyles = makeStyles(theme => ({
     barBlock: {
         height: '12px',
-        position: "relative"
+        position: "relative",
+        "&:hover": {
+            cursor: "pointer"
+        }
     },
     colorIndicator: {
         height: '10px',
@@ -47,12 +50,21 @@ function MultiColorBar({
     const classes = useStyles();
     let colors = ['#FFFFFF', '#8247E5', '#F7931A', '#26A17B', '#E84142']
 
+    const openLink = (link) => {
+        window.open(
+            link,
+            '_blank'
+        )
+    }
+
     return <Fragment>
         <div className={classes.displayFlex}>
             {coins.map((coin, index) => {
                 return <div key={index}
                             className={classes.barBlock + ' ' + (index === 0 ? classes.firstBlock : '') + ' ' + (index === (coins.length - 1) ? classes.lastBlock : '')}
-                            style={{width: `${coin.percent}%`, background: coin.color}}>
+                            style={{width: `${coin.percent}%`, background: coin.color}}
+                            onClick={()=>openLink(coin.link)}
+                        >
                     <div className={classes.labelName}>
                         <span className={classes.colorIndicator}
                               style={{background: coin.color}}>&nbsp;&nbsp;&nbsp;&nbsp;</span> {coin.label} {coin.percent}%

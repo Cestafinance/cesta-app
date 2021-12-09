@@ -15,5 +15,5 @@ export const getConnectionStatus = () => {
 }
 
 export const setConnectionStatus = (value) => {
-    return localStorage.setItem('connection', value);
+    return localStorage.setItem('connection', JSON.stringify(value));
 }

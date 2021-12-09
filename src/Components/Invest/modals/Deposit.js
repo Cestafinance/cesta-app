@@ -22,9 +22,11 @@ import {
 } from '../../../store/interactions/stableCoins';
 import {
     calculateFee,
-    depositToken
+    depositToken,
+    depositTokenThreeParam
 } from '../../../store/interactions/vaults';
 import {useSelector} from "react-redux";
+import {useTokenMinPriceDeposit} from '../TokenMinPrice/hooks';
 
 const LabelMessage = styled(Typography)(({theme}) => ({
     fontFamily: 'Inter',
@@ -97,6 +99,8 @@ function DepositTemplate({
     const [isDepositing, SetDepositing] = useState(false);
     const [depositError, SetDepositError] =useState(false);
     const [depositCompleted, SetDepositCompleted] = useState(false);
+    const [slippageWarningNeeded, SetSlippageWarningNeeded] = useState(true);
+    const [slippageAccepted, SetSlippageAcceptance] = useState(false);
     const [feeInfo, SetFeeInformation] = useState({
         feePercentage: 0,
         fees: 0,
@@ -104,6 +108,7 @@ function DepositTemplate({
     });
 
     const web3 = useSelector(web3Selector);
+    const {getTokenPriceMin} = useTokenMinPriceDeposit()
 
     const checkAllowanceApprovalNeeded = async () => {
         SetCheckingForApproval(true);
@@ -116,6 +121,7 @@ function DepositTemplate({
     const getFeeInfo = async () => {
         SetCalculatingFees(true);
         const feeDataResponse = await calculateFee(vault.contract, strategyInfo.type, (amount * (10 ** stableCoinsContractData.decimals)));
+
         if (!feeDataResponse.success) {
             SetCalculatingFees(false);
             return null;
@@ -137,12 +143,21 @@ function DepositTemplate({
         SetIsApproving(false);
         SetHasApproved(approvalData.success);
         SetIsApprovalError(!approvalData.success)
+        SetNeedStrategyApproval(!approvalData.success);
     }
 
     const depositAmount = async () => {
         SetDepositing(true);
         const valueData = amount * (10 ** stableCoinsContractData.decimals);
-        const depositStatus = await depositToken(vault.contract, valueData.toString(), stableCoinsContractData.address, account);
+
+        const tokenMinPrice = await getTokenPriceMin({
+            strategy: strategyInfo,
+            depositERC20Address: stableCoinsContractData.address,
+            depositAmount: valueData.toString()
+        });
+        
+        const depositStatus = await depositTokenThreeParam(vault.contract, valueData.toString(), stableCoinsContractData.address,  tokenMinPrice, account);
+    
         SetDepositing(false);
         if(depositStatus.success) {
             SetDepositError(false);
@@ -225,9 +240,11 @@ function DepositTemplate({
             padding: '15px'
 
         }}>
-            <Box sx={{display: 'flex'}}>
+            {slippageWarningNeeded && <Box sx={{display: 'flex'}}>
                 <Box>
-                    <Checkbox/>
+                    <Checkbox onChange={(event) => {
+                        SetSlippageAcceptance(event.target.checked);
+                    }}/>
                 </Box>
                 <Box>
                     <Typography>
@@ -235,7 +252,7 @@ function DepositTemplate({
                     </Typography>
                 </Box>
 
-            </Box>
+            </Box>}
             {needStrategyApproval && <Box sx={{display: 'flex'}}>
                 <Box sx={{width: '70%'}}>
                     Allow your USDT to be deposited
@@ -248,7 +265,8 @@ function DepositTemplate({
                 </Box>
             </Box>}
             <Box sx={{textAlign: 'center'}}>
-                <DepositButton disabled={checkingForApproval || calculatingFees || !hasApproved} onClick={depositAmount}>
+                <DepositButton disabled={checkingForApproval || calculatingFees || !hasApproved || (slippageWarningNeeded &&
+                    !slippageAccepted)} onClick={depositAmount}>
                     {isDepositing? <CircularProgress size={20}/>: 'DEPOSIT'}
                 </DepositButton>
             </Box>

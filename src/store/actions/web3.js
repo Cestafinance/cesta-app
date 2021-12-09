@@ -19,3 +19,22 @@ export function networkIdLoaded(networkId) {
         networkId
     }
 }
+
+export function disconnectWallet() {
+    return {
+        type: 'DISCONNECT_WALLET_EVENT'
+    }
+}
+
+export function resetWeb3() {
+    return {
+        type: 'DISCONNECT_WALLET'
+    }
+}
+
+export function changeWalletAction() {
+    return {
+        type: 'CHANGE_WALLET',
+        value: new Date().getTime()
+    }
+}
