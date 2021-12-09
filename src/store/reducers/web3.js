@@ -18,6 +18,26 @@ function web3(state = {}, action) {
             }
         case 'ETHER_BALANCE_LOADED':
             return {...state, balance: action.balance}
+        case 'CHANGE_WALLET': {
+            return {
+                ...state,
+                changeWallet: action.value
+            }
+        }
+        case 'DISCONNECT_WALLET_EVENT':
+            return {
+                ...state,
+                disconnect: true
+            }
+        case 'DISCONNECT_WALLET':
+            return {
+                ...state,
+                connection: null,
+                account: null,
+                source: null,
+                networkId: null,
+                disconnect: null
+            }
         default:
             return state;
     }

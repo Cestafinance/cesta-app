@@ -16,7 +16,8 @@ import { styled } from '@mui/material/styles';
 import {
     Close as CloseIcon
 } from '@mui/icons-material';
-
+import {useDispatch, useSelector} from 'react-redux';
+import {withStyles, makeStyles} from '@mui/styles';
 import {useEagerConnect, useInactiveListener} from './hooks';
 import {
     injected,
@@ -29,8 +30,21 @@ import {
     loadWeb3,
     loadAccount
 } from '../../store/interactions/web3';
-import {useDispatch} from "react-redux";
-import {withStyles, makeStyles} from '@mui/styles';
+
+import {
+    changeWalletSelector,
+    disconnectSelector,
+    sourceSelector
+} from '../../store/selectors/web3';
+
+import {
+    resetWeb3,
+    disconnectWallet as disconnectWalletAction
+} from '../../store/actions/web3';
+
+import {
+    setConnectionStatus
+} from '../../store/local';
 
 
 const ConnectorNames = {
@@ -221,8 +235,9 @@ export default function ({loadContracts}) {
 function Balance({
                      loadContracts
                  }) {
-    const {account, library, chainId, connector} = useWeb3React()
+    const {account, library, chainId, connector, deactivate} = useWeb3React()
     const dispatch = useDispatch();
+    const disconnectNow = useSelector(disconnectSelector);
 
     const [balance, setBalance] = React.useState()
 
@@ -238,6 +253,13 @@ function Balance({
                 return true;
             }
         });
+
+
+        setConnectionStatus({
+            source: connectorName,
+            connected: true
+        });
+
 
         let web3 = await loadWeb3(dispatch, provider);
         await loadAccount(dispatch, account, chainId, connectorName);
@@ -271,6 +293,14 @@ function Balance({
         }
     }, [account, library, chainId]) // ensures refresh if referential identity of library doesn't change across chainIds
 
+    React.useEffect(() => {
+        if(disconnectNow) {
+            deactivate();
+            setConnectionStatus({});
+            dispatch(resetWeb3());
+        }
+    }, [disconnectNow])
+
     return (
         <>
 
@@ -294,12 +324,22 @@ function App({
              }) {
     const context = useWeb3React();
     const classes = useStyles();
+    const dispatch = useDispatch();
     const {connector, activate, error} = context
 
     // handle logic to recognize the connector currently being activated
     const [activatingConnector, setActivatingConnector] = React.useState();
     const [open, SetOpen] = React.useState(false);
     const [walletImages, setWalletImages] = React.useState({});
+    const walletChangeTime = useSelector(changeWalletSelector);
+    const source = useSelector(sourceSelector);
+
+    React.useEffect(() => {
+        if (walletChangeTime) {
+            SetOpen(true);
+        }
+    }, [walletChangeTime])
+
     React.useEffect(() => {
         if (activatingConnector && activatingConnector === connector) {
             setActivatingConnector(undefined)
@@ -327,7 +367,7 @@ function App({
     }
 
     const disconnectConnectedWallet = () => {
-
+        dispatch(disconnectWalletAction());
     }
 
     return (
@@ -337,7 +377,7 @@ function App({
                 <BootstrapDialog
                     onClose={handleClose}
                     aria-labelledby="customized-dialog-title"
-                    open={open}
+                    open={open || !source}
                 >
                     <BootstrapDialogTitle id="customized-dialog-title" onClose={handleClose}>
                         Wallet Connect

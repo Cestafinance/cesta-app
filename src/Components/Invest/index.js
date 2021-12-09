@@ -37,11 +37,15 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
   color: "white",
 }));
 
+const StrategyTableCell = styled(TableCell)(({ theme }) => ({
+  borderBottom: "none",
+}));
+
 const StyledTableContainer = styled(TableContainer)(({ theme }) => ({
   "&.MuiPaper-root": {
     backgroundColor: theme.palette.app.main,
     padding: "10px",
-    margin: "1rem",
+    overflowY: "hidden",
   },
 }));
 
@@ -58,6 +62,9 @@ function Invest() {
 
   const loadStrategies = async () => {
     if (!networkId) {
+      SetStrategyContracts({});
+      SetVaultContracts({});
+      SetStrategies([]);
       return;
     }
     const response = await getAllStrategies(networkMap[networkId]);
@@ -117,8 +124,11 @@ function Invest() {
   };
 
   useEffect(() => {
+    SetStrategyContracts({});
+    SetVaultContracts({});
+    SetStrategies([]);
     loadStrategies();
-  }, []);
+  }, [networkId]);
 
   return (
     <div className={classes.mainContainer}>
@@ -144,9 +154,9 @@ function Invest() {
               <TableHead>
                 <TableRow>
                   <StyledTableCell align="left">Name</StyledTableCell>
-                  <StyledTableCell align="center">Staked</StyledTableCell>
-                  <StyledTableCell align="center">Liquidity</StyledTableCell>
-                  <StyledTableCell align="center">ROI</StyledTableCell>
+                  <StyledTableCell align="left">Staked</StyledTableCell>
+                  <StyledTableCell align="left">Liquidity</StyledTableCell>
+                  <StyledTableCell align="left">ROI</StyledTableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -156,7 +166,7 @@ function Invest() {
                       key={index}
                       sx={{ "&:last-child td, th": { border: 0 } }}
                     >
-                      <TableCell colSpan={4}>
+                      <StrategyTableCell colSpan={4}>
                         <Strategy
                           strategyData={strategy}
                           strategyContract={
@@ -168,7 +178,7 @@ function Invest() {
                             ]
                           }
                         />
-                      </TableCell>
+                      </StrategyTableCell>
                     </TableRow>
                   );
                 })}

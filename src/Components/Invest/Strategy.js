@@ -46,8 +46,8 @@ const TokenName = styled(Typography)((theme) => ({
     fontFamily: "Inter",
     fontStyle: "normal",
     fontWeight: "bold",
-    fontSize: "18px",
-    lineHeight: "22px",
+    fontSize: "14px",
+    lineHeight: "18px",
     alignItems: "center",
     position: "absolute",
     top: "28%",
@@ -107,7 +107,7 @@ function Strategy({ strategyData, strategyContract, vaultContract }) {
               <img src={Asset1} className={classes.assetImages} alt="" />
               <img src={Asset2} className={classes.assetImages} alt="" />
               <img src={Asset3} className={classes.assetImages} alt="" />
-              <TokenName variant="body">Investing Strategy #1</TokenName>
+              <TokenName variant="body">{strategyData.name}</TokenName>
             </Grid>
             <Grid item xs={3}>
               <ValueLabel>$12345678.89</ValueLabel>
