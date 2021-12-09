@@ -1,0 +1,28 @@
+version: '3'
+services: 
+  nginx:
+    container_name: 'frontend'
+    restart: always
+    env_file:
+      - .env
+    image: cestafi/frontend-develop:latest
+    ports: 
+      - 80:80
+      - 443:443
+    volumes: 
+      - ./nginx:/etc/nginx/conf.d
+      - ./certbot/conf:/etc/letsencrypt
+      - ./certbot/www:/var/www/certbot
+    command: "/bin/sh -c 'while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g \"daemon off;\"'"
+    networks: 
+      - cesta-api_backend
+  certbot:
+    image: certbot/certbot
+    volumes: 
+      - ./certbot/conf:/etc/letsencrypt
+      - ./certbot/www:/var/www/certbot
+    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
+networks: 
+  cesta-api_backend:
+    external: true
+
