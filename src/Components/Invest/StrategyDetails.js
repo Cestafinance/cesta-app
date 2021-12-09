@@ -101,7 +101,10 @@ function StrategyDetails({
                              strategyData,
                              strategyContract,
                              vaultContract,
-                             isExpanded
+                             isExpanded,
+                             depositedAmount,
+                             getShareAndUSDValue,
+                             depositedShares
                          }) {
 
     const classes = useStyles();
@@ -255,6 +258,9 @@ function StrategyDetails({
                                                     strategyContract={strategyContract}
                                                     vaultContract={vaultContract}
                                                     coinBalances={coinBalances}
+                                                    getShareAndUSDValue={getShareAndUSDValue}
+                                                    depositedAmount={depositedAmount}
+                                                    depositedShares={depositedShares}
                                                     getStableCoinWalletDetails={getStableCoinWalletDetails}
                                                     stableCoinLogos={stableCoinLogos}
                     />}

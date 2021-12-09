@@ -69,12 +69,13 @@ function WithDraw({
   vaultContract,
   coinBalances,
   stableCoinLogos,
+  getShareAndUSDValue,
+  depositedAmount,
+  depositedShares,
 }) {
   const classes = useStyles();
 
   const [openCoinSelection, SetOpenCoinSelecting] = useState(false);
-  const [depositedShares, SetDepositedShares] = useState(0);
-  const [depositedAmount, SetDepositedAmount] = useState(0);
   const [selectedCoinIndex, SetSelectedCoinIndex] = useState(0);
   const [amountToWithdraw, SetAmountToWithdraw] = useState(0);
   const [selectedPercentage, SetSelectedPercentage] = useState(null);
@@ -82,43 +83,13 @@ function WithDraw({
   const [open, SetOpen] = useState(false);
 
   const account = useSelector(accountSelector);
-  const web3 = useSelector(web3Selector);
   const stableCoinsContracts = useSelector(stableCoinsSelector);
-
-  const getShareAndUSDValue = async () => {
-    try {
-      let strategyBalance = await getWalletAmount(
-        vaultContract.contract,
-        account
-      );
-      strategyBalance = parseFloat(
-        (strategyBalance / 10 ** strategyData.decimals).toFixed(8)
-      );
-      SetDepositedShares(strategyBalance);
-
-      let vaultPricePerFullShare = await getPricePerFullShare(
-        vaultContract.contract
-      );
-
-      let depositPendingAmount = await getDepositAmountFromContract(
-        vaultContract.contract,
-        account
-      );
-
-      let strategyBalanceInUSD = strategyBalance * vaultPricePerFullShare;
-      SetDepositedAmount(parseFloat(strategyBalanceInUSD.toFixed(4)));
-    } catch (Err) {}
-  };
 
   const selectPercentage = (value) => {
     const amt = depositedAmount * (value / 100);
     SetAmountToWithdraw(amt.toFixed(4));
     SetSelectedPercentage(value);
   };
-
-  useEffect(() => {
-    getShareAndUSDValue();
-  }, []);
 
   const onInputChange = (value) => {
     let decimals = value.match(/\./g);
@@ -184,7 +155,7 @@ function WithDraw({
                 textAlign: "end",
               }}
             >
-              Available: {amountToWithdraw}{" "}
+              Available: {depositedAmount}{" "}
               {strategyData.tokens[selectedCoinIndex]}
             </Box>
           </Box>
