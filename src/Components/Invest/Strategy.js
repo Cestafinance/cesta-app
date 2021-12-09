@@ -161,12 +161,12 @@ function Strategy({
                     </Grid>
                     <Grid item xs={3}>
                         <ValueLabel>
-                            $12345678.89
+                            $ {strategyData.liquidity}
                         </ValueLabel>
                     </Grid>
                     <Grid item xs={3}>
                         <RoiLabel>
-                            47%
+                            {strategyData.ROI} %
                         </RoiLabel>
                     </Grid>
                 </Grid>
