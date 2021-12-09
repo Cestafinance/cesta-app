@@ -10,11 +10,15 @@ import {
 import { styled } from "@mui/material/styles";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { makeStyles } from "@mui/styles";
-import StrategyDetails from "./StrategyDetails";
+import { useSelector } from "react-redux";
 
-import Asset1 from "../../assets/logos/asset1.png";
-import Asset2 from "../../assets/logos/asset2.png";
-import Asset3 from "../../assets/logos/asset3.png";
+import StrategyDetails from "./StrategyDetails";
+import { getWalletAmount } from "../../store/interactions/stableCoins";
+import {
+  getDepositAmountFromContract,
+  getPricePerFullShare,
+} from "../../store/interactions/vaults";
+import { accountSelector } from "../../store/selectors/web3";
 
 const StyledAccordion = styled(Accordion)(({ theme }) => ({
   "&.MuiPaper-root": {
@@ -89,6 +93,10 @@ function Strategy({ strategyData, strategyContract, vaultContract }) {
 
   const [isExpanded, SetIsExpanded] = useState(false);
   const [strategyImage, SetStrategyImage] = useState(null);
+  const [depositedShares, SetDepositedShares] = useState(0);
+  const [depositedAmount, SetDepositedAmount] = useState(0);
+
+  const account = useSelector(accountSelector);
 
   const getStrategyLogo = async () => {
     try {
@@ -101,8 +109,33 @@ function Strategy({ strategyData, strategyContract, vaultContract }) {
     }
   };
 
+  const getShareAndUSDValue = async () => {
+    try {
+      let strategyBalance = await getWalletAmount(
+        vaultContract.contract,
+        account
+      );
+      strategyBalance = parseFloat(
+        (strategyBalance / 10 ** strategyData.decimals).toFixed(8)
+      );
+      SetDepositedShares(strategyBalance);
+
+      let vaultPricePerFullShare = await getPricePerFullShare(
+        vaultContract.contract
+      );
+
+      let depositPendingAmount = await getDepositAmountFromContract(
+        vaultContract.contract,
+        account
+      );
+      let strategyBalanceInUSD = strategyBalance * vaultPricePerFullShare;
+      SetDepositedAmount(parseFloat(strategyBalanceInUSD.toFixed(4)));
+    } catch (Err) {}
+  };
+
   useEffect(() => {
     getStrategyLogo();
+    getShareAndUSDValue();
   }, []);
 
   return (
@@ -126,21 +159,24 @@ function Strategy({ strategyData, strategyContract, vaultContract }) {
               <TokenName variant="body">{strategyData.name}</TokenName>
             </Grid>
             <Grid item xs={3}>
-              <ValueLabel>$12345678.89</ValueLabel>
+              <ValueLabel>$ {depositedAmount.toLocaleString()}</ValueLabel>
             </Grid>
             <Grid item xs={3}>
-              <ValueLabel>$12345678.89</ValueLabel>
+              <ValueLabel>$ {strategyData.liquidity}</ValueLabel>
             </Grid>
             <Grid item xs={3}>
-              <RoiLabel>47%</RoiLabel>
+              <RoiLabel>{strategyData.ROI} %</RoiLabel>
             </Grid>
           </Grid>
         </StyledAccordionSummary>
         <AccordionDetails>
           <StrategyDetails
+            getShareAndUSDValue={getShareAndUSDValue}
+            depositedAmount={depositedAmount}
             isExpanded={isExpanded}
             strategyData={strategyData}
             strategyContract={strategyContract}
+            depositedShares={depositedShares}
             vaultContract={vaultContract}
           />
         </AccordionDetails>
