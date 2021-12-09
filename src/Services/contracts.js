@@ -35,3 +35,7 @@ export const getStrategyChartData = (strategyId, days) =>  {
         }
     });
 }
+
+export const getStrategyCoinDistribution = (id) => {
+    return axios.get(`/v1/contracts/strategies/distribution?id=${id}`);
+}

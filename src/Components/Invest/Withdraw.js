@@ -22,6 +22,7 @@ import {
 import {stableCoinsSelector} from "../../store/selectors/commons";
 import ActionConfirm from './modals/Modal';
 import WithdrawTemplate from './modals/WithDraw';
+import DepositTemplate from "./modals/Deposit";
 
 const useStyles = makeStyles(({theme}) => ({
     assetScaleLabel: {
@@ -77,7 +78,7 @@ function WithDraw({
                       strategyData,
                       vaultContract,
                       coinBalances,
-                      stableCoinLogos
+                      stableCoinLogos,
                   }) {
 
 
@@ -192,7 +193,7 @@ function WithDraw({
                 }} onClick={() => SetOpenCoinSelecting(!openCoinSelection)}>
                     <Box sx={{
                         position: 'absolute',
-                        right: '125px',
+                        right: '135px',
                         marginLeft: 'auto',
                         marginTop: '-38px',
                         float: 'right'
@@ -202,7 +203,7 @@ function WithDraw({
                     </Box>
                     <Box sx={{
                         position: 'absolute',
-                        right: '75px',
+                        right: '85px',
                         marginLeft: 'auto',
                         marginTop: '-37px',
                         float: 'right'
@@ -211,7 +212,7 @@ function WithDraw({
                     </Box>
                     <Box sx={{
                         position: 'absolute',
-                        right: '50px',
+                        right: '60px',
                         marginLeft: 'auto',
                         marginTop: '-39px',
                         float: 'right'
@@ -289,6 +290,8 @@ function WithDraw({
                         amount={amountToWithdraw}
                         shares={toWithdrawShares}
                         vault={vaultContract}
+                        closeDialog={handleClose}
+                        getShareAndUSDValue={getShareAndUSDValue}
                         logo={stableCoinLogos[strategyData.tokens[selectedCoinIndex]]}
                         stableCoinsContractData={stableCoinsContracts[strategyData.erc20addresses[selectedCoinIndex].toLowerCase()]}
                         account={account}

@@ -1,4 +1,4 @@
-import { Fragment, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 
 import {
   Accordion,
@@ -88,6 +88,22 @@ function Strategy({ strategyData, strategyContract, vaultContract }) {
   const classes = useStyles();
 
   const [isExpanded, SetIsExpanded] = useState(false);
+  const [strategyImage, SetStrategyImage] = useState(null);
+
+  const getStrategyLogo = async () => {
+    try {
+      const imageData = await import(
+        `../../assets/vaults/${strategyData.symbol}.${strategyData.logoFormat}`
+      );
+      SetStrategyImage(imageData.default);
+    } catch (Err) {
+      console.log(Err);
+    }
+  };
+
+  useEffect(() => {
+    getStrategyLogo();
+  }, []);
 
   return (
     <Fragment>
@@ -104,9 +120,9 @@ function Strategy({ strategyData, strategyContract, vaultContract }) {
         >
           <Grid container>
             <Grid item xs={3}>
-              <img src={Asset1} className={classes.assetImages} alt="" />
-              <img src={Asset2} className={classes.assetImages} alt="" />
-              <img src={Asset3} className={classes.assetImages} alt="" />
+              <img src={strategyImage} className={classes.assetImages} alt="" />
+              {/*<img src={Asset2} className={classes.assetImages} alt=""/>*/}
+              {/*<img src={Asset3} className={classes.assetImages} alt=""/>*/}
               <TokenName variant="body">{strategyData.name}</TokenName>
             </Grid>
             <Grid item xs={3}>
