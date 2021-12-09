@@ -141,7 +141,7 @@ function SideBar(props) {
           ml: { sm: `${drawerWidth}px` },
           background: "transparent",
           boxShadow: "none",
-          zIndex: 9
+          zIndex: 9,
         }}
       >
         <Toolbar>
