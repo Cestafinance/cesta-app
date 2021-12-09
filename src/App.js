@@ -6,7 +6,7 @@ import {
     BrowserRouter as Router,
     Routes,
     Route,
-    Redirect
+    Navigate,
 } from "react-router-dom";
 import {useDispatch} from "react-redux";
 import Sidebar from './Components/Commons/Sidebar';
@@ -68,6 +68,11 @@ function App() {
                     <Topbar/>
                     <WalletConnect loadContracts={blockChainInit}/>
                     <Routes>
+                        <Route
+                            exact
+                            path={"/"}
+                            element={coinLoaded && <Navigate to="/invest" />}
+                        />
                         <Route
                             exact
                             path={'/invest'}

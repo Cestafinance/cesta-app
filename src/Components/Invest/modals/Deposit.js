@@ -89,7 +89,8 @@ function DepositTemplate({
                              account,
                              strategyInfo,
                              closeDialog,
-                             getStableCoinWalletDetails
+                             getStableCoinWalletDetails,
+                             getShareAndUSDValue
                          }) {
 
     const classes = useStyles();
@@ -167,6 +168,7 @@ function DepositTemplate({
             SetDepositError(false);
             SetDepositCompleted(true);
             getStableCoinWalletDetails();
+            getShareAndUSDValue();
             setTimeout(() => {
                 closeDialog();
             }, 2000)
