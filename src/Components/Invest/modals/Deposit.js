@@ -27,6 +27,7 @@ import {
 } from '../../../store/interactions/vaults';
 import {useSelector} from "react-redux";
 import {useTokenMinPriceDeposit} from '../TokenMinPrice/hooks';
+import DoneMark from '../../../assets/commons/done.png';
 
 const LabelMessage = styled(Typography)(({theme}) => ({
     fontFamily: 'Inter',
@@ -86,7 +87,9 @@ function DepositTemplate({
                              logo,
                              stableCoinsContractData,
                              account,
-                             strategyInfo
+                             strategyInfo,
+                             closeDialog,
+                             getStableCoinWalletDetails
                          }) {
 
     const classes = useStyles();
@@ -148,20 +151,25 @@ function DepositTemplate({
 
     const depositAmount = async () => {
         SetDepositing(true);
-        const valueData = amount * (10 ** stableCoinsContractData.decimals);
+        const roundedAmount = Math.round(amount * (10**4));
+        const valueData = roundedAmount * (10 ** (stableCoinsContractData.decimals - 4));
 
         const tokenMinPrice = await getTokenPriceMin({
             strategy: strategyInfo,
             depositERC20Address: stableCoinsContractData.address,
             depositAmount: valueData.toString()
         });
-        
+        SetDepositError(false);
         const depositStatus = await depositTokenThreeParam(vault.contract, valueData.toString(), stableCoinsContractData.address,  tokenMinPrice, account);
     
         SetDepositing(false);
         if(depositStatus.success) {
             SetDepositError(false);
             SetDepositCompleted(true);
+            getStableCoinWalletDetails();
+            setTimeout(() => {
+                closeDialog();
+            }, 2000)
         } else {
             SetDepositError(true);
             SetDepositCompleted(false);
@@ -255,8 +263,8 @@ function DepositTemplate({
             </Box>}
             {needStrategyApproval && <Box sx={{display: 'flex'}}>
                 <Box sx={{width: '70%'}}>
-                    Allow your USDT to be deposited
-                    in Cuban’s Ape Strategy
+                    Allow your {symbol} to be deposited <br/>
+                    in {strategyInfo.name}
                 </Box>
                 <Box sx={{width: '30%', textAlign: 'end'}}>
                     <ApproveButton onClick={approveAmount} disabled={isApproving}>
@@ -264,10 +272,38 @@ function DepositTemplate({
                     </ApproveButton>
                 </Box>
             </Box>}
+
+            {isDepositing && <Box sx={{display: 'flex', textAlign: 'center'}}>
+                <Box sx={{width: '100%'}}>
+                    Depositing your {symbol} <br/>
+                    in {strategyInfo.name} <br/>
+                </Box>
+            </Box>}
+            {depositError && <Box sx={{display: 'flex', textAlign: 'center', color: 'red'}}>
+                <Box sx={{width: '100%'}}>
+                    Failed to deposit {symbol} <br/>
+                    in {strategyInfo.name}. <br/>
+                    Please try again
+                </Box>
+            </Box>}
+
+            {isApprovalError && <Box sx={{display: 'flex', textAlign: 'center', color: 'red'}}>
+                <Box sx={{width: '100%'}}>
+                    Transaction Denied. Please try again
+                </Box>
+            </Box>}
+
+            {depositCompleted && <Box sx={{display: 'flex',  textAlign: 'center'}}>
+                <Box sx={{width: '100%'}}>
+                    Your {symbol}  has been deposited
+                    in {strategyInfo.name}
+                    successfully.
+                </Box>
+            </Box>}
             <Box sx={{textAlign: 'center'}}>
                 <DepositButton disabled={checkingForApproval || calculatingFees || !hasApproved || (slippageWarningNeeded &&
                     !slippageAccepted)} onClick={depositAmount}>
-                    {isDepositing? <CircularProgress size={20}/>: 'DEPOSIT'}
+                    {isDepositing? <CircularProgress size={20}/>: depositCompleted? <img src={DoneMark} alt="Done"/>:'DEPOSIT'}
                 </DepositButton>
             </Box>
 
