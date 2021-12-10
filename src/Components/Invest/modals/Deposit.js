@@ -28,6 +28,7 @@ import {
 import {useSelector} from "react-redux";
 import {useTokenMinPriceDeposit} from '../TokenMinPrice/hooks';
 import DoneMark from '../../../assets/commons/done.png';
+import fromExponential from 'from-exponential';
 
 const LabelMessage = styled(Typography)(({theme}) => ({
     fontFamily: 'Inter',
@@ -155,13 +156,17 @@ function DepositTemplate({
         const roundedAmount = Math.round(amount * (10**4));
         const valueData = roundedAmount * (10 ** (stableCoinsContractData.decimals - 4));
 
+        // To prevent "1.2e+21" being passed into deposit function, should be "1200000000000000000000" instead
+        const finalAmountToDeposit = fromExponential(valueData);
+        
         const tokenMinPrice = await getTokenPriceMin({
             strategy: strategyInfo,
             depositERC20Address: stableCoinsContractData.address,
-            depositAmount: valueData.toString()
+            depositAmount: finalAmountToDeposit
         });
+
         SetDepositError(false);
-        const depositStatus = await depositTokenThreeParam(vault.contract, valueData.toString(), stableCoinsContractData.address,  tokenMinPrice, account);
+        const depositStatus = await depositTokenThreeParam(vault.contract, finalAmountToDeposit, stableCoinsContractData.address,  tokenMinPrice, account);
     
         SetDepositing(false);
         if(depositStatus.success) {
@@ -252,7 +257,7 @@ function DepositTemplate({
         }}>
             {slippageWarningNeeded && <Box sx={{display: 'flex'}}>
                 <Box>
-                    <Checkbox onChange={(event) => {
+                    <Checkbox sx={{ color: "rgb(255,255,255, 0.6)"}} onChange={(event) => {
                         SetSlippageAcceptance(event.target.checked);
                     }}/>
                 </Box>

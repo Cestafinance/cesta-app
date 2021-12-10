@@ -51,47 +51,7 @@ export const getPricePerFullShare = async(contract) => {
 
 export const calculateFee = async (vaultContract, strategyType, amount) => {
     try {
-        let percentageRange1 = await vaultContract.methods.networkFeePerc(0).call();
-        let percentageRange2 = await vaultContract.methods.networkFeePerc(1).call();
-        let percentageRange3 = await vaultContract.methods.networkFeePerc(2).call();
-
-        let amountRange1 = await vaultContract.methods.networkFeeTier2(0).call();
-        let amountRange2 = await vaultContract.methods.networkFeeTier2(1).call();
-
-        const strategies = [
-            "metaverse",
-            "citadelv2",
-            "daoStonks",
-            "daoSafu",
-            "daoTA",
-            "daoDegen"
-        ];
-
-        let feePercent ;
-
-        if (strategies.includes(strategyType)) {
-            let amountRange3 = await vaultContract.methods.customNetworkFeeTier().call();
-            let percentageRange4 = await vaultContract.methods.customNetworkFeePerc().call();
-
-            if (amount < amountRange1) {
-                feePercent = percentageRange1 / 100
-            } else if (amount <= amountRange2) {
-                feePercent = percentageRange2 / 100
-            } else if (amount < amountRange3) {
-                feePercent = percentageRange3 / 100
-            } else {
-                feePercent = percentageRange4 / 100
-            }
-
-        } else {
-            if (amount < amountRange1) {
-                feePercent = percentageRange1 / 100
-            } else if (amount >= amountRange1 && amount <= amountRange2) {
-                feePercent = percentageRange2 / 100
-            } else {
-                feePercent = percentageRange3 / 100
-            }
-        }
+        const feePercent = await vaultContract.methods.networkFeePerc().call();
 
         return {
             success: true,
