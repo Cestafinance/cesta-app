@@ -39,8 +39,8 @@ function App() {
             const response = await getAllStableCoinsContract(networkMap[networkId] ? networkMap[networkId] : '');
             const contractsData = {};
             const stableCoinsData = response.data;
-            for(let i=0;i< stableCoinsData.length; i++) {
-                let contract = await contractLoad(dispatch, web3, stableCoinsData[i].abi,stableCoinsData[i].address.toLowerCase(), {
+            for (let i = 0; i < stableCoinsData.length; i++) {
+                let contract = await contractLoad(dispatch, web3, stableCoinsData[i].abi, stableCoinsData[i].address.toLowerCase(), {
                     name: stableCoinsData[i].name,
                     symbol: stableCoinsData[i].symbol,
                     decimals: stableCoinsData[i].decimals
@@ -62,16 +62,16 @@ function App() {
 
     return (
         <div className="App">
-            <Suspense fallback={<div>Loading...</div>}>
-                <Router>
-                    <Sidebar/>
-                    <Topbar/>
-                    <WalletConnect loadContracts={blockChainInit}/>
+            <Router>
+                <Sidebar/>
+                <Topbar/>
+                <WalletConnect loadContracts={blockChainInit}/>
+                <Suspense fallback={<div>Loading...</div>}>
                     <Routes>
                         <Route
                             exact
                             path={"/"}
-                            element={coinLoaded && <Navigate to="/invest" />}
+                            element={coinLoaded && <Navigate to="/invest"/>}
                         />
                         <Route
                             exact
@@ -90,8 +90,8 @@ function App() {
                         />
 
                     </Routes>
-                </Router>
-            </Suspense>
+                </Suspense>
+            </Router>
 
         </div>
     );
