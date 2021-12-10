@@ -1,6 +1,6 @@
 import { Fragment, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { Grid, Box, TextField, Button } from "@mui/material";
+import {Grid, Box, TextField, Button, Typography} from "@mui/material";
 import { styled, makeStyles } from "@mui/styles";
 import { scales } from "../../Constants/utils";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
@@ -76,6 +76,7 @@ function WithDraw({
   const classes = useStyles();
 
   const [openCoinSelection, SetOpenCoinSelecting] = useState(false);
+  const [inputError, SetInputError] = useState(false)
   const [selectedCoinIndex, SetSelectedCoinIndex] = useState(0);
   const [amountToWithdraw, SetAmountToWithdraw] = useState(0);
   const [selectedPercentage, SetSelectedPercentage] = useState(null);
@@ -89,6 +90,7 @@ function WithDraw({
     const amt = depositedAmount * (value / 100);
     SetAmountToWithdraw(amt.toFixed(4));
     SetSelectedPercentage(value);
+    SetInputError(false);
   };
 
   const onInputChange = (value) => {
@@ -101,11 +103,14 @@ function WithDraw({
       (decimals && decimals.length === 1 && value[value.length - 1] === ".") ||
       value[value.length - 1] === "0"
     ) {
+      SetInputError(depositedAmount < value)
       SetAmountToWithdraw(value);
       return;
     }
     let newVal = parseFloat(value);
-    SetAmountToWithdraw(isNaN(newVal) ? 0 : newVal);
+    newVal = isNaN(newVal) ? 0 : newVal;
+    SetInputError(depositedAmount < value)
+    SetAmountToWithdraw(newVal);
   };
 
   const handleClose = () => {
@@ -172,7 +177,7 @@ function WithDraw({
           <StyledTextField
             onChange={(e) => onInputChange(e.target.value)}
             value={amountToWithdraw}
-            error={false}
+            error={inputError}
           />
           <Box
             sx={{
@@ -277,13 +282,17 @@ function WithDraw({
             }}
           >
             <Box
-              sx={{
-                width: "50%",
-              }}
-            ></Box>
+                sx={{
+                  width: "50%",
+                  marginLeft: '20px',
+                  color: 'red'
+                }}
+            >
+              {inputError && <Typography>Invalid Amount</Typography>}
+            </Box>
             <Box
               sx={{
-                width: "70%",
+                width: "50%",
                 // textAlign: "end",
                 display: "flex",
                 justifyContent: "space-between",
