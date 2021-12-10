@@ -24,6 +24,7 @@ const useStyles = makeStyles((theme) => ({
   mainContainer: {
     background: theme.palette.app.main,
     width: `100%`,
+    height: `100%`,
     color: "white",
     padding: "60px 0px 0px 240px",
     [theme.breakpoints.down("sm")]: {
