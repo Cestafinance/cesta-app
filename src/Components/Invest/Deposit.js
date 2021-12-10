@@ -107,6 +107,12 @@ function Deposit({
   };
 
 
+  const handleCoinSelected = (index) => {
+    SetSelectedCoinIndex(index);
+    SetOpenCoinSelecting(false)
+  }
+
+
   return (
     <Box sx={{ color: "white" }}>
       <Grid container>
@@ -214,10 +220,10 @@ function Deposit({
               {strategyData.tokens.map((token, index) => {
                 return (
                   <Box
-                    onClick={() => SetSelectedCoinIndex(index)}
+                    onClick={() => handleCoinSelected(index)}
                     key={index}
                     sx={{
-                      display: "flex",
+                      display: "flex", 
                       padding: "0 15px 0 15px",
                       cursor: "pointer",
                       ":hover": {

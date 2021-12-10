@@ -119,6 +119,11 @@ function WithDraw({
     SetOpen(true);
   };
 
+  const handleCoinSelected = (index) => {
+    SetSelectedCoinIndex(index);
+    SetOpenCoinSelecting(false)
+  }
+
   return (
     <Box sx={{ color: "white" }}>
       <Grid container>
@@ -230,7 +235,7 @@ function WithDraw({
               {strategyData.tokens.map((token, index) => {
                 return (
                   <Box
-                    onClick={() => SetSelectedCoinIndex(index)}
+                    onClick={() => handleCoinSelected(index)}
                     key={index}
                     sx={{
                       display: "flex",
