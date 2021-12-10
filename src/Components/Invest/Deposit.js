@@ -60,6 +60,7 @@ function Deposit({
   vaultContract,
   coinBalances,
   stableCoinLogos,
+                   getShareAndUSDValue
 }) {
   const classes = useStyles();
 
@@ -287,6 +288,7 @@ function Deposit({
                     strategyData.erc20addresses[selectedCoinIndex].toLowerCase()
                   ]
                 }
+                getShareAndUSDValue={getShareAndUSDValue}
                 account={account}
                 symbol={strategyData.tokens[selectedCoinIndex]}
               />

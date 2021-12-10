@@ -15,11 +15,12 @@ const TICK_AMOUNT = {
 
 const useStyles = makeStyles(({theme}) => ({
     chartContainer: {
-        // '& #basic-bar': {
-        //    '& .apexchart-canvas' :{
-        //        width: "800px"
-        //    }
-        // }
+        padding: "15px 15px 15px 18px",
+        '& #apexchartsbasicbar': {
+           '& .apexcharts-svg': {
+                overflow: "overlay",
+           }
+        }
     }
 }));
 

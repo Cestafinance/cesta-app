@@ -252,6 +252,7 @@ function StrategyDetails({
                                                    vaultContract={vaultContract}
                                                    coinBalances={coinBalances}
                                                    getStableCoinWalletDetails={getStableCoinWalletDetails}
+                                                   getShareAndUSDValue={getShareAndUSDValue}
                                                    stableCoinLogos={stableCoinLogos}
                     />}
                     {selectedTab === 1 && <WithDraw strategyData={strategyData}
