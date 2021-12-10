@@ -6,6 +6,7 @@ import {
     withdrawTokenThreeParam
 } from '../../../store/interactions/vaults';
 import DoneMark from '../../../assets/commons/done.png';
+import fromExponential from 'from-exponential';
 
 const LabelMessage = styled(Typography)(({theme}) => ({
     fontFamily: 'Inter',
@@ -71,13 +72,16 @@ function WithdrawTemplate({
 
         SetIsWithdrawing(true);
 
+        // To prevent "1.2e+21" being passed into withdraw function, should be "1200000000000000000000" instead
+        const finalSharesToWithdraw = fromExponential(shares);
+    
         const tokenMinPrice = await getTokenPriceMin({
             strategy: strategyInfo,
             withdrawERC20Address: stableCoinsContractData.address,
-            shareToWithdraw: shares.toString()
+            shareToWithdraw: finalSharesToWithdraw
         });
 
-        const status = await withdrawTokenThreeParam(vault.contract, shares.toString() , stableCoinsContractData.address, tokenMinPrice, account);
+        const status = await withdrawTokenThreeParam(vault.contract, finalSharesToWithdraw , stableCoinsContractData.address, tokenMinPrice, account);
 
         SetIsWithdrawing(false);
         if(status.success) {
