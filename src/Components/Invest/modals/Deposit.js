@@ -257,7 +257,7 @@ function DepositTemplate({
         }}>
             {slippageWarningNeeded && <Box sx={{display: 'flex'}}>
                 <Box>
-                    <Checkbox onChange={(event) => {
+                    <Checkbox sx={{ color: "rgb(255,255,255, 0.6)"}} onChange={(event) => {
                         SetSlippageAcceptance(event.target.checked);
                     }}/>
                 </Box>
