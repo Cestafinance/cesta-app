@@ -88,6 +88,25 @@ function Deposit({
     SetOpen(false);
   };
 
+  
+  const onInputChange = (value) => {
+    let decimals = value.match(/\./g);
+    if (decimals && decimals.length > 1) {
+      return value;
+    }
+
+    if (
+      (decimals && decimals.length === 1 && value[value.length - 1] === ".") ||
+      value[value.length - 1] === "0"
+    ) {
+      SetDepositAmount(value);
+      return;
+    }
+    let newVal = parseFloat(value);
+    SetDepositAmount(isNaN(newVal) ? 0 : newVal);
+  };
+
+
   return (
     <Box sx={{ color: "white" }}>
       <Grid container>
@@ -133,7 +152,7 @@ function Deposit({
           &nbsp;
         </Grid>
         <Grid item xs={12}>
-          <StyledTextField value={depositAmount} error={false} />
+          <StyledTextField value={depositAmount} error={false}  onChange={(e) => onInputChange(e.target.value)} />
           <Box
             sx={{
               cursor: "pointer",
