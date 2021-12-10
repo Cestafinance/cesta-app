@@ -108,6 +108,16 @@ export default function StrategyChart({
         dataLabels: {
             enabled: false,
         },
+        tooltip: {
+            y: {
+                formatter: function(value) {
+                    return `${Number(value).toFixed(2)}%`
+                },
+                title: {
+                    formatter: (seriesName) => seriesName,
+                },
+            },
+        }, 
         noData: {
             text: undefined,
             align: 'center',
