@@ -52,10 +52,9 @@ export const getPricePerFullShare = async(contract) => {
 export const calculateFee = async (vaultContract, strategyType, amount) => {
     try {
         const feePercent = await vaultContract.methods.networkFeePerc().call();
-
         return {
             success: true,
-            feePercent
+            feePercent: parseFloat(feePercent/100) || 0
         }
 
     } catch (Err) {

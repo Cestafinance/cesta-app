@@ -13,8 +13,10 @@ import {
 } from '@mui/material';
 import {makeStyles, styled} from '@mui/styles';
 import {Info as InfoIcon} from '@mui/icons-material';
+import fromExponential from 'from-exponential';
 import {
-    web3Selector
+    web3Selector,
+    sourceSelector
 } from '../../../store/selectors/web3';
 import {
     checkAllowance,
@@ -22,13 +24,12 @@ import {
 } from '../../../store/interactions/stableCoins';
 import {
     calculateFee,
-    depositToken,
     depositTokenThreeParam
 } from '../../../store/interactions/vaults';
 import {useSelector} from "react-redux";
 import {useTokenMinPriceDeposit} from '../TokenMinPrice/hooks';
 import DoneMark from '../../../assets/commons/done.png';
-import fromExponential from 'from-exponential';
+import Metamask from '../../../assets/commons/metaMask.png';
 
 const LabelMessage = styled(Typography)(({theme}) => ({
     fontFamily: 'Inter',
@@ -65,6 +66,21 @@ const DepositButton = styled(Button)(({theme}) => ({
     },
 }));
 
+const AddToMetamaskButton = styled(Button)(({theme}) => ({
+    '&.MuiButton-root': {
+        background: '#4B86F2',
+        borderRadius: '33px',
+        width: '75%',
+        color: '#FFFFFF',
+        marginBottom: '20px',
+        marginTop: '20px',
+        '&:hover': {
+            background: 'rgba(75, 134, 242, 0.4)'
+
+        }
+    },
+}));
+
 const useStyles = makeStyles(({theme}) => ({
     alignRight: {
         textAlign: 'right'
@@ -77,6 +93,9 @@ const useStyles = makeStyles(({theme}) => ({
     logo: {
         height: '17px',
         marginTop: '3px'
+    },
+    metamaskLogo: {
+        height: '25px'
     }
 }));
 
@@ -113,14 +132,31 @@ function DepositTemplate({
     });
 
     const web3 = useSelector(web3Selector);
+    const source = useSelector(sourceSelector);
     const {getTokenPriceMin} = useTokenMinPriceDeposit()
 
     const checkAllowanceApprovalNeeded = async () => {
         SetCheckingForApproval(true);
-        const isApprovalNeeded = await checkAllowance(stableCoinsContractData.contract, vault.address, account, web3, amount * (10 ** stableCoinsContractData.decimals));
+        const isApprovalNeeded = await checkAllowance(stableCoinsContractData.contract, vault.address, account, web3, amount);
         SetNeedStrategyApproval(isApprovalNeeded.needApproval);
         SetHasApproved(!isApprovalNeeded.needApproval);
         SetCheckingForApproval(false);
+    }
+
+    const watchAssetToken = async () => {
+        let data = await window.ethereum
+            .request({
+                method: 'wallet_watchAsset',
+                params: {
+                    type: 'ERC20',
+                    options: {
+                        address: vault.address,
+                        symbol: vault.symbol,
+                        decimals: vault.decimals,
+                    },
+                },
+            });
+
     }
 
     const getFeeInfo = async () => {
@@ -176,7 +212,7 @@ function DepositTemplate({
             getShareAndUSDValue();
             setTimeout(() => {
                 closeDialog();
-            }, 2000)
+            }, 5000)
         } else {
             SetDepositError(true);
             SetDepositCompleted(false);
@@ -307,8 +343,15 @@ function DepositTemplate({
                     successfully.
                 </Box>
             </Box>}
+
+
+            {depositCompleted && source === 'metaMask' && <Box sx={{display: 'flex',  textAlign: 'center'}}>
+                <Box sx={{width: '100%'}}>
+                   <AddToMetamaskButton onClick={watchAssetToken}>Add Token to Meta mask &nbsp; &nbsp; <img src={Metamask} className={classes.metamaskLogo} alt="meta mask"/></AddToMetamaskButton>
+                </Box>
+            </Box>}
             <Box sx={{textAlign: 'center'}}>
-                <DepositButton disabled={checkingForApproval || calculatingFees || !hasApproved || (slippageWarningNeeded &&
+                <DepositButton disabled={checkingForApproval || isDepositing || calculatingFees || !hasApproved || (slippageWarningNeeded &&
                     !slippageAccepted)} onClick={depositAmount}>
                     {isDepositing? <CircularProgress size={20}/>: depositCompleted? <img src={DoneMark} alt="Done"/>:'DEPOSIT'}
                 </DepositButton>

@@ -106,7 +106,7 @@ function Invest() {
           name: strategies[i].vaultInfo.name,
           symbol: strategies[i].vaultInfo.symbol,
           strategyAddress: strategies[i].address,
-          decimals: strategies[i].vaultInfo.decimals,
+          decimals: strategies[i].decimals,
         }
       );
 
@@ -115,7 +115,7 @@ function Invest() {
         symbol: strategies[i].vaultInfo.symbol,
         strategyAddress: strategies[i].address,
         address: strategies[i].vaultInfo.address,
-        decimals: strategies[i].vaultInfo.decimals,
+        decimals: strategies[i].decimals,
         contract: vaultContract,
       };
     }

@@ -62,6 +62,9 @@ const StyledButton = styled(Button)(({ theme }) => ({
     borderRadius: "16px",
     zIndex: 4,
   },
+  "&.Mui-disabled": {
+    backgroundColor: 'none'
+  }
 }));
 
 function WithDraw({
@@ -351,7 +354,7 @@ function WithDraw({
           />
         </Grid>
         <Grid item xs={12}>
-          <StyledButton onClick={withdrawNow} variant={"contained"}>
+          <StyledButton onClick={withdrawNow} disabled={inputError || !amountToWithdraw}>
             Withdraw
           </StyledButton>
         </Grid>
