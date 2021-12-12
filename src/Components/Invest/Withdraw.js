@@ -1,6 +1,6 @@
 import { Fragment, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import {Grid, Box, TextField, Button, Typography} from "@mui/material";
+import { Grid, Box, TextField, Button, Typography } from "@mui/material";
 import { styled, makeStyles } from "@mui/styles";
 import { scales } from "../../Constants/utils";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
@@ -76,7 +76,7 @@ function WithDraw({
   const classes = useStyles();
 
   const [openCoinSelection, SetOpenCoinSelecting] = useState(false);
-  const [inputError, SetInputError] = useState(false)
+  const [inputError, SetInputError] = useState(false);
   const [selectedCoinIndex, SetSelectedCoinIndex] = useState(0);
   const [amountToWithdraw, SetAmountToWithdraw] = useState(0);
   const [selectedPercentage, SetSelectedPercentage] = useState(null);
@@ -103,13 +103,13 @@ function WithDraw({
       (decimals && decimals.length === 1 && value[value.length - 1] === ".") ||
       value[value.length - 1] === "0"
     ) {
-      SetInputError(depositedAmount < value)
+      SetInputError(depositedAmount < value);
       SetAmountToWithdraw(value);
       return;
     }
     let newVal = parseFloat(value);
     newVal = isNaN(newVal) ? 0 : newVal;
-    SetInputError(depositedAmount < value)
+    SetInputError(depositedAmount < value);
     SetAmountToWithdraw(newVal);
   };
 
@@ -126,8 +126,8 @@ function WithDraw({
 
   const handleCoinSelected = (index) => {
     SetSelectedCoinIndex(index);
-    SetOpenCoinSelecting(false)
-  }
+    SetOpenCoinSelecting(false);
+  };
 
   return (
     <Box sx={{ color: "white" }}>
@@ -154,15 +154,17 @@ function WithDraw({
           >
             <Box
               sx={{
-                width: "50%",
+                width: "60%",
+                fontWeight: "600",
               }}
             >
               Withdraw funds from this strategy.
             </Box>
             <Box
               sx={{
-                width: "50%",
+                width: "40%",
                 textAlign: "end",
+                fontWeight: "550",
               }}
             >
               Available: {depositedAmount}{" "}
@@ -282,21 +284,22 @@ function WithDraw({
             }}
           >
             <Box
-                sx={{
-                  width: "50%",
-                  marginLeft: '20px',
-                  color: 'red'
-                }}
+              sx={{
+                width: "40%",
+                marginLeft: "20px",
+                color: "red",
+              }}
             >
               {inputError && <Typography>Invalid Amount</Typography>}
             </Box>
             <Box
               sx={{
-                width: "50%",
-                // textAlign: "end",
+                width: "60%",
                 display: "flex",
                 justifyContent: "space-between",
                 alignItems: "center",
+                paddingRight: "1rem",
+                fontWeight: "600",
               }}
             >
               {scales.map((scale, index) => {

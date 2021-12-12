@@ -52,9 +52,9 @@ const StyledButton = styled(Button)(({ theme }) => ({
     borderRadius: "16px",
     zIndex: 4,
   },
-  '&.Mui-disabled': {
-    backgroundColor: 'none'
-  }
+  "&.Mui-disabled": {
+    backgroundColor: "none",
+  },
 }));
 
 function Deposit({
@@ -63,12 +63,12 @@ function Deposit({
   vaultContract,
   coinBalances,
   stableCoinLogos,
-                   getShareAndUSDValue
+  getShareAndUSDValue,
 }) {
   const classes = useStyles();
 
   const [openCoinSelection, SetOpenCoinSelecting] = useState(false);
-  const [inputError, SetInputError] = useState(false)
+  const [inputError, SetInputError] = useState(false);
   const [selectedCoinIndex, SetSelectedCoinIndex] = useState(0);
   const [depositAmount, SetDepositAmount] = useState(0);
   const [open, SetOpen] = useState(false);
@@ -99,27 +99,26 @@ function Deposit({
       return value;
     }
     let balance = parseFloat(
-        coinBalances[strategyData.tokens[selectedCoinIndex]]
-    )
+      coinBalances[strategyData.tokens[selectedCoinIndex]]
+    );
     if (
-        (decimals && decimals.length === 1 && value[value.length - 1] === ".") ||
-        value[value.length - 1] === "0"
+      (decimals && decimals.length === 1 && value[value.length - 1] === ".") ||
+      value[value.length - 1] === "0"
     ) {
-        SetInputError(balance < value)
+      SetInputError(balance < value);
       SetDepositAmount(value);
       return;
     }
     let newVal = parseFloat(value);
     newVal = isNaN(newVal) ? 0 : newVal;
-    SetInputError(balance < value)
+    SetInputError(balance < value);
     SetDepositAmount(newVal);
   };
 
-
   const handleCoinSelected = (index) => {
     SetSelectedCoinIndex(index);
-    SetOpenCoinSelecting(false)
-  }
+    SetOpenCoinSelecting(false);
+  };
   return (
     <Box sx={{ color: "white" }}>
       <Grid container>
@@ -145,15 +144,17 @@ function Deposit({
           >
             <Box
               sx={{
-                width: "50%",
+                width: "60%",
+                fontWeight: "600",
               }}
             >
               Deposit funds into this strategy.
             </Box>
             <Box
               sx={{
-                width: "50%",
+                width: "40%",
                 textAlign: "end",
+                fontWeight: "550",
               }}
             >
               Available: {coinBalances[strategyData.tokens[selectedCoinIndex]]}{" "}
@@ -165,9 +166,11 @@ function Deposit({
           &nbsp;
         </Grid>
         <Grid item xs={12}>
-          <StyledTextField value={depositAmount}
-                           onChange={(e) => onInputChange(e.target.value)}
-                           error={inputError} />
+          <StyledTextField
+            value={depositAmount}
+            onChange={(e) => onInputChange(e.target.value)}
+            error={inputError}
+          />
           <Box
             sx={{
               cursor: "pointer",
@@ -232,7 +235,7 @@ function Deposit({
                     onClick={() => handleCoinSelected(index)}
                     key={index}
                     sx={{
-                      display: "flex", 
+                      display: "flex",
                       padding: "0 15px 0 15px",
                       cursor: "pointer",
                       ":hover": {
@@ -272,20 +275,21 @@ function Deposit({
           >
             <Box
               sx={{
-                width: "50%",
-                marginLeft: '20px',
-                color: 'red'
+                width: "40%",
+                marginLeft: "20px",
+                color: "red",
               }}
             >
               {inputError && <Typography>Invalid Amount</Typography>}
             </Box>
             <Box
               sx={{
-                width: "50%",
-                // textAlign: "end",
+                width: "60%",
                 display: "flex",
                 justifyContent: "space-between",
                 alignItems: "center",
+                paddingRight: "1rem",
+                fontWeight: "600",
               }}
             >
               {scales.map((scale, index) => {
@@ -334,7 +338,11 @@ function Deposit({
           />
         </Grid>
         <Grid item xs={12}>
-          <StyledButton variant={"contained"} onClick={confirmDeposit} disabled={inputError || !depositAmount}>
+          <StyledButton
+            variant={"contained"}
+            onClick={confirmDeposit}
+            disabled={inputError || !depositAmount}
+          >
             Deposit
           </StyledButton>
         </Grid>
