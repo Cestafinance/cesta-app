@@ -52,7 +52,7 @@ const StyledButton = styled(Button)(({ theme }) => ({
     borderRadius: "16px",
     zIndex: 4,
   },
-  '&.Mui-disabled': {
+  "&.Mui-disabled": {
     backgroundColor: 'none'
   }
 }));
@@ -334,7 +334,7 @@ function Deposit({
           />
         </Grid>
         <Grid item xs={12}>
-          <StyledButton variant={"contained"} onClick={confirmDeposit} disabled={inputError || !depositAmount}>
+          <StyledButton onClick={confirmDeposit} disabled={inputError || !depositAmount}>
             Deposit
           </StyledButton>
         </Grid>

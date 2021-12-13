@@ -188,7 +188,7 @@ function SideBar(props) {
               width: drawerWidth,
               boxSizing: "border-box",
               background: "#110d16",
-              boxShadow: "0px 0px 30px #15023b",
+              // boxShadow: "0px 0px 30px #15023b",
             },
           }}
           open

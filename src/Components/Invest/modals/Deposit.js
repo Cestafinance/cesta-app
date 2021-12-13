@@ -351,7 +351,7 @@ function DepositTemplate({
                 </Box>
             </Box>}
             <Box sx={{textAlign: 'center'}}>
-                <DepositButton disabled={checkingForApproval || calculatingFees || !hasApproved || (slippageWarningNeeded &&
+                <DepositButton disabled={checkingForApproval || isDepositing || calculatingFees || !hasApproved || (slippageWarningNeeded &&
                     !slippageAccepted)} onClick={depositAmount}>
                     {isDepositing? <CircularProgress size={20}/>: depositCompleted? <img src={DoneMark} alt="Done"/>:'DEPOSIT'}
                 </DepositButton>
