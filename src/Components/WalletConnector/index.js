@@ -107,10 +107,12 @@ const useStyles = makeStyles((theme) => ({
     walletLabel: {
         fontFamily: "Ambit",
         fontStyle: "normal",
-        fontWeight: "normal",
         display: "flex",
         alignItems: "center",
         color: "#FFFFFF",
+        "&.MuiTypography-root": {
+            fontWeight: "bold"
+        }
 
     },
     welcomeLabel: {
@@ -166,6 +168,7 @@ const useStyles = makeStyles((theme) => ({
     walletButton: {
         '&.MuiButton-root': {
             border: "1px solid rgba(55, 88, 148, 0.5)",
+            borderRadius: "13px",
             justifyContent: "start",
             '&:hover': {
                 background: "#4B86F2"
@@ -416,7 +419,7 @@ function App({
                                         className={`${classes.connected} ${classes.walletButton}`}
                                     >
                                         {activating ? <CircularProgress size={20} /> : <Fragment>
-                                            <img style={{ height: "20px", marginRight: "10px" }}
+                                            <img style={{ height: "20px",marginRight: "10px" }}
                                                 src={walletImages[wallet.name] ? walletImages[wallet.name] : ''}
                                                 alt="" />
                                             <Typography variant="body1" className={classes.walletLabel}>

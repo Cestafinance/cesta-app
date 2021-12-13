@@ -61,7 +61,7 @@ const DialogMain = styled(Dialog)(({theme}) => ({
         padding: theme.spacing(1),
     },
     '& .MuiDialog-paper': {
-        background: '#18162d',
+        background: '#0F1322',
         borderRadius: '16px',
         border: "1px solid rgba(75, 134, 242, 0.5)" ,
         width: "100%"
