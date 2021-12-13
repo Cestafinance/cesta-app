@@ -34,6 +34,7 @@ const useStyles = makeStyles((theme) => ({
     margin: "1rem 0.1rem 2rem 0.1rem",
   },
   menuIcon: {
+    width: "1.5rem",
     height: "1.5rem",
     margin: "0 0.5rem",
   },
@@ -105,7 +106,7 @@ function SideBar(props) {
       <img src={CestaLogo} alt="" className={classes.logo} />
       <StyledList>
         {MenuList.map((menu, index) => (
-          <NavLink to={menu.path} key={index}>
+          <NavLink to={menu.path} key={index} style={{textDecoration:"none"}}>
             <StyledListItem
               button
               key={index}

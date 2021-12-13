@@ -7,6 +7,7 @@ import {
   TableContainer,
   Table,
   TableBody,
+  Typography,
   TableCell,
   TableHead,
   TableRow,
@@ -154,10 +155,34 @@ function Invest() {
             >
               <TableHead>
                 <TableRow>
-                  <StyledTableCell align="left">Name</StyledTableCell>
-                  <StyledTableCell align="right">Staked</StyledTableCell>
-                  <StyledTableCell align="center">Liquidity</StyledTableCell>
-                  <StyledTableCell align="left">ROI</StyledTableCell>
+                  <StyledTableCell colSpan={4}>
+                    <Grid container sx={{padding: '0 20px 0 20px'}}>
+                      <Grid item xs={3}>
+                        <Typography component={'span'}>
+                          Name
+                        </Typography>
+
+                      </Grid>
+                      <Grid item xs={3} sx={{textAlign: 'center'}}>
+                        <Typography component={'span'}>
+                          Staked
+                        </Typography>
+
+                      </Grid>
+                      <Grid item xs={3} sx={{textAlign: 'center'}}>
+                        <Typography component={'span'}>
+                          Liquidity
+                        </Typography>
+
+                      </Grid>
+                      <Grid  item xs={3} sx={{textAlign: 'center'}}>
+                        <Typography component={'span'}>
+                          ROI
+                        </Typography>
+
+                      </Grid>
+                    </Grid>
+                  </StyledTableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
