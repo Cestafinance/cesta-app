@@ -161,7 +161,16 @@ const useStyles = makeStyles((theme) => ({
         lineHeight: "16px"
     },
     connected: {
-        background: "#0D99B8 !important"
+        background: "#375894 !important"
+    },
+    walletButton: {
+        '&.MuiButton-root': {
+            border: "1px solid rgba(55, 88, 148, 0.5)",
+            justifyContent: "start",
+            '&:hover': {
+                background: "#4B86F2"
+            }
+        },
     }
 
 }));
@@ -174,7 +183,10 @@ const BootstrapDialog = styled(Dialog)(({ theme }) => ({
         padding: theme.spacing(1),
     },
     '& .MuiDialog-paper': {
-        background: theme.palette.app.light,
+        // background: theme.palette.app.light,
+        background: "#0F1322",
+        borderRadius: "24px",
+        border: "1px solid rgba(55, 88, 148, 0.5)",
         width: "100%"
     }
 }));
@@ -196,7 +208,7 @@ const BootstrapDialogTitle = (props) => {
     const { children, onClose, ...other } = props;
 
     return (
-        <DialogTitle sx={{ m: 0, p: 2 }} {...other}>
+        <DialogTitle sx={{ m: 0, p: 2 , color: "#ffffff"}} {...other}>
             {children}
             {onClose ? (
                 <IconButton
@@ -336,6 +348,7 @@ function App({
 
     React.useEffect(() => {
         if (walletChangeTime) {
+            console.log(`trigger here`);
             SetOpen(true);
         }
     }, [walletChangeTime])
@@ -383,64 +396,53 @@ function App({
                         Wallet Connect
                     </BootstrapDialogTitle>
                     <DialogContent dividers>
-                        <Grid container spacing={2}>
-                            <Grid item xs={1}>
-                            </Grid>
-                            <Grid item xs={10}>
-                                <Grid
-                                    container
-                                    direction="row"
-                                    spacing={3}
+                        <Grid
+                            container
+                            direction="row"
+                            spacing={3}
+                        >
+                            {walletDetails.map((wallet, index) => {
+                                const currentConnector = connectorsByName[wallet.connectorName]
+                                const activating = currentConnector === activatingConnector
+                                const connected = currentConnector === connector
+                                const disabled = !triedEager || !!activatingConnector || connected || !!error
+                                return <Grid item key={index}
+                                    xs={12} sm={6}
                                 >
-                                    {walletDetails.map((wallet, index) => {
-                                        const currentConnector = connectorsByName[wallet.connectorName]
-                                        const activating = currentConnector === activatingConnector
-                                        const connected = currentConnector === connector
-                                        const disabled = !triedEager || !!activatingConnector || connected || !!error
-                                        return <Grid item key={index}
-                                                     xs={12} sm={6}
 
-                                        >
-
-                                            {connected && <ButtonStyle
-                                                key={wallet.name}
-                                                onClick={disconnectConnectedWallet}
-                                                className={classes.connected}
-                                            >
-                                                {activating ? <CircularProgress size={20} /> : <Fragment>
-                                                    <img style={{height: "20px", marginRight: "10px"}}
-                                                         src={walletImages[wallet.name] ? walletImages[wallet.name] : ''}
-                                                         alt=""/>
-                                                    <Typography variant="body1" className={classes.walletLabel}>
-                                                        Deactivate
-                                                    </Typography>
-                                                </Fragment>}
-                                            </ButtonStyle>}
-                                            {!connected && <ButtonStyle
-                                                key={wallet.name}
-                                                onClick={() => {
-                                                    setActivatingConnector(currentConnector)
-                                                    activate(connectorsByName[wallet.connectorName])
-                                                }}
-                                                className={connected ? classes.connected : ''}
-                                            >
-                                                {activating ? <CircularProgress size={20} /> : <Fragment>
-                                                    <img style={{height: "20px", marginRight: "10px"}}
-                                                         src={walletImages[wallet.name] ? walletImages[wallet.name] : ''}
-                                                         alt=""/>
-                                                    <Typography variant="body1" className={classes.walletLabel}>
-                                                        {wallet.name}
-                                                    </Typography>
-                                                </Fragment>}
-                                            </ButtonStyle>}
-                                        </Grid>
-                                    })}
-
-
+                                    {connected && <ButtonStyle
+                                        key={wallet.name}
+                                        onClick={disconnectConnectedWallet}
+                                        className={`${classes.connected} ${classes.walletButton}`}
+                                    >
+                                        {activating ? <CircularProgress size={20} /> : <Fragment>
+                                            <img style={{ height: "20px", marginRight: "10px" }}
+                                                src={walletImages[wallet.name] ? walletImages[wallet.name] : ''}
+                                                alt="" />
+                                            <Typography variant="body1" className={classes.walletLabel}>
+                                                Deactivate
+                                            </Typography>
+                                        </Fragment>}
+                                    </ButtonStyle>}
+                                    {!connected && <ButtonStyle
+                                        key={wallet.name}
+                                        onClick={() => {
+                                            setActivatingConnector(currentConnector)
+                                            activate(connectorsByName[wallet.connectorName])
+                                        }}
+                                        className={`${classes.walletButton} ${connected ? classes.connected : ''}`}
+                                    >
+                                        {activating ? <CircularProgress size={20} /> : <Fragment>
+                                            <img style={{ height: "20px", marginRight: "10px" }}
+                                                src={walletImages[wallet.name] ? walletImages[wallet.name] : ''}
+                                                alt="" />
+                                            <Typography variant="body1" className={classes.walletLabel}>
+                                                {wallet.name}
+                                            </Typography>
+                                        </Fragment>}
+                                    </ButtonStyle>}
                                 </Grid>
-                            </Grid>
-                            <Grid item xs={1}>
-                            </Grid>
+                            })}
                         </Grid>
                     </DialogContent>
                 </BootstrapDialog>

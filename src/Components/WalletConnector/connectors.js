@@ -8,7 +8,7 @@ import { ChainID } from "../../Constants/mains";
 const supportedChainIds = [
     1, // ethereum
     42, // kovan
-    137, // matic
+    137, // polygon
     80001, // mumbai,
     56, // bsc
     97, // bsc test
@@ -29,7 +29,7 @@ const RPC_URLS = {
     [ChainID.ETHEREUM]: "https://eth-mainnet.alchemyapi.io/v2/k2--UT_xVVXMOvAyoxJYqtKhlmyBbqnX",
     [ChainID.RINKEBY]: "https://rinkeby.infura.io/v3/bd80ce1ca1f94da48e151bb6868bb150",
     [ChainID.KOVAN]: 'https://eth-kovan.alchemyapi.io/v2/6OVAa_B_rypWWl9HqtiYK26IRxXiYqER',
-    [ChainID.MATIC]: 'https://rpc-mainnet.maticvigil.com',
+    [ChainID.POLYGON]: 'https://rpc-mainnet.maticvigil.com',
     [ChainID.MUMBAI]: 'https://rpc-mumbai.matic.today',
     [ChainID.BSC]: 'https://bsc-dataseed.binance.org/',
     [ChainID.BSCTEST]: 'https://data-seed-prebsc-2-s3.binance.org:8545',
