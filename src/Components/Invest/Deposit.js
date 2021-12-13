@@ -51,6 +51,7 @@ const StyledButton = styled(Button)(({ theme }) => ({
     boxShadow: "none",
     borderRadius: "16px",
     zIndex: 4,
+    color: "white",
   },
   "&.Mui-disabled": {
     backgroundColor: "none",

@@ -50,7 +50,7 @@ const TokenName = styled(Typography)((theme) => ({
     fontFamily: "Inter",
     fontStyle: "normal",
     fontWeight: "bold",
-    fontSize: "1rem",
+    fontSize: "1.25vw",
     lineHeight: "1rem",
     alignItems: "center",
     position: "absolute",
@@ -179,7 +179,9 @@ function Strategy({ strategyData, strategyContract, vaultContract }) {
               <ValueLabel>$ {depositedAmount.toLocaleString()}</ValueLabel>
             </Grid>
             <Grid item xs={3}>
-              <LiquidityLabel>$ {strategyData.liquidity}</LiquidityLabel>
+              <LiquidityLabel>
+                $ {strategyData.liquidity.toFixed(2)}
+              </LiquidityLabel>
             </Grid>
             <Grid item xs={3}>
               <RoiLabel>{strategyData.ROI} %</RoiLabel>
