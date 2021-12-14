@@ -61,6 +61,10 @@ const StyledButton = styled(Button)(({ theme }) => ({
     boxShadow: "none",
     borderRadius: "16px",
     zIndex: 4,
+    color: "#ffffff",
+    "&:hover": {
+      background: "rgba(39, 62, 112, 0.5)"
+    }
   },
   "&.Mui-disabled": {
     backgroundColor: 'none'
