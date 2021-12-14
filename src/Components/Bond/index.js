@@ -1,6 +1,6 @@
 import {useState} from 'react';
 import { useSelector } from "react-redux";
-import { bondingSelector } from "../../store/selectors/web3";
+import { bondingSelector } from "../../store/selectors/bond";
 import {
     Fade,
     Grid,
@@ -33,9 +33,8 @@ function Bond({ bond }) {
             <Grid className="bond-view">
                 <Backdrop open={true}>
                     <Fade in={true}>
-                        <div className="bond-card">
+                        {/* <div className="bond-card">
                             <BondHeader bond={bond} slippage={slippage} onSlippageChange={onSlippageChange} />
-                            {/* @ts-ignore */}
                             <Box direction="row" className="bond-price-data-row">
                                 <div className="bond-price-data">
                                     <p className="bond-price-data-title">Mint Price</p>
@@ -65,7 +64,7 @@ function Bond({ bond }) {
                             <TabPanel value={view} index={1}>
                                 <BondRedeem bond={bond} />
                             </TabPanel>
-                        </div>
+                        </div> */}
                     </Fade>
                 </Backdrop>
             </Grid>

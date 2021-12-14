@@ -1,4 +1,4 @@
-import { Networks } from "../../Constants/v2/blockchain.tts";
+import { Networks } from "../../Constants/v2/blockchain";
 import { LPBond, CustomLPBond } from "./lp-bond";
 import { StableBond, CustomBond } from "./stable-bond";
 

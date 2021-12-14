@@ -13,7 +13,7 @@ const AVAX_MAINNET = {
     WMEMO_ADDRESS: "0x0da67235dD5787D67955420C84ca1cEcd4E5Bb3b",
 };
 
-export const getAddresses = (networkID) => {
+export const getAddresses = (networkID: number) => {
     if (networkID === Networks.AVAX) return AVAX_MAINNET;
 
     throw Error("Network don't support");

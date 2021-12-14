@@ -22,7 +22,8 @@ import './App.css';
 import {
     networkMap
 } from './Constants/mains';
-
+import useBonds from "./hooks/bonds";
+import useTokens from "./hooks/tokens";
 
 const Invest = lazy(() => import('./Components/Invest'));
 const Bond = lazy(() => import('./Components/Bond'));
@@ -33,6 +34,11 @@ function App() {
     const dispatch = useDispatch();
 
     const [coinLoaded, SetAllCoinsLoaded] = useState(false);
+
+    const { bonds } = useBonds();
+    const { tokens } = useTokens();
+    console.log('bonds', bonds);
+    console.log('tokens', tokens);
 
     const blockChainInit = async (web3, networkId) => {
         try {

@@ -260,9 +260,13 @@ function Balance({
             connected: true
         });
 
+        console.log('account', account);
+        console.log('library', library);
 
         let web3 = await loadWeb3(dispatch, provider);
         await loadAccount(dispatch, account, chainId, connectorName);
+
+        console.log('web3', web3);
         loadContracts(web3, chainId);
     }
 
