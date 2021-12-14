@@ -71,6 +71,7 @@ export default function StrategyChart({
             toolbar: {
                 show: false,
             },
+            fontFamily: "Inter",
             foreColor: '#ffffff',
             width: '100%'
         },
