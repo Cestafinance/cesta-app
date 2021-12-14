@@ -6,6 +6,7 @@ import {
   AccordionDetails,
   Typography,
   Grid,
+  Box,
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
@@ -70,7 +71,7 @@ const ValueLabel = styled(Typography)((theme) => ({
     alignItems: "right",
     position: "absolute",
     top: "28%",
-    left: "45%",
+    // left: "45%",
     color: "#FFFFFF",
   },
 }));
@@ -85,7 +86,7 @@ const LiquidityLabel = styled(Typography)((theme) => ({
     alignItems: "center",
     position: "absolute",
     top: "28%",
-    left: "63%",
+    // left: "63%",
     color: "#FFFFFF",
   },
 }));
@@ -100,7 +101,7 @@ const RoiLabel = styled(Typography)((theme) => ({
     alignItems: "right",
     position: "absolute",
     top: "28%",
-    right: "13%",
+    // right: "13%",
     color: "#15C73E",
   },
 }));
@@ -164,7 +165,17 @@ function Strategy({ strategyData, strategyContract, vaultContract }) {
         }}
       >
         <StyledAccordionSummary
-          expandIcon={<ExpandMoreIcon fill={"red"} />}
+          expandIcon={
+            <Box
+              sx={{
+                background: "rgba(39, 62, 112, 0.25)",
+                borderRadius: "50%",
+                height: "24px",
+              }}
+            >
+              <ExpandMoreIcon />
+            </Box>
+          }
           aria-controls="panel1a-content"
           id="panel1a-header"
         >
@@ -175,16 +186,18 @@ function Strategy({ strategyData, strategyContract, vaultContract }) {
               {/*<img src={Asset3} className={classes.assetImages} alt=""/>*/}
               <TokenName variant="body">{strategyData.name}</TokenName>
             </Grid>
-            <Grid item xs={3}>
-              <ValueLabel>$ {depositedAmount.toLocaleString()}</ValueLabel>
+            <Grid item xs={3} sx={{ textAlign: "center", marginLeft: "-15px" }}>
+              <ValueLabel component={"span"}>
+                $ {depositedAmount.toLocaleString()}
+              </ValueLabel>
             </Grid>
-            <Grid item xs={3}>
-              <LiquidityLabel>
-                $ {strategyData.liquidity.toFixed(2)}
+            <Grid item xs={3} sx={{ textAlign: "center" }}>
+              <LiquidityLabel component={"span"}>
+                $ {strategyData.liquidity}
               </LiquidityLabel>
             </Grid>
-            <Grid item xs={3}>
-              <RoiLabel>{strategyData.ROI} %</RoiLabel>
+            <Grid item xs={3} sx={{ textAlign: "center", marginLeft: "10px" }}>
+              <RoiLabel component={"span"}>{strategyData.ROI} %</RoiLabel>
             </Grid>
           </Grid>
         </StyledAccordionSummary>
