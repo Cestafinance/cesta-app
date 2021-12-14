@@ -144,7 +144,7 @@ function SideBar(props) {
                     }}>
                         <img src={Twitter} className={classes.platformLogo} alt=""/>
                     </Box>
-                    <Box onClick={()=> openInNewTab("https://discord.gg/N2TdnC3tZX")} sx={{
+                    <Box onClick={()=> openInNewTab("https://discord.gg/k39QEv2Xw5")} sx={{
                         padding: '5%',
                         cursor: 'pointer'
                     }}>

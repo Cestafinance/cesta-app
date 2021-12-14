@@ -48,6 +48,7 @@ const StyledAccordionSummary = styled(AccordionSummary)(({ theme }) => ({
     background: "rgba(39, 62, 112, 0.25)",
     borderRadius: "1.5rem",
     border: 0,
+    margin: "10px 0 10px 0"
   },
 }));
 
@@ -109,6 +110,12 @@ const RoiLabel = styled(Typography)((theme) => ({
     // right: "13%",
     color: "#15C73E",
   },
+}));
+
+const StyledAccordionDetails = styled(AccordionDetails)(() => ({
+  "&.MuiAccordionDetails-root": {
+    padding: '8px 0 8px 0'
+  }
 }));
 
 function Strategy({ strategyData, strategyContract, vaultContract }) {
@@ -227,7 +234,7 @@ function Strategy({ strategyData, strategyContract, vaultContract }) {
             </Grid>
           </Grid>
         </StyledAccordionSummary>
-        <AccordionDetails>
+        <StyledAccordionDetails>
           <StrategyDetails
             getShareAndUSDValue={getShareAndUSDValue}
             depositedAmount={depositedAmount}
@@ -237,7 +244,7 @@ function Strategy({ strategyData, strategyContract, vaultContract }) {
             depositedShares={depositedShares}
             vaultContract={vaultContract}
           />
-        </AccordionDetails>
+        </StyledAccordionDetails>
       </StyledAccordion>
     </Fragment>
   );

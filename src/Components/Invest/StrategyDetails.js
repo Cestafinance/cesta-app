@@ -45,7 +45,7 @@ const useStyles = makeStyles((theme) => ({
         marginTop: '30px !important'
     },
     paddingGrid: {
-        padding: '20px',
+        padding: '20px 0 20px 0px',
         marginTop: '30px !important'
     },
     activeTimeRange: {
@@ -172,6 +172,7 @@ function StrategyDetails({
             container
             columnSpacing={3}
             rowSpacing={1}
+            sx={{paddingLeft: '0'}}
         >
             <Grid item xs={12}>
                 <Box sx={{
