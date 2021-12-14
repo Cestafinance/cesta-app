@@ -299,7 +299,7 @@ function Topbar() {
                   noWrap
                   onClick={() => {SetOpenOptions(!openOptions); openEtherScanLink()}}
                 >
-                  View On Etherscan
+                  View On Explorer
                 </Typography>
               </div>
             )}
