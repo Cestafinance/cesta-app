@@ -119,7 +119,7 @@ function SideBar(props) {
               <ListItemIcon>
                 {menuLogs[menu.name]&&<img
                   src={menuLogs[menu.name]}
-                  alt=""
+                  alt={menu.name}
                   className={classes.menuIcon}
                 />}
               </ListItemIcon>
