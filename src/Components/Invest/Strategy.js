@@ -6,7 +6,7 @@ import {
   AccordionDetails,
   Typography,
   Grid,
-  Box
+  Box,
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
@@ -51,7 +51,7 @@ const TokenName = styled(Typography)((theme) => ({
     fontFamily: "Inter",
     fontStyle: "normal",
     fontWeight: "bold",
-    fontSize: "1rem",
+    fontSize: "1.25vw",
     lineHeight: "1rem",
     alignItems: "center",
     position: "absolute",
@@ -165,14 +165,17 @@ function Strategy({ strategyData, strategyContract, vaultContract }) {
         }}
       >
         <StyledAccordionSummary
-          expandIcon={<Box sx={{
-
-            background: 'rgba(39, 62, 112, 0.25)',
-            borderRadius: '50%',
-            height: '24px'
-          }}>
-            <ExpandMoreIcon  />
-          </Box>}
+          expandIcon={
+            <Box
+              sx={{
+                background: "rgba(39, 62, 112, 0.25)",
+                borderRadius: "50%",
+                height: "24px",
+              }}
+            >
+              <ExpandMoreIcon />
+            </Box>
+          }
           aria-controls="panel1a-content"
           id="panel1a-header"
         >
@@ -203,8 +206,8 @@ function Strategy({ strategyData, strategyContract, vaultContract }) {
                   }).format(Number(strategyData.liquidity).toFixed(2))}
               </LiquidityLabel>
             </Grid>
-            <Grid item xs={3}  sx={{textAlign: 'center', marginLeft: '10px'}}>
-              <RoiLabel component={'span'}>{strategyData.ROI} %</RoiLabel>
+            <Grid item xs={3} sx={{ textAlign: "center", marginLeft: "10px" }}>
+              <RoiLabel component={"span"}>{strategyData.ROI} %</RoiLabel>
             </Grid>
           </Grid>
         </StyledAccordionSummary>
