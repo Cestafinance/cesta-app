@@ -41,12 +41,15 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
 
 const StrategyTableCell = styled(TableCell)(({ theme }) => ({
   borderBottom: "none",
+  '&.MuiTableCell-root': {
+    padding: '8px 0 8px 0'
+  }
 }));
 
 const StyledTableContainer = styled(TableContainer)(({ theme }) => ({
   "&.MuiPaper-root": {
     backgroundColor: theme.palette.app.main,
-    padding: "10px",
+    padding: "40px",
     overflowY: "hidden",
   },
 }));

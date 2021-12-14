@@ -139,8 +139,6 @@ const NetworkName = styled(Typography)(({theme}) => ({
 
 const mainnet = [
     "avalanche",
-    "ethereum",
-    "polygon"
 ]
 const Networks = Object.values(networkMap).filter(n => mainnet.includes(n));
 
