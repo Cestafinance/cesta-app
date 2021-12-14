@@ -34,6 +34,7 @@ const useStyles = makeStyles((theme) => ({
     margin: "1rem 0.1rem 2rem 0.1rem",
   },
   menuIcon: {
+    width: "1.5rem",
     height: "1.5rem",
     margin: "0 0.5rem",
   },
@@ -85,10 +86,12 @@ function SideBar(props) {
     setMobileOpen(!mobileOpen);
   };
 
+
   const getMenuLogos = async () => {
     let logos = {};
     for (let i = 0; i < MenuList.length; i++) {
-      let image = await import(`../../assets/sideMenu/${MenuList[i].name}.png`);
+      const imageName = MenuList[i].name;
+      let image = await import(`../../assets/sideMenu/${imageName}.png`);
       logos[MenuList[i].name] = image.default;
     }
     SetMenuLogos(logos);
@@ -105,7 +108,7 @@ function SideBar(props) {
       <img src={CestaLogo} alt="" className={classes.logo} />
       <StyledList>
         {MenuList.map((menu, index) => (
-          <NavLink to={menu.path} key={index}>
+          <NavLink to={menu.path} key={index} style={{textDecoration:"none"}}>
             <StyledListItem
               button
               key={index}
@@ -114,11 +117,11 @@ function SideBar(props) {
               }
             >
               <ListItemIcon>
-                <img
+                {menuLogs[menu.name]&&<img
                   src={menuLogs[menu.name]}
-                  alt=""
+                  alt={menu.name}
                   className={classes.menuIcon}
-                />
+                />}
               </ListItemIcon>
               <StyledName>{menu.label}</StyledName>
             </StyledListItem>
