@@ -183,11 +183,25 @@ function Strategy({ strategyData, strategyContract, vaultContract }) {
               {/*<img src={Asset3} className={classes.assetImages} alt=""/>*/}
               <TokenName variant="body">{strategyData.name}</TokenName>
             </Grid>
-            <Grid item xs={3} sx={{textAlign: 'center', marginLeft: '-15px'}}>
-              <ValueLabel component={'span'}>$ {depositedAmount.toLocaleString()}</ValueLabel>
+            <Grid item xs={3} sx={{ textAlign: "center", marginLeft: "-15px" }}>
+              <ValueLabel component={"span"}>
+                {new Intl.NumberFormat("en-US", {
+                    style: "currency",
+                    currency: "USD",
+                    maximumFractionDigits: 3,
+                    minimumFractionDigits: 2,
+                  }).format(Number(depositedAmount).toFixed(2))}
+              </ValueLabel>
             </Grid>
-            <Grid item xs={3} sx={{textAlign: 'center'}}>
-              <LiquidityLabel component={'span'}>$ {strategyData.liquidity}</LiquidityLabel>
+            <Grid item xs={3} sx={{ textAlign: "center" }}>
+              <LiquidityLabel component={"span"}>
+                {new Intl.NumberFormat("en-US", {
+                    style: "currency",
+                    currency: "USD",
+                    maximumFractionDigits: 3,
+                    minimumFractionDigits: 2,
+                  }).format(Number(strategyData.liquidity).toFixed(2))}
+              </LiquidityLabel>
             </Grid>
             <Grid item xs={3}  sx={{textAlign: 'center', marginLeft: '10px'}}>
               <RoiLabel component={'span'}>{strategyData.ROI} %</RoiLabel>
