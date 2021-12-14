@@ -34,18 +34,19 @@ const TitleTypography = styled(Typography)(({ theme }) => ({
   fontFamily: "Inter",
   fontStyle: "normal",
   fontWeight: "500",
-  fontSize: "1rem",
+  fontSize: "1.3rem",
   lineHeight: "1rem",
-  marginLeft: "2.5rem",
+  marginLeft: "0.5rem",
+  marginTop: "0.5rem",
 }));
 
 const SubTitleTypography = styled(Typography)(({ theme }) => ({
   fontFamily: "Rubik",
   fontStyle: "normal",
   fontWeight: "200",
-  fontSize: "0.8rem",
+  fontSize: "1.1rem",
   lineHeight: "0.8rem",
-  margin: "6px 0 0 2.5rem",
+  margin: "6px 0 0 0.5rem",
 }));
 
 const BootstrapDialogTitle = (props) => {

@@ -38,7 +38,7 @@ const LabelMessage = styled(Typography)(({ theme }) => ({
 const BoxDetail = styled(Box)(({ theme }) => ({
   fontFamily: "Inter",
   fontStyle: "normal",
-  fontWeight: "bold",
+  fontWeight: "500",
   fontSize: "1.25rem",
   color: "#D0D3D4",
   marginLeft: "0.5rem",
@@ -88,12 +88,14 @@ const useStyles = makeStyles(({ theme }) => ({
   },
   alignRightAmount: {
     textAlign: "right",
-    fontWeight: "575",
+    fontWeight: "500",
     fontSize: "1.25rem",
+    margin: "1rem 0 1rem 0",
+    paddingTop: "1rem",
   },
   alignRight: {
     textAlign: "right",
-    fontWeight: "575",
+    fontWeight: "500",
   },
   toolTip: {
     height: "15px !important",
@@ -110,7 +112,7 @@ const useStyles = makeStyles(({ theme }) => ({
   transactionDetails: {
     fontFamily: "Inter",
     fontStyle: "normal",
-    fontWeight: "420",
+    fontWeight: "500",
     color: "#D0D3D4",
   },
 }));
@@ -281,7 +283,12 @@ function DepositTemplate({
           </LabelMessage>
         </Box>
 
-        <Box>
+        <Box
+          sx={{
+            paddingLeft: "0.5rem",
+            paddingRight: "0.5rem",
+          }}
+        >
           <Grid container>
             <Grid item xs={12}></Grid>
             <Grid item xs={6} className={classes.label1}>
@@ -289,6 +296,7 @@ function DepositTemplate({
                 sx={{
                   display: "flex",
                   alignItems: "center",
+                  margin: "1rem 0 1rem 0",
                 }}
               >
                 <Box sx={{ width: "10%" }}>
@@ -356,9 +364,8 @@ function DepositTemplate({
               />
             </Box>
             <Box sx={{ lineHeight: "1.1" }}>
-              {/* <AcceptTerms> */}I understand that my deposit may experience
-              high slippage due to low liqudity
-              {/* </AcceptTerms> */}
+              I understand that my deposit may experience high slippage due to
+              low liqudity
             </Box>
           </Box>
         )}
@@ -372,10 +379,10 @@ function DepositTemplate({
               letterSpacing: "1",
             }}
           >
-            <Box sx={{ width: "70%", fontSize: "1rem" }}>
-              Allow your {symbol} to be depositted
+            <Box sx={{ width: "70%", fontSize: "1rem", lineHeight: "1.1" }}>
+              Allow your {symbol} to be depositted in
               <br />
-              in {strategyInfo.name}
+              {strategyInfo.name}
             </Box>
             <Box sx={{ width: "30%", textAlign: "end" }}>
               <ApproveButton onClick={approveAmount} disabled={isApproving}>
