@@ -86,10 +86,12 @@ function SideBar(props) {
     setMobileOpen(!mobileOpen);
   };
 
+
   const getMenuLogos = async () => {
     let logos = {};
     for (let i = 0; i < MenuList.length; i++) {
-      let image = await import(`../../assets/sideMenu/${MenuList[i].name}.png`);
+      const imageName = MenuList[i].name;
+      let image = await import(`../../assets/sideMenu/${imageName}.png`);
       logos[MenuList[i].name] = image.default;
     }
     SetMenuLogos(logos);
@@ -115,11 +117,11 @@ function SideBar(props) {
               }
             >
               <ListItemIcon>
-                <img
+                {menuLogs[menu.name]&&<img
                   src={menuLogs[menu.name]}
                   alt=""
                   className={classes.menuIcon}
-                />
+                />}
               </ListItemIcon>
               <StyledName>{menu.label}</StyledName>
             </StyledListItem>
