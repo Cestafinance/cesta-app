@@ -61,17 +61,17 @@ const StyledButton = styled(Button)(({ theme }) => ({
     boxShadow: "none",
     borderRadius: "16px",
     zIndex: 4,
-    color: '#FFFFFF',
+    color: "#FFFFFF",
     padding: "12px 0px",
     textTransform: "uppercase",
     fontSize: "16px",
-    '&:hover': {
-      background: 'rgba(39, 62, 112, 0.5)',
-    }
+    "&:hover": {
+      background: "rgba(39, 62, 112, 0.5)",
+    },
   },
   "&.Mui-disabled": {
-    backgroundColor: 'none'
-  }
+    backgroundColor: "none",
+  },
 }));
 
 function WithDraw({
@@ -146,7 +146,7 @@ function WithDraw({
           &nbsp;
         </Grid>
 
-        <Grid container style={{ margin: "32px 0px", minHeight: "175px"}}>
+        <Grid container style={{ margin: "32px 0px", minHeight: "175px" }}>
           <Grid item xs={12}>
             <Box
               mt={2}
@@ -188,7 +188,7 @@ function WithDraw({
           <Grid item xs={12}>
             &nbsp;
           </Grid>
-          <Grid item xs={12} style={{position: "relative"}}>
+          <Grid item xs={12} style={{ position: "relative" }}>
             <StyledTextField
               onChange={(e) => onInputChange(e.target.value)}
               value={amountToWithdraw}
@@ -199,7 +199,7 @@ function WithDraw({
                 cursor: "pointer",
                 position: "absolute",
                 right: "12px",
-                top: "15px"
+                top: "15px",
               }}
               onClick={() => SetOpenCoinSelecting(!openCoinSelection)}
             >
@@ -209,7 +209,10 @@ function WithDraw({
                   className={classes.logoStableCoins}
                   alt=""
                 />
-                <span style={{ marginLeft: "8px" }}> {strategyData.tokens[selectedCoinIndex]}</span>
+                <span style={{ marginLeft: "8px" }}>
+                  {" "}
+                  {strategyData.tokens[selectedCoinIndex]}
+                </span>
                 <ArrowDropDownIcon />
               </div>
             </Box>
@@ -331,7 +334,7 @@ function WithDraw({
                 logo={stableCoinLogos[strategyData.tokens[selectedCoinIndex]]}
                 stableCoinsContractData={
                   stableCoinsContracts[
-                  strategyData.erc20addresses[selectedCoinIndex].toLowerCase()
+                    strategyData.erc20addresses[selectedCoinIndex].toLowerCase()
                   ]
                 }
                 account={account}
@@ -341,7 +344,10 @@ function WithDraw({
           />
         </Grid>
         <Grid item xs={12}>
-          <StyledButton onClick={withdrawNow} disabled={inputError || !amountToWithdraw}>
+          <StyledButton
+            onClick={withdrawNow}
+            disabled={inputError || !amountToWithdraw}
+          >
             Withdraw
           </StyledButton>
         </Grid>
