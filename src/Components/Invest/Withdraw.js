@@ -20,9 +20,12 @@ const useStyles = makeStyles(({ theme }) => ({
     margin: "0.3rem",
     cursor: "pointer",
   },
-  assetMaxlabel: {
+  assetSelectedlabel: {
     marginLeft: "0.3rem",
     cursor: "pointer",
+    background: "#375894",
+    borderRadius: "10px",
+    padding: "0 6px",
   },
   logoStableCoins: {
     height: "20px",
@@ -86,7 +89,7 @@ function WithDraw({
   const [inputError, SetInputError] = useState(false);
   const [selectedCoinIndex, SetSelectedCoinIndex] = useState(0);
   const [amountToWithdraw, SetAmountToWithdraw] = useState(0);
-  const [selectedPercentage, SetSelectedPercentage] = useState(null);
+  const [valueSelected, SetValueSelected] = useState(0);
   const [toWithdrawShares, SetToWithdrawShares] = useState(0);
   const [open, SetOpen] = useState(false);
 
@@ -96,7 +99,7 @@ function WithDraw({
   const selectPercentage = (value) => {
     const amt = depositedAmount * (value / 100);
     SetAmountToWithdraw(amt.toFixed(4));
-    SetSelectedPercentage(value);
+    SetValueSelected(value);
     SetInputError(false);
   };
 
@@ -242,7 +245,7 @@ function WithDraw({
                 marginLeft: "auto",
                 marginTop: "-10px",
                 float: "right",
-                padding: "15px 0 15px 0px",
+                padding: "4px 0",
                 background: "#191E2C",
                 zIndex: 5,
                 borderRadius: "24px",
@@ -315,13 +318,9 @@ function WithDraw({
                 return (
                   <span
                     className={
-                      (index !== 4
-                        ? classes.assetScaleLabel
-                        : classes.assetMaxlabel) +
-                      " " +
-                      (selectedPercentage === scale.value
-                        ? classes.selectedPercentage
-                        : "")
+                      valueSelected === scale.value
+                        ? classes.assetSelectedlabel
+                        : classes.assetScaleLabel
                     }
                     onClick={() => selectPercentage(scale.value)}
                   >
