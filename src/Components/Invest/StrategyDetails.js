@@ -213,7 +213,8 @@ function StrategyDetails({
                     >
                         <Grid item xs={12}>
                             <Box sx={{
-                                textAlign: 'end'
+                                textAlign: 'end',
+                                marginRight: "16px"
                             }}>
                                 {GraphTimeRanges.map((timeRange, index) => {
                                     return <TimerangeLabel variant='body' key={index}
