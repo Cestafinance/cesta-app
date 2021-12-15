@@ -188,7 +188,7 @@ function Deposit({
             <Box
               sx={{
                 position: "absolute",
-                right: "135px",
+                right: "108px",
                 marginLeft: "auto",
                 marginTop: "-38px",
                 float: "right",
@@ -203,10 +203,12 @@ function Deposit({
             <Box
               sx={{
                 position: "absolute",
-                right: "85px",
+                right: "65px",
                 marginLeft: "auto",
                 marginTop: "-37px",
                 float: "right",
+                fontWeight: "400",
+                size: "14px",
               }}
             >
               {strategyData.tokens[selectedCoinIndex]}
@@ -214,7 +216,7 @@ function Deposit({
             <Box
               sx={{
                 position: "absolute",
-                right: "60px",
+                right: "40px",
                 marginLeft: "auto",
                 marginTop: "-39px",
                 float: "right",
@@ -227,7 +229,7 @@ function Deposit({
             <Box
               sx={{
                 position: "absolute",
-                right: "60px",
+                right: "40px",
                 marginLeft: "auto",
                 marginTop: "-10px",
                 float: "right",

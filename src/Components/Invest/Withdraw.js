@@ -61,14 +61,14 @@ const StyledButton = styled(Button)(({ theme }) => ({
     boxShadow: "none",
     borderRadius: "16px",
     zIndex: 4,
-    color: '#FFFFFF',
-    '&:hover': {
-      background: 'rgba(39, 62, 112, 0.5)',
-    }
+    color: "#FFFFFF",
+    "&:hover": {
+      background: "rgba(39, 62, 112, 0.5)",
+    },
   },
   "&.Mui-disabled": {
-    backgroundColor: 'none'
-  }
+    backgroundColor: "none",
+  },
 }));
 
 function WithDraw({
@@ -197,7 +197,7 @@ function WithDraw({
             <Box
               sx={{
                 position: "absolute",
-                right: "135px",
+                right: "108px",
                 marginLeft: "auto",
                 marginTop: "-38px",
                 float: "right",
@@ -212,10 +212,12 @@ function WithDraw({
             <Box
               sx={{
                 position: "absolute",
-                right: "85px",
+                right: "65px",
                 marginLeft: "auto",
                 marginTop: "-37px",
                 float: "right",
+                fontWeight: "400",
+                size: "14px",
               }}
             >
               {strategyData.tokens[selectedCoinIndex]}
@@ -223,7 +225,7 @@ function WithDraw({
             <Box
               sx={{
                 position: "absolute",
-                right: "60px",
+                right: "40px",
                 marginLeft: "auto",
                 marginTop: "-39px",
                 float: "right",
@@ -236,7 +238,7 @@ function WithDraw({
             <Box
               sx={{
                 position: "absolute",
-                right: "60px",
+                right: "40px",
                 marginLeft: "auto",
                 marginTop: "-10px",
                 float: "right",
@@ -358,7 +360,10 @@ function WithDraw({
           />
         </Grid>
         <Grid item xs={12}>
-          <StyledButton onClick={withdrawNow} disabled={inputError || !amountToWithdraw}>
+          <StyledButton
+            onClick={withdrawNow}
+            disabled={inputError || !amountToWithdraw}
+          >
             Withdraw
           </StyledButton>
         </Grid>
