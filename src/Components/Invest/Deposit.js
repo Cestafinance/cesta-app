@@ -193,7 +193,7 @@ function Deposit({
                     className={classes.logoStableCoins}
                     alt=""
                   />
-                  <span style={{marginLeft: "4px"}}>{strategyData.tokens[selectedCoinIndex]}</span>
+                  <span style={{marginLeft: "8px"}}>{strategyData.tokens[selectedCoinIndex]}</span>
                   <ArrowDropDownIcon />
               </div>
             </Box>
