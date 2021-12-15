@@ -18,12 +18,8 @@ export const ChainID = {
 
 
 export const networkMap = {
-    42:'kovan',
-    1: 'ethereum',
-    137: 'polygon',
     43113: 'fuji',
     43114: 'avalanche',
-    42161: 'arbitrum'
 }
 
 
