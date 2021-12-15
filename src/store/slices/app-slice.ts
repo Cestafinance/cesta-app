@@ -17,8 +17,12 @@ export const loadAppDetails = createAsyncThunk(
     "app/loadAppDetails",
     //@ts-ignore
     async ({ networkID, provider }: ILoadAppDetails) => {
+        console.log('test');
         const mimPrice = getTokenPrice("MIM");
+        console.log('networkID', networkID)
+
         const addresses = getAddresses(networkID);
+        console.log(addresses)
 
         const stakingContract = new ethers.Contract(addresses.STAKING_ADDRESS, StakingContract, provider);
         const currentBlock = await provider.getBlockNumber();

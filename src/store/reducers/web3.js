@@ -3,7 +3,8 @@ function web3(state = {}, action) {
         case 'WEB3_LOADED':
             return {
                 ...state,
-                connection: action.connection
+                connection: action.connection,
+                connected: true,
             }
         case 'WEB3_ACCOUNT_LOADED':
             return {
@@ -27,7 +28,8 @@ function web3(state = {}, action) {
         case 'DISCONNECT_WALLET_EVENT':
             return {
                 ...state,
-                disconnect: true
+                disconnect: true,
+                connected: false,
             }
         case 'DISCONNECT_WALLET':
             return {
@@ -36,7 +38,13 @@ function web3(state = {}, action) {
                 account: null,
                 source: null,
                 networkId: null,
-                disconnect: null
+                disconnect: null,
+                connected: false,
+            }
+        case 'WEB3_PROVIDER_LOADED':
+            return {
+                ...state,
+                provider: action.provider
             }
         default:
             return state;

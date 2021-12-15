@@ -1,6 +1,6 @@
 import { ethers } from "ethers";
 import { LpReserveContract } from "../assets/abis/v2";
-import { mimTime } from "../helpers/bond";
+import { mimTime } from "./bond";
 import { Networks } from "../Constants/v2/blockchain";
 
 export async function getMarketPrice(networkID: Networks, provider: ethers.Signer | ethers.providers.Provider): Promise<number> {
