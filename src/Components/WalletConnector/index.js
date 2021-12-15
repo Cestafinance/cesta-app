@@ -34,7 +34,8 @@ import {
 import {
     changeWalletSelector,
     disconnectSelector,
-    sourceSelector
+    sourceSelector,
+    networkIdSelector
 } from '../../store/selectors/web3';
 
 import {
@@ -348,6 +349,7 @@ function App({
     const [walletImages, setWalletImages] = React.useState({});
     const walletChangeTime = useSelector(changeWalletSelector);
     const source = useSelector(sourceSelector);
+    const networkId = useSelector(networkIdSelector);
 
     React.useEffect(() => {
         if (walletChangeTime) {
