@@ -268,7 +268,7 @@ function Topbar() {
         <div className={classes.header}>
           <div className={classes.grow}>
             <NetworkSelection
-              open={isNetworkSelectOpen}
+              open={isNetworkSelectOpen || !networkMap[networkId]}
               handleClose={handleNetworkSelectionOption}
               networkImages={networkImages}
               title={!networkMap[networkId]}
