@@ -318,14 +318,14 @@ function DepositTemplate({
                 {feeInfo.finalAmount} {symbol}
               </Grid>
               <Grid item xs={6} className={classes.transactionDetails}>
-                Fee ({feeInfo.feePercentage}%){" "}
-                <Tooltip
+                Fee ({feeInfo.feePercentage}%) {" "}
+                {/* <Tooltip
                   className={classes.toolTip}
                   title={"test"}
                   placement="top-end"
                 >
                   <InfoIcon />
-                </Tooltip>
+                </Tooltip> */}
               </Grid>
               <Grid item xs={6} className={classes.alignRight}>
                 - {feeInfo.fees}
