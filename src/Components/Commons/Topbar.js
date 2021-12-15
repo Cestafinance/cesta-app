@@ -219,7 +219,7 @@ function Topbar() {
   }, [source]);
 
   useEffect(() => {
-    SetNetworkSelectOpen(networkMap[networkId] === undefined)
+    SetNetworkSelectOpen(account && networkMap[networkId] === undefined)
   }, [networkId])
 
   const handleNetworkSelectionOption = () => {
