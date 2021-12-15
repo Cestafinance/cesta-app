@@ -219,7 +219,7 @@ function Topbar() {
   }, [source]);
 
   useEffect(() => {
-    SetNetworkSelectOpen(account && networkMap[networkId] === undefined)
+    SetNetworkSelectOpen(networkId !== 0 && networkMap[networkId] === undefined);
   }, [networkId])
 
   const handleNetworkSelectionOption = () => {
@@ -265,15 +265,15 @@ function Topbar() {
     let url = networkScanUrl[networkId];
     window.open(`${url}address/${account}`, "_blank").focus();
   };
-
+  console.log(isNetworkSelectOpen, networkId, account);
   return (
     <Fragment>
       <div className={classes.headerContainer}>
         <div className={classes.header}>
           <div className={classes.grow}>
             <NetworkSelection
-              // open={isNetworkSelectOpen || (!networkMap[networkId])}
-              open={isNetworkSelectOpen}
+              open={isNetworkSelectOpen || Boolean((!networkMap[networkId]) && account && networkId !== 0)}
+              // open={isNetworkSelectOpen}
               handleClose={handleNetworkSelectionOption}
               networkImages={networkImages}
               title={!networkMap[networkId]}
@@ -312,7 +312,7 @@ function Topbar() {
           {account && networkMap[networkId] && (
             <NetworkSelectButton
               className={classes.networkDropDown}
-              // onClick={handleNetworkSelectionOption}
+              onClick={handleNetworkSelectionOption}
             >
               <img
                 src={networkImages[networkMap[networkId]]}

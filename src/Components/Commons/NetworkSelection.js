@@ -18,7 +18,7 @@ import {
     ChainID,
 } from '../../Constants/mains';
 import {useSelector} from "react-redux";
-import {networkIdSelector} from '../../store/selectors/web3.js';
+import {networkIdSelector, accountSelector} from '../../store/selectors/web3.js';
 import {
     CapitalizeFirstLetter
 } from "../../Util/textUtil";
@@ -274,20 +274,8 @@ function NetworkSelection({
             }}
             aria-labelledby="customized-dialog-title"
             open={open}>
-            {false ? <DialogTitle id="customized-dialog-title" onClose={handleClose}>
-                <Typography variant="body1" className={classes.selectWalletHeader}>
-                    Select Network
-                </Typography>
-                <Typography component="span" className={classes.selectWalletMessage}>
-                    Currently you are using
-                </Typography>
-                <Typography component="span" className={classes.selectWalletMessageNetworkName}>
-                    &nbsp;{CapitalizeFirstLetter(networkMap[networkId])}&nbsp;
-                </Typography>
-                <Typography component="span" className={classes.selectWalletMessage}>
-                    network
-                </Typography>
-            </DialogTitle> : null}
+            <DialogTitle id="customized-dialog-title" onClose={handleClose}>
+            </DialogTitle>
 
             {!title ? <DialogContent dividers>
                 <Grid
