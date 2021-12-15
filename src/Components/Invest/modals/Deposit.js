@@ -139,7 +139,7 @@ function DepositTemplate({
   const [isDepositing, SetDepositing] = useState(false);
   const [depositError, SetDepositError] = useState(false);
   const [depositCompleted, SetDepositCompleted] = useState(false);
-  const [slippageWarningNeeded, SetSlippageWarningNeeded] = useState(true);
+  const [slippageWarningNeeded, SetSlippageWarningNeeded] = useState(false);
   const [slippageAccepted, SetSlippageAcceptance] = useState(false);
   const [feeInfo, SetFeeInformation] = useState({
     feePercentage: 0,
