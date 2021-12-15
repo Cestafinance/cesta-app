@@ -129,9 +129,11 @@ function Deposit({
   return (
     <Box sx={{ color: "white" }}>
       <Grid container>
-        <Grid item xs={12}>&nbsp;</Grid>
+        <Grid item xs={12}>
+          &nbsp;
+        </Grid>
 
-        <Grid container style={{margin: "32px 0px", minHeight: "175px"}}>
+        <Grid container style={{ margin: "32px 0px", minHeight: "175px" }}>
           <Grid item xs={12}>
             <Box
               mt={2}
@@ -152,7 +154,6 @@ function Deposit({
               <Box
                 sx={{
                   width: "60%",
-
                 }}
               >
                 Deposit funds into this strategy.
@@ -164,7 +165,8 @@ function Deposit({
                   // fontWeight: "550",
                 }}
               >
-                Available: {coinBalances[strategyData.tokens[selectedCoinIndex]]}{" "}
+                Available:{" "}
+                {coinBalances[strategyData.tokens[selectedCoinIndex]]}{" "}
                 {strategyData.tokens[selectedCoinIndex]}
               </Box>
             </Box>
@@ -172,7 +174,7 @@ function Deposit({
           <Grid item xs={12}>
             &nbsp;
           </Grid>
-          <Grid item xs={12} style={{position: "relative"}}>
+          <Grid item xs={12} style={{ position: "relative" }}>
             <StyledTextField
               value={depositAmount}
               onChange={(e) => onInputChange(e.target.value)}
@@ -183,18 +185,20 @@ function Deposit({
                 cursor: "pointer",
                 position: "absolute",
                 right: "12px",
-                top: "15px"
+                top: "15px",
               }}
               onClick={() => SetOpenCoinSelecting(!openCoinSelection)}
             >
-              <div style={{display: "flex", alignItems:"center"}}>
-                  <img
-                    src={stableCoinLogos[strategyData.tokens[selectedCoinIndex]]}
-                    className={classes.logoStableCoins}
-                    alt=""
-                  />
-                  <span style={{marginLeft: "8px"}}>{strategyData.tokens[selectedCoinIndex]}</span>
-                  <ArrowDropDownIcon />
+              <div style={{ display: "flex", alignItems: "center" }}>
+                <img
+                  src={stableCoinLogos[strategyData.tokens[selectedCoinIndex]]}
+                  className={classes.logoStableCoins}
+                  alt=""
+                />
+                <span style={{ marginLeft: "8px" }}>
+                  {strategyData.tokens[selectedCoinIndex]}
+                </span>
+                <ArrowDropDownIcon />
               </div>
             </Box>
             {openCoinSelection && (
@@ -293,7 +297,7 @@ function Deposit({
             </Box>
           </Grid>
         </Grid>
-      
+
         <Grid item xs={12}>
           &nbsp;
           <ActionConfirm
