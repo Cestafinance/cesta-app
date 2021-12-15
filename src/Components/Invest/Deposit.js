@@ -15,12 +15,9 @@ const useStyles = makeStyles(({ theme }) => ({
     margin: "0.3rem",
     cursor: "pointer",
   },
-  assetSelectedlabel: {
+  assetMaxlabel: {
     marginLeft: "0.3rem",
     cursor: "pointer",
-    background: "#375894",
-    borderRadius: "10px",
-    padding: "0 6px",
   },
   logoStableCoins: {
     height: "20px",
@@ -55,6 +52,9 @@ const StyledButton = styled(Button)(({ theme }) => ({
     borderRadius: "16px",
     zIndex: 4,
     color: "#FFFFFF",
+    padding: "12px 0px",
+    textTransform: "uppercase",
+    fontSize: "16px",
     "&:hover": {
       background: "rgba(39, 62, 112, 0.5)",
     },
@@ -78,7 +78,6 @@ function Deposit({
   const [inputError, SetInputError] = useState(false);
   const [selectedCoinIndex, SetSelectedCoinIndex] = useState(0);
   const [depositAmount, SetDepositAmount] = useState(0);
-  const [valueSelected, SetValueSelected] = useState(0);
   const [open, SetOpen] = useState(false);
   const stableCoinsContracts = useSelector(stableCoinsSelector);
   const account = useSelector(accountSelector);
@@ -87,7 +86,7 @@ function Deposit({
     let balance = parseFloat(
       coinBalances[strategyData.tokens[selectedCoinIndex]]
     );
-    SetValueSelected(value);
+
     let amount = (balance * (value / 100)).toFixed(4);
     SetDepositAmount(amount);
     SetInputError(false);
@@ -133,193 +132,172 @@ function Deposit({
         <Grid item xs={12}>
           &nbsp;
         </Grid>
-        <Grid item xs={12}>
-          <Box
-            mt={2}
-            sx={{
-              display: "flex",
-            }}
-          >
-            Deposit
-          </Box>
+
+        <Grid container style={{ margin: "32px 0px", minHeight: "175px" }}>
+          <Grid item xs={12}>
+            <Box
+              mt={2}
+              sx={{
+                display: "flex",
+                fontWeight: "600",
+              }}
+            >
+              Deposit
+            </Box>
+          </Grid>
+          <Grid item xs={12}>
+            <Box
+              sx={{
+                display: "flex",
+              }}
+            >
+              <Box
+                sx={{
+                  width: "60%",
+                }}
+              >
+                Deposit funds into this strategy.
+              </Box>
+              <Box
+                sx={{
+                  width: "40%",
+                  textAlign: "end",
+                  // fontWeight: "550",
+                }}
+              >
+                Available:{" "}
+                {coinBalances[strategyData.tokens[selectedCoinIndex]]}{" "}
+                {strategyData.tokens[selectedCoinIndex]}
+              </Box>
+            </Box>
+          </Grid>
+          <Grid item xs={12}>
+            &nbsp;
+          </Grid>
+          <Grid item xs={12} style={{ position: "relative" }}>
+            <StyledTextField
+              value={depositAmount}
+              onChange={(e) => onInputChange(e.target.value)}
+              error={inputError}
+            />
+            <Box
+              sx={{
+                cursor: "pointer",
+                position: "absolute",
+                right: "12px",
+                top: "15px",
+              }}
+              onClick={() => SetOpenCoinSelecting(!openCoinSelection)}
+            >
+              <div style={{ display: "flex", alignItems: "center" }}>
+                <img
+                  src={stableCoinLogos[strategyData.tokens[selectedCoinIndex]]}
+                  className={classes.logoStableCoins}
+                  alt=""
+                />
+                <span style={{ marginLeft: "8px" }}>
+                  {strategyData.tokens[selectedCoinIndex]}
+                </span>
+                <ArrowDropDownIcon />
+              </div>
+            </Box>
+            {openCoinSelection && (
+              <Box
+                sx={{
+                  position: "absolute",
+                  right: "12px",
+                  marginLeft: "auto",
+                  marginTop: "-10px",
+                  float: "right",
+                  padding: "15px 0 15px 0px",
+                  background: "#191E2C",
+                  zIndex: 5,
+                  borderRadius: "24px",
+                }}
+              >
+                {strategyData.tokens.map((token, index) => {
+                  return (
+                    <Box
+                      onClick={() => handleCoinSelected(index)}
+                      key={index}
+                      sx={{
+                        display: "flex",
+                        padding: "0 15px 0 15px",
+                        cursor: "pointer",
+                        ":hover": {
+                          background: "#375894",
+                        },
+                      }}
+                    >
+                      <Box
+                        sx={{
+                          marginRight: "4px",
+                        }}
+                      >
+                        <img
+                          src={stableCoinLogos[token]}
+                          className={classes.logoStableCoins}
+                          alt=""
+                        />
+                      </Box>
+                      <Box
+                        sx={{
+                          marginLeft: "5px",
+                        }}
+                      >
+                        {token}
+                      </Box>
+                    </Box>
+                  );
+                })}
+              </Box>
+            )}
+          </Grid>
+          <Grid item xs={12}>
+            <Box
+              sx={{
+                display: "flex",
+              }}
+            >
+              <Box
+                sx={{
+                  width: "40%",
+                  marginLeft: "20px",
+                  color: "red",
+                }}
+              >
+                {inputError && <Typography>Invalid Amount</Typography>}
+              </Box>
+              <Box
+                sx={{
+                  width: "60%",
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  paddingRight: "1rem",
+                  fontWeight: "600",
+                }}
+              >
+                {scales.map((scale, index) => {
+                  return (
+                    <span
+                      key={index}
+                      className={
+                        index !== 4
+                          ? classes.assetScaleLabel
+                          : classes.assetMaxlabel
+                      }
+                      onClick={() => selectPercentage(scale.value)}
+                    >
+                      {scale.label}
+                    </span>
+                  );
+                })}
+              </Box>
+            </Box>
+          </Grid>
         </Grid>
 
-        <Grid item xs={12}>
-          <Box
-            sx={{
-              display: "flex",
-            }}
-          >
-            <Box
-              sx={{
-                width: "60%",
-                fontWeight: "600",
-              }}
-            >
-              Deposit funds into this strategy.
-            </Box>
-            <Box
-              sx={{
-                width: "40%",
-                textAlign: "end",
-                fontWeight: "550",
-              }}
-            >
-              Available: {coinBalances[strategyData.tokens[selectedCoinIndex]]}{" "}
-              {strategyData.tokens[selectedCoinIndex]}
-            </Box>
-          </Box>
-        </Grid>
-        <Grid item xs={12}>
-          &nbsp;
-        </Grid>
-        <Grid item xs={12}>
-          <StyledTextField
-            value={depositAmount}
-            onChange={(e) => onInputChange(e.target.value)}
-            error={inputError}
-          />
-          <Box
-            sx={{
-              cursor: "pointer",
-            }}
-            onClick={() => SetOpenCoinSelecting(!openCoinSelection)}
-          >
-            <Box
-              sx={{
-                position: "absolute",
-                right: "108px",
-                marginLeft: "auto",
-                marginTop: "-38px",
-                float: "right",
-              }}
-            >
-              <img
-                src={stableCoinLogos[strategyData.tokens[selectedCoinIndex]]}
-                className={classes.logoStableCoins}
-                alt=""
-              />
-            </Box>
-            <Box
-              sx={{
-                position: "absolute",
-                right: "65px",
-                marginLeft: "auto",
-                marginTop: "-37px",
-                float: "right",
-                fontWeight: "400",
-                size: "14px",
-              }}
-            >
-              {strategyData.tokens[selectedCoinIndex]}
-            </Box>
-            <Box
-              sx={{
-                position: "absolute",
-                right: "40px",
-                marginLeft: "auto",
-                marginTop: "-39px",
-                float: "right",
-              }}
-            >
-              <ArrowDropDownIcon />
-            </Box>
-          </Box>
-          {openCoinSelection && (
-            <Box
-              sx={{
-                position: "absolute",
-                right: "40px",
-                marginLeft: "auto",
-                marginTop: "-10px",
-                float: "right",
-                padding: "15px 0 15px 0px",
-                background: "#191E2C",
-                zIndex: 5,
-                borderRadius: "24px",
-              }}
-            >
-              {strategyData.tokens.map((token, index) => {
-                return (
-                  <Box
-                    onClick={() => handleCoinSelected(index)}
-                    key={index}
-                    sx={{
-                      display: "flex",
-                      padding: "0 15px 0 15px",
-                      cursor: "pointer",
-                      ":hover": {
-                        background: "#375894",
-                      },
-                    }}
-                  >
-                    <Box
-                      sx={{
-                        marginRight: "4px",
-                      }}
-                    >
-                      <img
-                        src={stableCoinLogos[token]}
-                        className={classes.logoStableCoins}
-                        alt=""
-                      />
-                    </Box>
-                    <Box
-                      sx={{
-                        marginLeft: "5px",
-                      }}
-                    >
-                      {token}
-                    </Box>
-                  </Box>
-                );
-              })}
-            </Box>
-          )}
-        </Grid>
-        <Grid item xs={12}>
-          <Box
-            sx={{
-              display: "flex",
-            }}
-          >
-            <Box
-              sx={{
-                width: "40%",
-                marginLeft: "20px",
-                color: "red",
-              }}
-            >
-              {inputError && <Typography>Invalid Amount</Typography>}
-            </Box>
-            <Box
-              sx={{
-                width: "60%",
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-                paddingRight: "1rem",
-                fontWeight: "600",
-              }}
-            >
-              {scales.map((scale, index) => {
-                return (
-                  <span
-                    key={index}
-                    className={
-                      valueSelected === scale.value
-                        ? classes.assetSelectedlabel
-                        : classes.assetScaleLabel
-                    }
-                    onClick={() => selectPercentage(scale.value)}
-                  >
-                    {scale.label}
-                  </span>
-                );
-              })}
-            </Box>
-          </Box>
-        </Grid>
         <Grid item xs={12}>
           &nbsp;
           <ActionConfirm

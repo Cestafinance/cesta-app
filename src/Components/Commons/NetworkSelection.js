@@ -94,6 +94,10 @@ const SelectNetworkButton = styled(Button)(({theme}) => ({
         height: "40px",
         cursor: "pointer",
         justifyContent: "center",
+        margin: "15px 0px",
+        "&.MuiTypography-root": {
+            marginLeft: "0px",
+        },
         '&:hover': {
             background: "#4B86F2"
         }
@@ -157,7 +161,6 @@ const NetworkName = styled(Typography)(({theme}) => ({
 const SwitchNetworkName = styled(Typography)(({theme}) => ({
     color: "#FFFFFF",
     "&.MuiTypography-root": {
-        marginLeft: "20px",
         fontWeight: "normal",
         "&:first-letter": {
             textTransform: "capitalize"
@@ -264,7 +267,11 @@ function NetworkSelection({
 
     return <Fragment>
         <DialogMain
-            onClose={handleClose}
+            onClose={(event, reason) => {
+                if(reason !== 'backdropClick') {
+                    handleClose()
+                }
+            }}
             aria-labelledby="customized-dialog-title"
             open={open}>
             {false ? <DialogTitle id="customized-dialog-title" onClose={handleClose}>
@@ -294,7 +301,7 @@ function NetworkSelection({
                     </Grid>
                     <Grid item xs={12} sx={{textAlign: 'center', paddingBottom: '10px !important'}}>
                         <CestaNetworkMessage  component={'span'}>
-                            Currently You are Using <Network component={'span'}>{networkMap[networkId]}</Network> Network
+                            Currently You are Using <Network component={'span'}>{CapitalizeFirstLetter(networkMap[networkId])}</Network> Network
                         </CestaNetworkMessage>
                     </Grid>
                     <Grid item xs={12} sx={{textAlign: 'center'}}>

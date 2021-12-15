@@ -218,6 +218,10 @@ function Topbar() {
     getImageData(source);
   }, [source]);
 
+  useEffect(() => {
+    SetNetworkSelectOpen(networkMap[networkId] === undefined)
+  }, [networkId])
+
   const handleNetworkSelectionOption = () => {
     SetNetworkSelectOpen(!isNetworkSelectOpen);
   };
@@ -268,7 +272,8 @@ function Topbar() {
         <div className={classes.header}>
           <div className={classes.grow}>
             <NetworkSelection
-              open={isNetworkSelectOpen || !networkMap[networkId]}
+              // open={isNetworkSelectOpen || (!networkMap[networkId])}
+              open={isNetworkSelectOpen}
               handleClose={handleNetworkSelectionOption}
               networkImages={networkImages}
               title={!networkMap[networkId]}
@@ -304,10 +309,10 @@ function Topbar() {
               </div>
             )}
           </div>
-          {account && (
+          {account && networkMap[networkId] && (
             <NetworkSelectButton
               className={classes.networkDropDown}
-              onClick={handleNetworkSelectionOption}
+              // onClick={handleNetworkSelectionOption}
             >
               <img
                 src={networkImages[networkMap[networkId]]}
@@ -315,9 +320,9 @@ function Topbar() {
                 className={classes.networkLogo}
               />
               <SelectedNetwork className={classes.networkName} noWrap>
-                &nbsp; &nbsp;{CapitalizeFirstLetter(networkMap[networkId])} Network&nbsp;
+                &nbsp; &nbsp;{CapitalizeFirstLetter(networkMap[networkId])}&nbsp;{networkMap[networkId]&&<span>Network</span>}
               </SelectedNetwork>
-              <ArrowDropDown className={classes.dropDownIcon} />
+              {/* <ArrowDropDown className={classes.dropDownIcon} /> */}
             </NetworkSelectButton>
           )}
           {account && (
