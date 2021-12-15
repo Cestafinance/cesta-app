@@ -38,8 +38,7 @@ const LabelMessage = styled(Typography)(({ theme }) => ({
 const BoxDetail = styled(Box)(({ theme }) => ({
   fontFamily: "Inter",
   fontStyle: "normal",
-  fontWeight: "500",
-  fontSize: "1.25rem",
+  fontSize: "16px",
   color: "#D0D3D4",
   marginLeft: "0.5rem",
 }));
@@ -62,6 +61,7 @@ const DepositButton = styled(Button)(({ theme }) => ({
     borderRadius: "33px",
     width: "75%",
     color: "#FFFFFF",
+    marginTop: "24px",
     "&:hover": {
       background: "rgba(75, 134, 242, 0.4)",
     },
@@ -88,14 +88,13 @@ const useStyles = makeStyles(({ theme }) => ({
   },
   alignRightAmount: {
     textAlign: "right",
-    fontWeight: "500",
-    fontSize: "1.25rem",
+    fontSize: "16px",
     margin: "1rem 0 1rem 0",
-    paddingTop: "1rem",
+    // paddingTop: "1rem",
   },
   alignRight: {
     textAlign: "right",
-    fontWeight: "500",
+    fontSize: "14px",
   },
   toolTip: {
     height: "15px !important",
@@ -104,7 +103,7 @@ const useStyles = makeStyles(({ theme }) => ({
   },
   logo: {
     height: "25px",
-    marginTop: "3px",
+    // marginTop: "3px",
   },
   metamaskLogo: {
     height: "25px",
@@ -112,8 +111,8 @@ const useStyles = makeStyles(({ theme }) => ({
   transactionDetails: {
     fontFamily: "Inter",
     fontStyle: "normal",
-    fontWeight: "500",
-    color: "#D0D3D4",
+    fontSize: "14px",
+    color: "rgba(255, 255, 255, 0.6);",
   },
 }));
 
@@ -139,7 +138,7 @@ function DepositTemplate({
   const [isDepositing, SetDepositing] = useState(false);
   const [depositError, SetDepositError] = useState(false);
   const [depositCompleted, SetDepositCompleted] = useState(false);
-  const [slippageWarningNeeded, SetSlippageWarningNeeded] = useState(true);
+  const [slippageWarningNeeded, SetSlippageWarningNeeded] = useState(false);
   const [slippageAccepted, SetSlippageAcceptance] = useState(false);
   const [feeInfo, SetFeeInformation] = useState({
     feePercentage: 0,
@@ -204,6 +203,7 @@ function DepositTemplate({
 
   const approveAmount = async () => {
     SetIsApproving(true);
+    SetIsApprovalError(false);
     const approvalData = await approveToken(
       stableCoinsContractData.contract,
       strategyInfo.vaultAddress,
@@ -261,11 +261,12 @@ function DepositTemplate({
   }, []);
 
   return (
-    <Box sx={{ color: "#FFFFFF" }}>
+    <Box sx={{ color: 'rgb(255,255,255, 0.6)', fontFamily: "Inter" }}>
       <Box
         sx={{
           width: "86%",
-          background: "rgba(75, 134, 242, 0.4)",
+          background: "none",
+          border: "1px solid #565656",
           borderRadius: "16px",
           marginLeft: "7%",
           padding: "15px",
@@ -274,8 +275,7 @@ function DepositTemplate({
         <Box
           sx={{
             textAlign: "center",
-            marginTop: "10px",
-            marginBottom: "10px",
+            marginBottom: "16px",
           }}
         >
           <LabelMessage>
@@ -291,51 +291,53 @@ function DepositTemplate({
         >
           <Grid container>
             <Grid item xs={12}></Grid>
-            <Grid item xs={6} className={classes.label1}>
-              <Box
-                sx={{
-                  display: "flex",
-                  alignItems: "center",
-                  margin: "1rem 0 1rem 0",
-                }}
-              >
-                <Box sx={{ width: "10%" }}>
+
+            {/** Deposit Currency and Amount */}
+            <Grid container style={{marginBottom: "16px", marginTop:"8px"}}>
+              <Grid item xs={6} className={classes.label1}>
+                <Box sx={{display: "flex",alignItems: "center"}}>
                   <img src={logo} className={classes.logo} alt="" />
+                  <BoxDetail>{symbol}</BoxDetail>
                 </Box>
-                <BoxDetail>{symbol}</BoxDetail>
-              </Box>
+              </Grid>
+              <Grid item xs={6} className={classes.alignRightAmount}>
+                {amount}
+              </Grid>
             </Grid>
-            <Grid item xs={6} className={classes.alignRightAmount}>
-              {amount}
-            </Grid>
+          
+
             <Grid item xs={12}>
               <hr />
             </Grid>
-            <Grid item xs={6} className={classes.transactionDetails}>
-              Deposit
+
+            <Grid container style={{marginTop: "8px"}}>
+              <Grid item xs={6} className={classes.transactionDetails}>
+                Deposit
+              </Grid>
+              <Grid item xs={6} className={classes.alignRight}>
+                {feeInfo.finalAmount} {symbol}
+              </Grid>
+              <Grid item xs={6} className={classes.transactionDetails}>
+                Fee ({feeInfo.feePercentage}%) {" "}
+                {/* <Tooltip
+                  className={classes.toolTip}
+                  title={"test"}
+                  placement="top-end"
+                >
+                  <InfoIcon />
+                </Tooltip> */}
+              </Grid>
+              <Grid item xs={6} className={classes.alignRight}>
+                - {feeInfo.fees}
+              </Grid>
+              <Grid item xs={6} className={classes.transactionDetails}>
+                Total
+              </Grid>
+              <Grid item xs={6} className={classes.alignRight}>
+                {amount} {symbol}
+              </Grid>
             </Grid>
-            <Grid item xs={6} className={classes.alignRight}>
-              {feeInfo.finalAmount} {symbol}
-            </Grid>
-            <Grid item xs={6} className={classes.transactionDetails}>
-              Fee ({feeInfo.feePercentage}%){" "}
-              <Tooltip
-                className={classes.toolTip}
-                title={"test"}
-                placement="top-end"
-              >
-                <InfoIcon />
-              </Tooltip>
-            </Grid>
-            <Grid item xs={6} className={classes.alignRight}>
-              - {feeInfo.fees}
-            </Grid>
-            <Grid item xs={6} className={classes.transactionDetails}>
-              Total
-            </Grid>
-            <Grid item xs={6} className={classes.alignRight}>
-              {amount} {symbol}
-            </Grid>
+          
           </Grid>
         </Box>
       </Box>
@@ -344,7 +346,7 @@ function DepositTemplate({
         sx={{
           width: "86%",
           marginLeft: "7%",
-          padding: "15px",
+          padding: "15px 0px",
         }}
       >
         {slippageWarningNeeded && (
@@ -370,20 +372,36 @@ function DepositTemplate({
           </Box>
         )}
         {needStrategyApproval && (
+
           <Box
+            id="approval"
             sx={{
               display: "flex",
               alignItems: "center",
+              justifyContent: "space-between",
               marginBottom: "3rem",
               lineHeight: "1",
               letterSpacing: "1",
+              marginTop: "16px"
             }}
           >
-            <Box sx={{ width: "70%", fontSize: "1rem", lineHeight: "1.1" }}>
-              Allow your {symbol} to be depositted in
-              <br />
-              {strategyInfo.name}
+            <Box sx={{ fontSize: "14px", lineHeight: "1.1", color: "#ffffff"}}>
+              {!isApprovalError && <span>
+                Allow your {symbol} to be depositted in
+                <br />
+                {strategyInfo.name}
+              </span>}
+
+             
+
+              {isApprovalError && (
+                <div style={{ color: 'red', fontSize: "14px", fontWeight: "bold"}}>
+                  <span>Transaction Denied. Please try again</span>
+                </div>
+              )}
             </Box>
+
+
             <Box sx={{ width: "30%", textAlign: "end" }}>
               <ApproveButton onClick={approveAmount} disabled={isApproving}>
                 {isApproving ? <CircularProgress size={20} /> : "APPROVE"}
@@ -393,15 +411,16 @@ function DepositTemplate({
         )}
 
         {isDepositing && (
-          <Box sx={{ display: "flex", textAlign: "center" }}>
+          <Box sx={{ display: "flex", textAlign: "center", fontSize: "14px", color: "#ffffff", marginTop: "16px" }}>
             <Box sx={{ width: "100%" }}>
               Depositing your {symbol} <br />
               in {strategyInfo.name} <br />
             </Box>
           </Box>
         )}
+
         {depositError && (
-          <Box sx={{ display: "flex", textAlign: "center", color: "red" }}>
+          <Box sx={{ display: "flex", textAlign: "center", color: "red", fontSize:"14px", fontWeight: "bold", marginTop: "16px"}}>
             <Box sx={{ width: "100%" }}>
               Failed to deposit {symbol} <br />
               in {strategyInfo.name}. <br />
@@ -410,28 +429,19 @@ function DepositTemplate({
           </Box>
         )}
 
-        {isApprovalError && (
-          <Box sx={{ display: "flex", textAlign: "center", color: "red" }}>
-            <Box sx={{ width: "100%" }}>
-              Transaction Denied. Please try again
-            </Box>
-          </Box>
-        )}
-
         {depositCompleted && (
-          <Box sx={{ display: "flex", textAlign: "center" }}>
+          <Box sx={{ display: "flex", textAlign: "center",  fontSize: "14px", color: "#ffffff", marginTop: "16px"  }}>
             <Box sx={{ width: "100%" }}>
-              Your {symbol} has been deposited in {strategyInfo.name}
-              successfully.
+              Your {symbol} has been deposited in {strategyInfo.name} successfully.
             </Box>
           </Box>
         )}
 
         {depositCompleted && source === "metaMask" && (
-          <Box sx={{ display: "flex", textAlign: "center" }}>
+          <Box sx={{ display: "flex", textAlign: "center", marginTop: "16px"}}>
             <Box sx={{ width: "100%" }}>
               <AddToMetamaskButton onClick={watchAssetToken}>
-                Add Token to Meta mask &nbsp; &nbsp;{" "}
+                Add Token to Metamask &nbsp; &nbsp;{" "}
                 <img
                   src={Metamask}
                   className={classes.metamaskLogo}
@@ -441,7 +451,8 @@ function DepositTemplate({
             </Box>
           </Box>
         )}
-        <Box sx={{ textAlign: "center" }}>
+
+        {!depositCompleted&&<Box sx={{ textAlign: "center" }}>
           <DepositButton
             disabled={
               checkingForApproval ||
@@ -460,7 +471,7 @@ function DepositTemplate({
               "DEPOSIT"
             )}
           </DepositButton>
-        </Box>
+        </Box>}
       </Box>
     </Box>
   );

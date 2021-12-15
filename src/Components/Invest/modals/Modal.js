@@ -46,7 +46,7 @@ const SubTitleTypography = styled(Typography)(({ theme }) => ({
   fontWeight: "200",
   fontSize: "1.1rem",
   lineHeight: "0.8rem",
-  margin: "6px 0 0 0.5rem",
+  margin: "13px 0 0 0.5rem",
 }));
 
 const BootstrapDialogTitle = (props) => {

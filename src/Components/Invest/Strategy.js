@@ -77,7 +77,7 @@ const ValueLabel = styled(Typography)((theme) => ({
     alignItems: "right",
     position: "absolute",
     top: "36%",
-    // left: "45%",
+    marginLeft: "5px",
     color: "#FFFFFF",
   },
 }));
@@ -91,6 +91,7 @@ const LiquidityLabel = styled(Typography)((theme) => ({
     lineHeight: "1rem",
     alignItems: "center",
     position: "absolute",
+    marginLeft: "-2px",
     top: "36%",
     // left: "63%",
     color: "#FFFFFF",
@@ -223,14 +224,14 @@ function Strategy({ strategyData, strategyContract, vaultContract }) {
             </Grid>
             <Grid item xs={3} sx={{ textAlign: "center", marginLeft: "10px" }}>
               <RoiLabel component={"span"}>{strategyData.ROI} %</RoiLabel>
-              <Box sx={{right: '10%', top: '30%', position: 'absolute'}}>
-                <Tooltip
-                    title={"ROI"}
-                    placement="top-end"
-                >
-                  <InfoIcon sx={{color: 'rgba(55, 88, 148, 1)'}}/>
-                </Tooltip>
-              </Box>
+              {/*<Box sx={{right: '10%', top: '30%', position: 'absolute'}}>*/}
+              {/*  <Tooltip*/}
+              {/*      title={"ROI"}*/}
+              {/*      placement="top-end"*/}
+              {/*  >*/}
+              {/*    <InfoIcon sx={{color: 'rgba(55, 88, 148, 1)'}}/>*/}
+              {/*  </Tooltip>*/}
+              {/*</Box>*/}
             </Grid>
           </Grid>
         </StyledAccordionSummary>

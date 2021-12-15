@@ -13,8 +13,8 @@ const useStyles = makeStyles(theme => ({
         }
     },
     colorIndicator: {
-        height: '10px',
-        width: '10px',
+        height: '12px',
+        width: '12px',
         borderRadius: '50%',
         display: 'inline-block'
     },
@@ -27,6 +27,11 @@ const useStyles = makeStyles(theme => ({
         fontSize: '12px',
         lineHeight: '12px',
         color: '#FFFFFF',
+        display:"flex",
+        alignItems:"center"
+    },
+    marginLeft16: {
+        marginLeft: "16px"
     },
     displayFlex: {
         display: 'flex',
@@ -65,15 +70,19 @@ function MultiColorBar({
                             style={{width: `${coin.percent}%`, background: coin.color}}
                             onClick={()=>openLink(coin.link)}
                         >
-                    <div className={classes.labelName}>
-                        <span className={classes.colorIndicator}
-                              style={{background: coin.color}}>&nbsp;&nbsp;&nbsp;&nbsp;</span> {coin.label} {coin.percent}%
-                    </div>
+                  
                 </div>
             })}
+           
         </div>
-
-
+        <div style={{display:"flex", flexDirection:"row"}}>
+            {coins.map((coin, index)=> {
+                    return <div className={`${classes.labelName} ${index !== 0 ? classes.marginLeft16 : ""}`}>
+                        <span className={classes.colorIndicator}style={{background: coin.color}}/>
+                        <span style={{marginLeft: "8px"}}> {coin.label} {coin.percent}%</span>
+                    </div>
+            })}
+        </div>
     </Fragment>
 
 }
