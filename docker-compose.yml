@@ -5,7 +5,7 @@ services:
     restart: always
     env_file:
       - .env
-    image: cestafi/frontend-develop:latest
+    image: cestafi/frontend-beta:latest
     ports: 
       - 80:80
       - 443:443
