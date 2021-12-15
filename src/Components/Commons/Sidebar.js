@@ -24,7 +24,8 @@ import {MenuList} from "../../Constants/mains";
 import CestaLogo from "../../assets/commons/Cesta.png";
 import Twitter from "../../assets/platform/twitter.png";
 import Discord from "../../assets/platform/discord.png";
-import Medium from "../../assets/platform/medium.png";
+import Gitbook from "../../assets/platform/gitbook.png";
+import Github from "../../assets/platform/github.png";
 
 const drawerWidth = 240;
 
@@ -150,12 +151,19 @@ function SideBar(props) {
                     }}>
                         <img src={Discord} className={classes.platformLogo} alt=""/>
                     </Box>
-                    <Box onClick={()=> openInNewTab("https://hello-32.gitbook.io/cesta-finance/")}  sx={{
+                    <Box onClick={()=> openInNewTab("https://cesta.gitbook.io/intro/")}  sx={{
                         padding: '5%',
                         cursor: 'pointer'
 
                     }}>
-                        <img src={Medium} className={classes.platformLogo} alt=""/>
+                        <img src={Gitbook} className={classes.platformLogo} alt=""/>
+                    </Box>
+                    <Box onClick={()=> openInNewTab("https://github.com/Cestafinance")}  sx={{
+                        padding: '5%',
+                        cursor: 'pointer'
+
+                    }}>
+                        <img src={Github} className={classes.platformLogo} alt=""/>
                     </Box>
                 </Box>
             </StyledList>

@@ -35,7 +35,7 @@ function web3(state = {}, action) {
                 connection: null,
                 account: null,
                 source: null,
-                networkId: null,
+                networkId: 0,
                 disconnect: null
             }
         default:
