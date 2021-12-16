@@ -75,17 +75,17 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     alignItems: "center",
     justifyContent: "flex-start",
-    width: "14rem",
+    // width: "14rem",
     padding: "8px",
     background: "rgba(57, 198, 228, 0.08)",
     borderRadius: "23px",
-    cursor: "pointer",
+    // cursor: "pointer",
     marginRight: "10px",
     color: "#FFFFFF",
   },
   networkLogo: {
     height: "1.25rem",
-    position: "absolute",
+    // position: "absolute",
     marginLeft: "0.25rem",
   },
   networkName: {
@@ -178,7 +178,7 @@ const useStyles = makeStyles((theme) => ({
 
 const SelectedNetwork = styled(Typography)((theme) => ({
   "&.MuiTypography-root": {
-    marginLeft: "25px",
+    marginLeft: "8px",
     color: "#FFFFFF",
   },
 }));
@@ -190,7 +190,7 @@ const AccountAddress = styled(Typography)((theme) => ({
 }));
 
 const NetworkSelectButton = styled("div")(({ theme }) => ({
-  cursor: "pointer",
+  // cursor: "pointer",
   display: "flex",
   border: `1px solid rgba(55, 88, 148, 0.5)`,
   color: theme.palette.text.main,
@@ -328,17 +328,21 @@ function Topbar() {
           {account && networkMap[networkId] && (
             <NetworkSelectButton
               className={classes.networkDropDown}
-              onClick={handleNetworkSelectionOption}
+              // onClick={handleNetworkSelectionOption}
             >
-              <img
-                src={networkImages[networkMap[networkId]]}
-                alt=""
-                className={classes.networkLogo}
-              />
-              <SelectedNetwork className={classes.networkName} noWrap>
-                &nbsp; &nbsp;{CapitalizeFirstLetter(networkMap[networkId])}
-                &nbsp;{networkMap[networkId] && <span>Network</span>}
-              </SelectedNetwork>
+              <div style={{display: "flex", flexDirection:"row", alignItems: "center"}}>
+                <img
+                  src={AvalancheImage}
+                  alt=""
+                  className={classes.networkLogo}
+                />
+                <Typography sx={{marginLeft:"8px", marginRight: "4px"}}>{CapitalizeFirstLetter(networkMap[networkId])} {networkMap[networkId] && <span>Network</span>}</Typography>
+                {/* <SelectedNetwork className={classes.networkName}>
+                  &nbsp; &nbsp;{CapitalizeFirstLetter(networkMap[networkId])}
+                  &nbsp;{networkMap[networkId] && <span>Network</span>}
+                </SelectedNetwork> */}
+              </div>
+            
               {/* <ArrowDropDown className={classes.dropDownIcon} /> */}
             </NetworkSelectButton>
           )}
