@@ -331,8 +331,7 @@ function Topbar() {
               onClick={handleNetworkSelectionOption}
             >
               <img
-                // src={networkImages[networkMap[networkId]]}
-                src={AvalancheImage}
+                src={networkImages[networkMap[networkId]]}
                 alt=""
                 className={classes.networkLogo}
               />
