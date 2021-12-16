@@ -196,13 +196,13 @@ function Strategy({ strategyData, strategyContract, vaultContract }) {
           id="panel1a-header"
         >
           <Grid container>
-            <Grid item xs={3}>
+            <Grid item xs={6}>
               <img src={strategyImage} className={classes.assetImages} alt="" />
               {/*<img src={Asset2} className={classes.assetImages} alt=""/>*/}
               {/*<img src={Asset3} className={classes.assetImages} alt=""/>*/}
               <TokenName variant="body">{strategyData.name}</TokenName>
             </Grid>
-            <Grid item xs={3} sx={{ textAlign: "center", marginLeft: "-15px" }}>
+            <Grid item xs={2} sx={{ textAlign: "center", marginLeft: "-15px" }}>
               <ValueLabel component={"span"}>
                 {new Intl.NumberFormat("en-US", {
                     style: "currency",
@@ -212,7 +212,7 @@ function Strategy({ strategyData, strategyContract, vaultContract }) {
                   }).format(Number(depositedAmount).toFixed(2))}
               </ValueLabel>
             </Grid>
-            <Grid item xs={3} sx={{ textAlign: "center" }}>
+            <Grid item xs={2} sx={{ textAlign: "center" }}>
               <LiquidityLabel component={"span"}>
                 {new Intl.NumberFormat("en-US", {
                     style: "currency",
@@ -222,7 +222,7 @@ function Strategy({ strategyData, strategyContract, vaultContract }) {
                   }).format(Number(strategyData.liquidity).toFixed(2))}
               </LiquidityLabel>
             </Grid>
-            <Grid item xs={3} sx={{ textAlign: "center", marginLeft: "10px" }}>
+            <Grid item xs={2} sx={{ textAlign: "center", marginLeft: "10px" }}>
               <RoiLabel component={"span"}>{strategyData.ROI} %</RoiLabel>
               {/*<Box sx={{right: '10%', top: '30%', position: 'absolute'}}>*/}
               {/*  <Tooltip*/}

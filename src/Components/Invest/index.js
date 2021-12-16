@@ -186,25 +186,25 @@ function Invest() {
                                 <TableRow>
                                     <StyledTableCell colSpan={4}>
                                         <Grid container sx={{padding: '0 20px 0 20px'}}>
-                                            <Grid item xs={3}>
+                                            <Grid item xs={6}>
                                                 <Typography component={'span'}>
                                                     Name
                                                 </Typography>
 
                                             </Grid>
-                                            <Grid item xs={3} sx={{textAlign: 'center'}}>
+                                            <Grid item xs={2} sx={{textAlign: 'center'}}>
                                                 <Typography component={'span'}>
                                                     Staked
                                                 </Typography>
 
                                             </Grid>
-                                            <Grid item xs={3} sx={{textAlign: 'center'}}>
+                                            <Grid item xs={2} sx={{textAlign: 'center'}}>
                                                 <Typography component={'span'}>
                                                     Liquidity
                                                 </Typography>
 
                                             </Grid>
-                                            <Grid item xs={3} sx={{textAlign: 'center'}}>
+                                            <Grid item xs={2} sx={{textAlign: 'center'}}>
                                                 <Typography component={'span'}>
                                                     APY
                                                 </Typography>
