@@ -26,6 +26,7 @@ import Twitter from "../../assets/platform/twitter.png";
 import Discord from "../../assets/platform/discord.png";
 import Gitbook from "../../assets/platform/gitbook.png";
 import Github from "../../assets/platform/github.png";
+import Medium from "../../assets/platform/medium.png";
 
 const drawerWidth = 240;
 
@@ -138,32 +139,39 @@ function SideBar(props) {
                 ))}
                 <Box sx={{height: '10%', marginTop: '25vw', display: 'flex', direction: 'column'}}>
                     <Box onClick={()=> openInNewTab("https://twitter.com/CestaFinance")} sx={{
-                        marginLeft: '20%',
-                        padding: '5%',
+                        marginLeft: '10%',
+                        padding: '3%',
                         cursor: 'pointer'
 
                     }}>
                         <img src={Twitter} className={classes.platformLogo} alt=""/>
                     </Box>
                     <Box onClick={()=> openInNewTab("https://discord.gg/k39QEv2Xw5")} sx={{
-                        padding: '5%',
+                        padding: '3%',
                         cursor: 'pointer'
                     }}>
                         <img src={Discord} className={classes.platformLogo} alt=""/>
                     </Box>
                     <Box onClick={()=> openInNewTab("https://cesta.gitbook.io/intro/")}  sx={{
-                        padding: '5%',
+                        padding: '3%',
                         cursor: 'pointer'
 
                     }}>
                         <img src={Gitbook} className={classes.platformLogo} alt=""/>
                     </Box>
                     <Box onClick={()=> openInNewTab("https://github.com/Cestafinance")}  sx={{
-                        padding: '5%',
+                        padding: '3%',
                         cursor: 'pointer'
 
                     }}>
                         <img src={Github} className={classes.platformLogo} alt=""/>
+                    </Box>
+                    <Box onClick={()=> openInNewTab("https://cestafinance.medium.com/")}  sx={{
+                        padding: '3%',
+                        cursor: 'pointer'
+
+                    }}>
+                        <img src={Medium} className={classes.platformLogo} alt=""/>
                     </Box>
                 </Box>
             </StyledList>

@@ -328,7 +328,7 @@ function DepositTemplate({
                 </Tooltip> */}
               </Grid>
               <Grid item xs={6} className={classes.alignRight}>
-                - {feeInfo.fees}
+                - {feeInfo.fees} {symbol}
               </Grid>
               <Grid item xs={6} className={classes.transactionDetails}>
                 Total

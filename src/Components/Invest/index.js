@@ -159,7 +159,7 @@ function Invest() {
                 <Grid item xs={12}>
                     <Box sx={{
                         background: 'linear-gradient(134.64deg, #EF7B6E 6.08%, #AB4863 34.8%, #1F224D 71.27%, #152E64 98.89%)',
-                        border: '1px solid rgba(255, 255, 255, 0.2)',
+                        border: '1px solid  #152E64',
                         boxSizing: 'border-box',
                         borderRadius: '26px',
                         height: '100px',
@@ -171,12 +171,6 @@ function Invest() {
                     </Box>
                 </Grid>
                 <Grid item xs={12}>
-                    &nbsp;
-                </Grid>
-                <Grid item xs={12}>
-                    &nbsp;
-                </Grid>
-                <Grid item xs={12}>
                     <StyledTableContainer component={Paper}>
                         <Table
                             sx={{backgroundColor: theme.palette.app.main, color: "white"}}
@@ -186,25 +180,25 @@ function Invest() {
                                 <TableRow>
                                     <StyledTableCell colSpan={4}>
                                         <Grid container sx={{padding: '0 20px 0 20px'}}>
-                                            <Grid item xs={3}>
+                                            <Grid item xs={6}>
                                                 <Typography component={'span'}>
                                                     Name
                                                 </Typography>
 
                                             </Grid>
-                                            <Grid item xs={3} sx={{textAlign: 'center'}}>
+                                            <Grid item xs={2} sx={{textAlign: 'center'}}>
                                                 <Typography component={'span'}>
                                                     Staked
                                                 </Typography>
 
                                             </Grid>
-                                            <Grid item xs={3} sx={{textAlign: 'center'}}>
+                                            <Grid item xs={2} sx={{textAlign: 'center'}}>
                                                 <Typography component={'span'}>
                                                     Liquidity
                                                 </Typography>
 
                                             </Grid>
-                                            <Grid item xs={3} sx={{textAlign: 'center'}}>
+                                            <Grid item xs={2} sx={{textAlign: 'center'}}>
                                                 <Typography component={'span'}>
                                                     APY
                                                 </Typography>

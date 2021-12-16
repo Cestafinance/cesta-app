@@ -90,7 +90,7 @@ const SelectNetworkButton = styled(Button)(({theme}) => ({
         background: "#4B86F2",
         border: "1px solid rgba(55, 88, 148, 0.2)",
         borderRadius: "12px",
-        width: "45%",
+        width: "50%",
         height: "40px",
         cursor: "pointer",
         justifyContent: "center",
@@ -106,7 +106,7 @@ const SelectNetworkButton = styled(Button)(({theme}) => ({
 
 const useStyles = makeStyles((theme) => ({
     networkName: {
-        fontFamily: "Rubik",
+        fontFamily: "Inter",
         fontStyle: "normal",
         fontWeight: "normal",
         display: "flex",
@@ -162,6 +162,7 @@ const SwitchNetworkName = styled(Typography)(({theme}) => ({
     color: "#FFFFFF",
     "&.MuiTypography-root": {
         fontWeight: "normal",
+        fontFamily: "Inter",
         "&:first-letter": {
             textTransform: "capitalize"
         }
@@ -171,21 +172,7 @@ const SwitchNetworkName = styled(Typography)(({theme}) => ({
 const WrongNetworkMessage = styled(Typography)(({theme}) => ({
     "&.MuiTypography-root": {
         color: "rgba(75, 134, 242, 1)",
-        fontFamily: 'Rubik',
-        fontStyle: 'normal',
-        fontWeight: 'normal',
-        fontSize: '16px',
-        lineHeight: '14px',
-        "&:first-letter": {
-            textTransform: "capitalize"
-        }
-    }
-}));
-
-const SelectNetworkMessage = styled(Typography)(({theme}) => ({
-    "&.MuiTypography-root": {
-        color: "rgba(75, 134, 242, 1)",
-        fontFamily: 'Rubik',
+        fontFamily: 'Inter',
         fontStyle: 'normal',
         fontWeight: 'normal',
         fontSize: '20px',
@@ -196,10 +183,24 @@ const SelectNetworkMessage = styled(Typography)(({theme}) => ({
     }
 }));
 
+const SelectNetworkMessage = styled(Typography)(({theme}) => ({
+    "&.MuiTypography-root": {
+        color: "rgba(75, 134, 242, 1)",
+        fontFamily: 'Inter',
+        fontStyle: 'normal',
+        fontWeight: 'normal',
+        fontSize: '18px',
+        lineHeight: '14px',
+        "&:first-letter": {
+            textTransform: "capitalize"
+        }
+    }
+}));
+
 const CestaNetworkMessage = styled(Typography)(({theme}) => ({
     "&.MuiTypography-root": {
         color: "#FFFFFF",
-        fontFamily: 'Rubik',
+        fontFamily: 'Inter',
         fontStyle: 'normal',
         fontWeight: 'normal',
         fontSize: '18px',
@@ -210,7 +211,7 @@ const CestaNetworkMessage = styled(Typography)(({theme}) => ({
 const Network =  styled(Typography)(({theme}) => ({
     "&.MuiTypography-root": {
         color: "rgba(75, 134, 242, 1)",
-        fontFamily: 'Rubik',
+        fontFamily: 'Inter',
         fontStyle: 'normal',
         fontWeight: 'normal',
         fontSize: '18px',
@@ -301,9 +302,9 @@ function NetworkSelection({
                             >
                                 {/*<img src={networkImages[network]} alt="" className={classes.networkLogo}/>*/}
 
-                                <SwitchNetworkName variant="body1">
+                                <CestaNetworkMessage variant="body1">
                                     Switch To {CapitalizeFirstLetter(network)} Mainnet
-                                </SwitchNetworkName>
+                                </CestaNetworkMessage>
                             </SelectNetworkButton>
                         })}
                     </Grid>
@@ -359,9 +360,9 @@ function NetworkSelection({
                             >
                                 {/*<img src={networkImages[network]} alt="" className={classes.networkLogo}/>*/}
 
-                                <SwitchNetworkName variant="body1">
+                                <CestaNetworkMessage variant="body1">
                                     Switch To {CapitalizeFirstLetter(network)} Mainnet
-                                </SwitchNetworkName>
+                                </CestaNetworkMessage>
                             </SelectNetworkButton>
                         })}
                     </Grid>
