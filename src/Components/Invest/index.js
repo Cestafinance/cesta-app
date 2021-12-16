@@ -159,7 +159,7 @@ function Invest() {
                 <Grid item xs={12}>
                     <Box sx={{
                         background: 'linear-gradient(134.64deg, #EF7B6E 6.08%, #AB4863 34.8%, #1F224D 71.27%, #152E64 98.89%)',
-                        border: '1px solid rgba(255, 255, 255, 0.2)',
+                        border: '1px solid  #152E64',
                         boxSizing: 'border-box',
                         borderRadius: '26px',
                         height: '100px',
@@ -169,12 +169,6 @@ function Invest() {
                             Invest
                         </StyledInvestLabel>
                     </Box>
-                </Grid>
-                <Grid item xs={12}>
-                    &nbsp;
-                </Grid>
-                <Grid item xs={12}>
-                    &nbsp;
                 </Grid>
                 <Grid item xs={12}>
                     <StyledTableContainer component={Paper}>

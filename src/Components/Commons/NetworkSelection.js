@@ -90,7 +90,7 @@ const SelectNetworkButton = styled(Button)(({theme}) => ({
         background: "#4B86F2",
         border: "1px solid rgba(55, 88, 148, 0.2)",
         borderRadius: "12px",
-        width: "45%",
+        width: "50%",
         height: "40px",
         cursor: "pointer",
         justifyContent: "center",
@@ -302,9 +302,9 @@ function NetworkSelection({
                             >
                                 {/*<img src={networkImages[network]} alt="" className={classes.networkLogo}/>*/}
 
-                                <SwitchNetworkName variant="body1">
+                                <CestaNetworkMessage variant="body1">
                                     Switch To {CapitalizeFirstLetter(network)} Mainnet
-                                </SwitchNetworkName>
+                                </CestaNetworkMessage>
                             </SelectNetworkButton>
                         })}
                     </Grid>
@@ -360,9 +360,9 @@ function NetworkSelection({
                             >
                                 {/*<img src={networkImages[network]} alt="" className={classes.networkLogo}/>*/}
 
-                                <SwitchNetworkName variant="body1">
+                                <CestaNetworkMessage variant="body1">
                                     Switch To {CapitalizeFirstLetter(network)} Mainnet
-                                </SwitchNetworkName>
+                                </CestaNetworkMessage>
                             </SelectNetworkButton>
                         })}
                     </Grid>
