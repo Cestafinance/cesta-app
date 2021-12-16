@@ -15,10 +15,14 @@ const useStyles = makeStyles(({ theme }) => ({
     margin: "0.3rem",
     cursor: "pointer",
   },
-  assetMaxlabel: {
+  assetSelectedlabel: {
     marginLeft: "0.3rem",
     cursor: "pointer",
+    background: "#375894",
+    borderRadius: "10px",
+    padding: "0 6px",
   },
+
   logoStableCoins: {
     height: "20px",
     marginTop: "2px",
@@ -78,6 +82,7 @@ function Deposit({
   const [inputError, SetInputError] = useState(false);
   const [selectedCoinIndex, SetSelectedCoinIndex] = useState(0);
   const [depositAmount, SetDepositAmount] = useState(0);
+  const [valueSelected, SetValueSelected] = useState(0);
   const [open, SetOpen] = useState(false);
   const stableCoinsContracts = useSelector(stableCoinsSelector);
   const account = useSelector(accountSelector);
@@ -86,7 +91,7 @@ function Deposit({
     let balance = parseFloat(
       coinBalances[strategyData.tokens[selectedCoinIndex]]
     );
-
+    SetValueSelected(value);
     let amount = (balance * (value / 100)).toFixed(4);
     SetDepositAmount(amount);
     SetInputError(false);
@@ -283,9 +288,9 @@ function Deposit({
                     <span
                       key={index}
                       className={
-                        index !== 4
-                          ? classes.assetScaleLabel
-                          : classes.assetMaxlabel
+                        valueSelected === scale.value
+                          ? classes.assetSelectedlabel
+                          : classes.assetScaleLabel
                       }
                       onClick={() => selectPercentage(scale.value)}
                     >
