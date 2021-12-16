@@ -221,13 +221,10 @@ function Topbar() {
   }, [source]);
 
   useEffect(() => {
-<<<<<<< HEAD
-    SetNetworkSelectOpen(networkMap[networkId] === undefined);
+    SetNetworkSelectOpen(
+      networkId !== 0 && networkMap[networkId] === undefined
+    );
   }, [networkId]);
-=======
-    SetNetworkSelectOpen(networkId !== 0 && networkMap[networkId] === undefined);
-  }, [networkId])
->>>>>>> b6ac822d05397b6bb823d45ab10cf7c50cb5b504
 
   const handleNetworkSelectionOption = () => {
     SetNetworkSelectOpen(!isNetworkSelectOpen);
@@ -279,7 +276,10 @@ function Topbar() {
         <div className={classes.header}>
           <div className={classes.grow}>
             <NetworkSelection
-              open={isNetworkSelectOpen || Boolean((!networkMap[networkId]) && account && networkId !== 0)}
+              open={
+                isNetworkSelectOpen ||
+                Boolean(!networkMap[networkId] && account && networkId !== 0)
+              }
               // open={isNetworkSelectOpen}
               handleClose={handleNetworkSelectionOption}
               networkImages={networkImages}
