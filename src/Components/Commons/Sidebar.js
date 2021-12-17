@@ -24,6 +24,8 @@ import {MenuList} from "../../Constants/mains";
 import CestaLogo from "../../assets/commons/Cesta.png";
 import Twitter from "../../assets/platform/twitter.png";
 import Discord from "../../assets/platform/discord.png";
+import Gitbook from "../../assets/platform/gitbook.png";
+import Github from "../../assets/platform/github.png";
 import Medium from "../../assets/platform/medium.png";
 
 const drawerWidth = 240;
@@ -135,30 +137,50 @@ function SideBar(props) {
                         </StyledListItem>
                     </NavLink>
                 ))}
-                <Box sx={{height: '10%', marginTop: '25vw', display: 'flex', direction: 'column'}}>
-                    <Box onClick={()=> openInNewTab("https://twitter.com/CestaFinance")} sx={{
-                        marginLeft: '20%',
-                        padding: '5%',
-                        cursor: 'pointer'
-
-                    }}>
-                        <img src={Twitter} className={classes.platformLogo} alt=""/>
-                    </Box>
-                    <Box onClick={()=> openInNewTab("https://discord.gg/k39QEv2Xw5")} sx={{
-                        padding: '5%',
-                        cursor: 'pointer'
-                    }}>
-                        <img src={Discord} className={classes.platformLogo} alt=""/>
-                    </Box>
-                    <Box onClick={()=> openInNewTab("https://hello-32.gitbook.io/cesta-finance/")}  sx={{
-                        padding: '5%',
-                        cursor: 'pointer'
-
-                    }}>
-                        <img src={Medium} className={classes.platformLogo} alt=""/>
-                    </Box>
-                </Box>
             </StyledList>
+            <Box sx={{
+                position: 'fixed',
+                bottom:'0%',
+                height: '8%',
+                display: 'flex',
+                direction: 'column'
+            }}>
+                <Box onClick={()=> openInNewTab("https://twitter.com/CestaFinance")} sx={{
+                    marginLeft: '50%',
+                    padding: '5%',
+                    cursor: 'pointer'
+
+                }}>
+                    <img src={Twitter} className={classes.platformLogo} alt=""/>
+                </Box>
+                <Box onClick={()=> openInNewTab("https://discord.gg/k39QEv2Xw5")} sx={{
+                    padding: '5%',
+                    cursor: 'pointer'
+                }}>
+                    <img src={Discord} className={classes.platformLogo} alt=""/>
+                </Box>
+                <Box onClick={()=> openInNewTab("https://cesta.gitbook.io/intro/")}  sx={{
+                    padding: '5%',
+                    cursor: 'pointer'
+
+                }}>
+                    <img src={Gitbook} className={classes.platformLogo} alt=""/>
+                </Box>
+                <Box onClick={()=> openInNewTab("https://github.com/Cestafinance")}  sx={{
+                    padding: '5%',
+                    cursor: 'pointer'
+
+                }}>
+                    <img src={Github} className={classes.platformLogo} alt=""/>
+                </Box>
+                <Box onClick={()=> openInNewTab("https://cestafinance.medium.com/")}  sx={{
+                    padding: '5%',
+                    cursor: 'pointer'
+
+                }}>
+                    <img src={Medium} className={classes.platformLogo} alt=""/>
+                </Box>
+            </Box>
         </div>
     );
 

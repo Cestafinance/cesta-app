@@ -20,6 +20,17 @@ const useStyles = makeStyles(({ theme }) => ({
     margin: "0.3rem",
     cursor: "pointer",
   },
+  assetSelectedlabel: {
+    marginLeft: "0.3rem",
+    cursor: "pointer",
+    background: "#375894",
+    borderRadius: "10px",
+    padding: "0 6px",
+  },
+  assetScaleLabel: {
+    margin: "0.3rem",
+    cursor: "pointer",
+  },
   assetMaxlabel: {
     marginLeft: "0.3rem",
     cursor: "pointer",
@@ -61,17 +72,17 @@ const StyledButton = styled(Button)(({ theme }) => ({
     boxShadow: "none",
     borderRadius: "16px",
     zIndex: 4,
-    color: '#FFFFFF',
+    color: "#FFFFFF",
     padding: "12px 0px",
     textTransform: "uppercase",
     fontSize: "16px",
-    '&:hover': {
-      background: 'rgba(39, 62, 112, 0.5)',
-    }
+    "&:hover": {
+      background: "rgba(39, 62, 112, 0.5)",
+    },
   },
   "&.Mui-disabled": {
-    backgroundColor: 'none'
-  }
+    backgroundColor: "none",
+  },
 }));
 
 function WithDraw({
@@ -89,7 +100,8 @@ function WithDraw({
   const [inputError, SetInputError] = useState(false);
   const [selectedCoinIndex, SetSelectedCoinIndex] = useState(0);
   const [amountToWithdraw, SetAmountToWithdraw] = useState(0);
-  const [selectedPercentage, SetSelectedPercentage] = useState(null);
+  // const [selectedPercentage, SetSelectedPercentage] = useState(null);
+  const [valueSelected, SetValueSelected] = useState(0);
   const [toWithdrawShares, SetToWithdrawShares] = useState(0);
   const [open, SetOpen] = useState(false);
 
@@ -99,7 +111,7 @@ function WithDraw({
   const selectPercentage = (value) => {
     const amt = depositedAmount * (value / 100);
     SetAmountToWithdraw(amt.toFixed(4));
-    SetSelectedPercentage(value);
+    SetValueSelected(value);
     SetInputError(false);
   };
 
@@ -146,7 +158,7 @@ function WithDraw({
           &nbsp;
         </Grid>
 
-        <Grid container style={{ margin: "32px 0px", minHeight: "175px"}}>
+        <Grid container style={{ margin: "32px 0px", minHeight: "175px" }}>
           <Grid item xs={12}>
             <Box
               mt={2}
@@ -188,7 +200,7 @@ function WithDraw({
           <Grid item xs={12}>
             &nbsp;
           </Grid>
-          <Grid item xs={12} style={{position: "relative"}}>
+          <Grid item xs={12} style={{ position: "relative" }}>
             <StyledTextField
               onChange={(e) => onInputChange(e.target.value)}
               value={amountToWithdraw}
@@ -199,7 +211,7 @@ function WithDraw({
                 cursor: "pointer",
                 position: "absolute",
                 right: "12px",
-                top: "15px"
+                top: "15px",
               }}
               onClick={() => SetOpenCoinSelecting(!openCoinSelection)}
             >
@@ -209,7 +221,10 @@ function WithDraw({
                   className={classes.logoStableCoins}
                   alt=""
                 />
-                <span style={{ marginLeft: "8px" }}> {strategyData.tokens[selectedCoinIndex]}</span>
+                <span style={{ marginLeft: "8px" }}>
+                  {" "}
+                  {strategyData.tokens[selectedCoinIndex]}
+                </span>
                 <ArrowDropDownIcon />
               </div>
             </Box>
@@ -294,13 +309,9 @@ function WithDraw({
                   return (
                     <span
                       className={
-                        (index !== 4
-                          ? classes.assetScaleLabel
-                          : classes.assetMaxlabel) +
-                        " " +
-                        (selectedPercentage === scale.value
-                          ? classes.selectedPercentage
-                          : "")
+                        valueSelected === scale.value
+                          ? classes.assetSelectedlabel
+                          : classes.assetScaleLabel
                       }
                       onClick={() => selectPercentage(scale.value)}
                     >
@@ -331,7 +342,7 @@ function WithDraw({
                 logo={stableCoinLogos[strategyData.tokens[selectedCoinIndex]]}
                 stableCoinsContractData={
                   stableCoinsContracts[
-                  strategyData.erc20addresses[selectedCoinIndex].toLowerCase()
+                    strategyData.erc20addresses[selectedCoinIndex].toLowerCase()
                   ]
                 }
                 account={account}
@@ -341,7 +352,10 @@ function WithDraw({
           />
         </Grid>
         <Grid item xs={12}>
-          <StyledButton onClick={withdrawNow} disabled={inputError || !amountToWithdraw}>
+          <StyledButton
+            onClick={withdrawNow}
+            disabled={inputError || !amountToWithdraw}
+          >
             Withdraw
           </StyledButton>
         </Grid>

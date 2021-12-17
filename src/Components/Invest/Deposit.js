@@ -15,10 +15,14 @@ const useStyles = makeStyles(({ theme }) => ({
     margin: "0.3rem",
     cursor: "pointer",
   },
-  assetMaxlabel: {
+  assetSelectedlabel: {
     marginLeft: "0.3rem",
     cursor: "pointer",
+    background: "#375894",
+    borderRadius: "10px",
+    padding: "0 6px",
   },
+
   logoStableCoins: {
     height: "20px",
     marginTop: "2px",
@@ -78,6 +82,7 @@ function Deposit({
   const [inputError, SetInputError] = useState(false);
   const [selectedCoinIndex, SetSelectedCoinIndex] = useState(0);
   const [depositAmount, SetDepositAmount] = useState(0);
+  const [valueSelected, SetValueSelected] = useState(0);
   const [open, SetOpen] = useState(false);
   const stableCoinsContracts = useSelector(stableCoinsSelector);
   const account = useSelector(accountSelector);
@@ -86,7 +91,7 @@ function Deposit({
     let balance = parseFloat(
       coinBalances[strategyData.tokens[selectedCoinIndex]]
     );
-
+    SetValueSelected(value);
     let amount = (balance * (value / 100)).toFixed(4);
     SetDepositAmount(amount);
     SetInputError(false);
@@ -129,9 +134,11 @@ function Deposit({
   return (
     <Box sx={{ color: "white" }}>
       <Grid container>
-        <Grid item xs={12}>&nbsp;</Grid>
+        <Grid item xs={12}>
+          &nbsp;
+        </Grid>
 
-        <Grid container style={{margin: "32px 0px", minHeight: "175px"}}>
+        <Grid container style={{ margin: "32px 0px", minHeight: "175px" }}>
           <Grid item xs={12}>
             <Box
               mt={2}
@@ -152,7 +159,6 @@ function Deposit({
               <Box
                 sx={{
                   width: "60%",
-
                 }}
               >
                 Deposit funds into this strategy.
@@ -164,7 +170,8 @@ function Deposit({
                   // fontWeight: "550",
                 }}
               >
-                Available: {coinBalances[strategyData.tokens[selectedCoinIndex]]}{" "}
+                Available:{" "}
+                {coinBalances[strategyData.tokens[selectedCoinIndex]]}{" "}
                 {strategyData.tokens[selectedCoinIndex]}
               </Box>
             </Box>
@@ -172,7 +179,7 @@ function Deposit({
           <Grid item xs={12}>
             &nbsp;
           </Grid>
-          <Grid item xs={12} style={{position: "relative"}}>
+          <Grid item xs={12} style={{ position: "relative" }}>
             <StyledTextField
               value={depositAmount}
               onChange={(e) => onInputChange(e.target.value)}
@@ -183,18 +190,20 @@ function Deposit({
                 cursor: "pointer",
                 position: "absolute",
                 right: "12px",
-                top: "15px"
+                top: "15px",
               }}
               onClick={() => SetOpenCoinSelecting(!openCoinSelection)}
             >
-              <div style={{display: "flex", alignItems:"center"}}>
-                  <img
-                    src={stableCoinLogos[strategyData.tokens[selectedCoinIndex]]}
-                    className={classes.logoStableCoins}
-                    alt=""
-                  />
-                  <span style={{marginLeft: "8px"}}>{strategyData.tokens[selectedCoinIndex]}</span>
-                  <ArrowDropDownIcon />
+              <div style={{ display: "flex", alignItems: "center" }}>
+                <img
+                  src={stableCoinLogos[strategyData.tokens[selectedCoinIndex]]}
+                  className={classes.logoStableCoins}
+                  alt=""
+                />
+                <span style={{ marginLeft: "8px" }}>
+                  {strategyData.tokens[selectedCoinIndex]}
+                </span>
+                <ArrowDropDownIcon />
               </div>
             </Box>
             {openCoinSelection && (
@@ -279,9 +288,9 @@ function Deposit({
                     <span
                       key={index}
                       className={
-                        index !== 4
-                          ? classes.assetScaleLabel
-                          : classes.assetMaxlabel
+                        valueSelected === scale.value
+                          ? classes.assetSelectedlabel
+                          : classes.assetScaleLabel
                       }
                       onClick={() => selectPercentage(scale.value)}
                     >
@@ -293,7 +302,7 @@ function Deposit({
             </Box>
           </Grid>
         </Grid>
-      
+
         <Grid item xs={12}>
           &nbsp;
           <ActionConfirm

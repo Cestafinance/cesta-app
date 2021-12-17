@@ -10,7 +10,7 @@ import {
   changeWalletAction,
   disconnectWallet as disconnectWalletAction,
 } from "../../store/actions/web3";
-
+import AvalancheImage from "../../assets/networks/avalanche.png";
 
 import {
   networkIdSelector,
@@ -18,9 +18,7 @@ import {
   sourceSelector,
 } from "../../store/selectors/web3";
 
-import { 
-  CapitalizeFirstLetter
-} from "../../Util/textUtil";
+import { CapitalizeFirstLetter } from "../../Util/textUtil";
 
 // import { CustomThemeContext } from "../../themes/CustomThemeProvider";
 
@@ -77,20 +75,24 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     alignItems: "center",
     justifyContent: "flex-start",
-    width: "14rem",
+    // width: "14rem",
     padding: "8px",
     background: "rgba(57, 198, 228, 0.08)",
     borderRadius: "23px",
-    cursor: "pointer",
+    // cursor: "pointer",
     marginRight: "10px",
     color: "#FFFFFF",
   },
   networkLogo: {
-    height: "1.75rem",
-    position: "absolute",
+    height: "1.25rem",
+    // position: "absolute",
+    marginLeft: "0.25rem",
   },
   networkName: {
+    fontFamily: "Inter",
     color: "white",
+    fontSize: "3rem",
+    fontWeight: "bold",
   },
   networkOptionsLogo: {
     height: "1.5rem",
@@ -158,11 +160,11 @@ const useStyles = makeStyles((theme) => ({
     marginRight: "0.75rem",
     width: "100%",
     "&.MuiTypography-root": {
-      margin: "3px 0px"
+      margin: "3px 0px",
     },
-    "&:hover":{
-      background: "#375894"
-    }
+    "&:hover": {
+      background: "#375894",
+    },
   },
   userAddress: {
     width: "6rem",
@@ -176,7 +178,7 @@ const useStyles = makeStyles((theme) => ({
 
 const SelectedNetwork = styled(Typography)((theme) => ({
   "&.MuiTypography-root": {
-    marginLeft: "25px",
+    marginLeft: "8px",
     color: "#FFFFFF",
   },
 }));
@@ -188,14 +190,14 @@ const AccountAddress = styled(Typography)((theme) => ({
 }));
 
 const NetworkSelectButton = styled("div")(({ theme }) => ({
-  cursor: "pointer",
+  // cursor: "pointer",
   display: "flex",
   border: `1px solid rgba(55, 88, 148, 0.5)`,
   color: theme.palette.text.main,
   padding: "8px",
   alignItems: "center",
   fontSize: "12px",
-  background: "#141316"
+  background: "#141316",
 }));
 
 function Topbar() {
@@ -219,8 +221,10 @@ function Topbar() {
   }, [source]);
 
   useEffect(() => {
-    SetNetworkSelectOpen(networkMap[networkId] === undefined)
-  }, [networkId])
+    SetNetworkSelectOpen(
+      networkId !== 0 && networkMap[networkId] === undefined
+    );
+  }, [networkId]);
 
   const handleNetworkSelectionOption = () => {
     SetNetworkSelectOpen(!isNetworkSelectOpen);
@@ -265,15 +269,18 @@ function Topbar() {
     let url = networkScanUrl[networkId];
     window.open(`${url}address/${account}`, "_blank").focus();
   };
-
+  console.log(isNetworkSelectOpen, networkId, account);
   return (
     <Fragment>
       <div className={classes.headerContainer}>
         <div className={classes.header}>
           <div className={classes.grow}>
             <NetworkSelection
-              // open={isNetworkSelectOpen || (!networkMap[networkId])}
-              open={isNetworkSelectOpen}
+              open={
+                isNetworkSelectOpen ||
+                Boolean(!networkMap[networkId] && account && networkId !== 0)
+              }
+              // open={isNetworkSelectOpen}
               handleClose={handleNetworkSelectionOption}
               networkImages={networkImages}
               title={!networkMap[networkId]}
@@ -283,9 +290,12 @@ function Topbar() {
                 <Typography
                   variant="body1"
                   className={classes.optionsList}
-                  sx={{marginTop: "15px"}}
+                  sx={{ marginTop: "15px" }}
                   noWrap
-                  onClick={() => {SetOpenOptions(!openOptions); changeWallet()}}
+                  onClick={() => {
+                    SetOpenOptions(!openOptions);
+                    changeWallet();
+                  }}
                 >
                   Change wallet
                 </Typography>
@@ -293,16 +303,22 @@ function Topbar() {
                   variant="body1"
                   className={classes.optionsList}
                   noWrap
-                  onClick={() => {SetOpenOptions(!openOptions); disconnectWallet()} }
+                  onClick={() => {
+                    SetOpenOptions(!openOptions);
+                    disconnectWallet();
+                  }}
                 >
                   Disconnect
                 </Typography>
                 <Typography
                   variant="body1"
                   className={classes.optionsList}
-                  sx={{marginBottom: "15px"}}
+                  sx={{ marginBottom: "15px" }}
                   noWrap
-                  onClick={() => {SetOpenOptions(!openOptions); openEtherScanLink()}}
+                  onClick={() => {
+                    SetOpenOptions(!openOptions);
+                    openEtherScanLink();
+                  }}
                 >
                   View On Explorer
                 </Typography>
@@ -314,14 +330,19 @@ function Topbar() {
               className={classes.networkDropDown}
               // onClick={handleNetworkSelectionOption}
             >
-              <img
-                src={networkImages[networkMap[networkId]]}
-                alt=""
-                className={classes.networkLogo}
-              />
-              <SelectedNetwork className={classes.networkName} noWrap>
-                &nbsp; &nbsp;{CapitalizeFirstLetter(networkMap[networkId])}&nbsp;{networkMap[networkId]&&<span>Network</span>}
-              </SelectedNetwork>
+              <div style={{display: "flex", flexDirection:"row", alignItems: "center"}}>
+                <img
+                  src={AvalancheImage}
+                  alt=""
+                  className={classes.networkLogo}
+                />
+                <Typography sx={{marginLeft:"8px", marginRight: "4px"}}>{CapitalizeFirstLetter(networkMap[networkId])} {networkMap[networkId] && <span>Network</span>}</Typography>
+                {/* <SelectedNetwork className={classes.networkName}>
+                  &nbsp; &nbsp;{CapitalizeFirstLetter(networkMap[networkId])}
+                  &nbsp;{networkMap[networkId] && <span>Network</span>}
+                </SelectedNetwork> */}
+              </div>
+            
               {/* <ArrowDropDown className={classes.dropDownIcon} /> */}
             </NetworkSelectButton>
           )}
