@@ -34,8 +34,9 @@ const StyledAccordion = styled(Accordion)(({ theme }) => ({
 const useStyles = makeStyles((theme) => ({
   assetImages: {
     height: "30px",
-    marginLeft: "-10px",
-    borderRadius: "50%",
+    marginLeft: "25px",
+    top: '21%',
+    position: 'absolute'
   },
   downArrow: {
     height: '8px',
