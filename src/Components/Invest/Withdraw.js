@@ -14,6 +14,7 @@ import { stableCoinsSelector } from "../../store/selectors/commons";
 import ActionConfirm from "./modals/Modal";
 import WithdrawTemplate from "./modals/WithDraw";
 import DepositTemplate from "./modals/Deposit";
+import useGAEventsTracker from "../../Analytics/useGAEventsTracker";
 
 const useStyles = makeStyles(({ theme }) => ({
   assetScaleLabel: {

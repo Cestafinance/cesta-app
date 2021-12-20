@@ -6,10 +6,11 @@ import {
   AccordionDetails,
   Typography,
   Grid,
-  Box, Tooltip,
+  Box,
+  Tooltip,
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import InfoIcon from '@mui/icons-material/Info';
+import InfoIcon from "@mui/icons-material/Info";
 import { makeStyles } from "@mui/styles";
 import { useSelector } from "react-redux";
 
@@ -20,7 +21,8 @@ import {
   getPricePerFullShare,
 } from "../../store/interactions/vaults";
 import { accountSelector } from "../../store/selectors/web3";
-import ArrowDown from '../../assets/commons/arrow-down.png';
+import ArrowDown from "../../assets/commons/arrow-down.png";
+import useGAEventsTracker from "../../Analytics/useGAEventsTracker";
 
 const StyledAccordion = styled(Accordion)(({ theme }) => ({
   "&.MuiPaper-root": {
@@ -35,13 +37,13 @@ const useStyles = makeStyles((theme) => ({
   assetImages: {
     height: "30px",
     marginLeft: "25px",
-    top: '21%',
-    position: 'absolute'
+    top: "21%",
+    position: "absolute",
   },
   downArrow: {
-    height: '8px',
-    marginBottom: '4px'
-  }
+    height: "8px",
+    marginBottom: "4px",
+  },
 }));
 
 const StyledAccordionSummary = styled(AccordionSummary)(({ theme }) => ({
@@ -49,7 +51,7 @@ const StyledAccordionSummary = styled(AccordionSummary)(({ theme }) => ({
     background: "rgba(39, 62, 112, 0.25)",
     borderRadius: "1.5rem",
     border: 0,
-    margin: "10px 0 10px 0"
+    margin: "10px 0 10px 0",
   },
 }));
 
@@ -116,8 +118,8 @@ const RoiLabel = styled(Typography)((theme) => ({
 
 const StyledAccordionDetails = styled(AccordionDetails)(() => ({
   "&.MuiAccordionDetails-root": {
-    padding: '8px 0 8px 0'
-  }
+    padding: "8px 0 8px 0",
+  },
 }));
 
 function Strategy({ strategyData, strategyContract, vaultContract }) {
@@ -127,6 +129,7 @@ function Strategy({ strategyData, strategyContract, vaultContract }) {
   const [strategyImage, SetStrategyImage] = useState(null);
   const [depositedShares, SetDepositedShares] = useState(0);
   const [depositedAmount, SetDepositedAmount] = useState(0);
+  const GAEventsTracker = useGAEventsTracker("Strategy Dropdown");
 
   const account = useSelector(accountSelector);
 
@@ -176,6 +179,9 @@ function Strategy({ strategyData, strategyContract, vaultContract }) {
         expanded={isExpanded}
         onChange={() => {
           SetIsExpanded(!isExpanded);
+          isExpanded
+            ? GAEventsTracker(strategyData.name, "Expanded")
+            : GAEventsTracker(strategyData.name, "Closed");
         }}
       >
         <StyledAccordionSummary
@@ -186,10 +192,10 @@ function Strategy({ strategyData, strategyContract, vaultContract }) {
                 borderRadius: "50%",
                 height: "24px",
                 width: "24px",
-                padding: '4px'
+                padding: "4px",
               }}
             >
-              <img src={ArrowDown} alt="" className={classes.downArrow}/>
+              <img src={ArrowDown} alt="" className={classes.downArrow} />
               {/*<ExpandMoreIcon />*/}
             </Box>
           }
@@ -206,21 +212,21 @@ function Strategy({ strategyData, strategyContract, vaultContract }) {
             <Grid item xs={2} sx={{ textAlign: "center", marginLeft: "-15px" }}>
               <ValueLabel component={"span"}>
                 {new Intl.NumberFormat("en-US", {
-                    style: "currency",
-                    currency: "USD",
-                    maximumFractionDigits: 3,
-                    minimumFractionDigits: 2,
-                  }).format(Number(depositedAmount).toFixed(2))}
+                  style: "currency",
+                  currency: "USD",
+                  maximumFractionDigits: 3,
+                  minimumFractionDigits: 2,
+                }).format(Number(depositedAmount).toFixed(2))}
               </ValueLabel>
             </Grid>
             <Grid item xs={2} sx={{ textAlign: "center" }}>
               <LiquidityLabel component={"span"}>
                 {new Intl.NumberFormat("en-US", {
-                    style: "currency",
-                    currency: "USD",
-                    maximumFractionDigits: 3,
-                    minimumFractionDigits: 2,
-                  }).format(Number(strategyData.liquidity).toFixed(2))}
+                  style: "currency",
+                  currency: "USD",
+                  maximumFractionDigits: 3,
+                  minimumFractionDigits: 2,
+                }).format(Number(strategyData.liquidity).toFixed(2))}
               </LiquidityLabel>
             </Grid>
             <Grid item xs={2} sx={{ textAlign: "center", marginLeft: "10px" }}>
