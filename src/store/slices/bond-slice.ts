@@ -1,20 +1,20 @@
 import { ethers, constants } from "ethers";
-import { getMarketPrice, getTokenPrice } from "../../helpers1";
+import { getMarketPrice, getTokenPrice } from "../../helpers";
 import { calculateUserBondDetails, getBalances } from "./account-slice";
 import { getAddresses } from "../../Constants/v2";
 import { fetchPendingTxns, clearPendingTxn } from "./pending-txns-slice";
 import { createSlice, createSelector, createAsyncThunk } from "@reduxjs/toolkit";
 import { JsonRpcProvider, StaticJsonRpcProvider } from "@ethersproject/providers";
 import { fetchAccountSuccess } from "./account-slice";
-import { Bond } from "../../helpers1/bond/bond";
+import { Bond } from "../../helpers/bond/bond";
 import { Networks } from "../../Constants/v2/blockchain";
-import { getBondCalculator } from "../../helpers1/bond-calculator";
-import { avaxTime, wavax } from "../../helpers1/bond";
+import { getBondCalculator } from "../../helpers/bond-calculator";
+import { avaxTime, wavax } from "../../helpers/bond";
 import { error, warning, success, info } from "../slices/messages-slice";
 import { messages } from "../../Constants/v2/messages";
-import { getGasPrice } from "../../helpers1/get-gas-price";
-import { metamaskErrorWrap } from "../../helpers1/metamask-error-wrap";
-import { sleep } from "../../helpers1";
+import { getGasPrice } from "../../helpers/get-gas-price";
+import { metamaskErrorWrap } from "../../helpers/metamask-error-wrap";
+import { sleep } from "../../helpers";
 import { BigNumber } from "ethers";
 
 interface IChangeApproval {

@@ -1,8 +1,8 @@
 import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
-import allBonds from "../helpers1/bond";
+import allBonds from "../helpers/bond";
 import { IUserBondDetails } from "../store/slices/account-slice";
-import { Bond } from "../helpers1/bond/bond";
+import { Bond } from "../helpers/bond/bond";
 import { IBondDetails, IBondSlice } from "../store/slices/bond-slice";
 import { IReduxState } from "../store/slices/state.interface";
 

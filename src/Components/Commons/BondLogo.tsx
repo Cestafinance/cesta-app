@@ -1,5 +1,5 @@
 import { Box } from "@mui/material";
-import { Bond } from "../../helpers1/bond/bond";
+import { Bond } from "../../helpers/bond/bond";
 
 interface IBondLogoProps {
     bond: Bond;

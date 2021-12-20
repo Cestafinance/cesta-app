@@ -1,13 +1,13 @@
 import { ethers } from "ethers";
 import { getAddresses } from "../../Constants/v2";
 import { TimeTokenContract, MemoTokenContract, MimTokenContract, wMemoTokenContract } from "../../assets/abis/v2";
-import { setAll } from "../../helpers1";
+import { setAll } from "../../helpers";
 
 import { createSlice, createSelector, createAsyncThunk } from "@reduxjs/toolkit";
 import { JsonRpcProvider, StaticJsonRpcProvider } from "@ethersproject/providers";
-import { Bond } from "../../helpers1/bond/bond";
+import { Bond } from "../../helpers/bond/bond";
 import { Networks } from "../../Constants/v2/blockchain";
-import { IToken } from "../../helpers1/tokens";
+import { IToken } from "../../helpers/tokens";
 
 interface IGetBalances {
     address: string;

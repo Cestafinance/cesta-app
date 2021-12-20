@@ -1,12 +1,12 @@
 import { ethers } from "ethers";
 import { getAddresses } from "../../Constants/v2";
 import { StakingContract, MemoTokenContract, TimeTokenContract } from "../../assets/abis/v2";
-import { setAll } from "../../helpers1";
+import { setAll } from "../../helpers";
 import { createSlice, createSelector, createAsyncThunk } from "@reduxjs/toolkit";
 import { JsonRpcProvider } from "@ethersproject/providers";
-import { getMarketPrice, getTokenPrice } from "../../helpers1";
+import { getMarketPrice, getTokenPrice } from "../../helpers";
 import ConfigureStore from "../configureStore";
-import allBonds from "../../helpers1/bond";
+import allBonds from "../../helpers/bond";
  
 interface ILoadAppDetails {
     networkID: number;
