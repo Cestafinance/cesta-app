@@ -1,9 +1,10 @@
-import { Suspense, useState, lazy } from "react";
+import { Suspense, useState, lazy, useEffect } from "react";
 import {
   BrowserRouter as Router,
   Routes,
   Route,
   Navigate,
+  withRouter,
 } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import Sidebar from "./Components/Commons/Sidebar";
@@ -14,12 +15,13 @@ import { contractLoad } from "./store/interactions/stableCoins";
 import "./App.css";
 import { networkMap } from "./Constants/mains";
 import TagManager from "react-gtm-module";
+import ReactGA from "react-ga";
 
 const tagManagerArgs = {
-  gtmId: "GTM-WV2DCK6",
+  gtmId: process.env.REACT_GTM_TRACKING,
 };
-
 TagManager.initialize(tagManagerArgs);
+ReactGA.initialize(process.env.REACT_GA_TRACKING);
 
 const Invest = lazy(() => import("./Components/Invest"));
 const Bond = lazy(() => import("./Components/Bond"));
@@ -63,6 +65,10 @@ function App() {
     }
   };
 
+  useEffect(() => {
+    ReactGA.pageview(window.location.pathname + window.location.search);
+  });
+
   return (
     <div className="App">
       <Router>
@@ -86,4 +92,4 @@ function App() {
   );
 }
 
-export default App;
+export default withRouter(App);
