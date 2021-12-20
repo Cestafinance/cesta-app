@@ -22,6 +22,7 @@ import {networkMap} from "../../Constants/mains";
 import {loadVaultContract} from "../../store/interactions/vaults";
 import {loadStrategyContract} from "../../store/interactions/strategies";
 
+
 const useStyles = makeStyles((theme) => ({
     mainContainer: {
         background: theme.palette.app.main,
