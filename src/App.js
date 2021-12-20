@@ -4,7 +4,6 @@ import {
   Routes,
   Route,
   Navigate,
-  withRouter,
 } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import Sidebar from "./Components/Commons/Sidebar";
@@ -92,4 +91,4 @@ function App() {
   );
 }
 
-export default withRouter(App);
+export default App;

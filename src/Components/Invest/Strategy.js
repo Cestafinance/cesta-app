@@ -22,6 +22,7 @@ import {
 } from "../../store/interactions/vaults";
 import { accountSelector } from "../../store/selectors/web3";
 import ArrowDown from "../../assets/commons/arrow-down.png";
+import useGAEventsTracker from "../../Analytics/useGAEventsTracker";
 
 const StyledAccordion = styled(Accordion)(({ theme }) => ({
   "&.MuiPaper-root": {
@@ -36,8 +37,8 @@ const useStyles = makeStyles((theme) => ({
   assetImages: {
     height: "30px",
     marginLeft: "25px",
-    top: '21%',
-    position: 'absolute'
+    top: "21%",
+    position: "absolute",
   },
   downArrow: {
     height: "8px",
@@ -128,6 +129,7 @@ function Strategy({ strategyData, strategyContract, vaultContract }) {
   const [strategyImage, SetStrategyImage] = useState(null);
   const [depositedShares, SetDepositedShares] = useState(0);
   const [depositedAmount, SetDepositedAmount] = useState(0);
+  const GAEventsTracker = useGAEventsTracker("Strategy Dropdown");
 
   const account = useSelector(accountSelector);
 
@@ -177,6 +179,9 @@ function Strategy({ strategyData, strategyContract, vaultContract }) {
         expanded={isExpanded}
         onChange={() => {
           SetIsExpanded(!isExpanded);
+          isExpanded
+            ? GAEventsTracker(strategyData.name, "Expanded")
+            : GAEventsTracker(strategyData.name, "Closed");
         }}
       >
         <StyledAccordionSummary
