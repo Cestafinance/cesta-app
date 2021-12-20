@@ -1,23 +1,24 @@
 import React, { Fragment, useState, useEffect, useContext } from "react";
-import { useLocation } from "react-router-dom";
 
 import { makeStyles, styled } from "@mui/styles";
 import { Typography } from "@mui/material";
 import { ArrowDropDown } from "@mui/icons-material";
 import { useDispatch, useSelector } from "react-redux";
-import online from "../../assets/commons/online.png";
 import { networkMap, networkScanUrl } from "../../Constants/mains";
 import NetworkSelection from "./NetworkSelection";
 import {
   changeWalletAction,
   disconnectWallet as disconnectWalletAction,
 } from "../../store/actions/web3";
+import AvalancheImage from "../../assets/networks/avalanche.png";
 
 import {
   networkIdSelector,
   accountSelector,
   sourceSelector,
 } from "../../store/selectors/web3";
+
+import { CapitalizeFirstLetter } from "../../Util/textUtil";
 
 // import { CustomThemeContext } from "../../themes/CustomThemeProvider";
 
@@ -74,20 +75,24 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     alignItems: "center",
     justifyContent: "flex-start",
-    width: "12rem",
+    // width: "14rem",
     padding: "8px",
     background: "rgba(57, 198, 228, 0.08)",
     borderRadius: "23px",
-    cursor: "pointer",
+    // cursor: "pointer",
     marginRight: "10px",
     color: "#FFFFFF",
   },
   networkLogo: {
-    height: "1.75rem",
-    position: "absolute",
+    height: "1.25rem",
+    // position: "absolute",
+    marginLeft: "0.25rem",
   },
   networkName: {
+    fontFamily: "Inter",
     color: "white",
+    fontSize: "3rem",
+    fontWeight: "bold",
   },
   networkOptionsLogo: {
     height: "1.5rem",
@@ -122,7 +127,8 @@ const useStyles = makeStyles((theme) => ({
     },
     width: "14rem",
     padding: "8px",
-    background: "rgba(57, 198, 228, 0.08)",
+    border: `1px solid rgba(55, 88, 148, 0.5)`,
+    background: "#141316",
     borderRadius: "23px",
     cursor: "pointer",
     color: "#FFFFFF",
@@ -137,8 +143,10 @@ const useStyles = makeStyles((theme) => ({
     float: "right",
     right: "82px",
     top: "105%",
-    background: "rgba(57, 198, 228, 0.08)",
+    background: "#141316",
+    border: `1px solid rgba(55, 88, 148, 0.5)`,
     borderRadius: "23px",
+    padding: "10px 0px",
     width: "14rem",
     display: "flex",
     flexDirection: "column",
@@ -150,6 +158,13 @@ const useStyles = makeStyles((theme) => ({
     cursor: "pointer",
     height: "1.75rem",
     marginRight: "0.75rem",
+    width: "100%",
+    "&.MuiTypography-root": {
+      margin: "3px 0px",
+    },
+    "&:hover": {
+      background: "#375894",
+    },
   },
   userAddress: {
     width: "6rem",
@@ -163,9 +178,8 @@ const useStyles = makeStyles((theme) => ({
 
 const SelectedNetwork = styled(Typography)((theme) => ({
   "&.MuiTypography-root": {
-    marginLeft: "25px",
+    marginLeft: "8px",
     color: "#FFFFFF",
-    textTransform: "uppercase",
   },
 }));
 
@@ -176,13 +190,14 @@ const AccountAddress = styled(Typography)((theme) => ({
 }));
 
 const NetworkSelectButton = styled("div")(({ theme }) => ({
-  cursor: "pointer",
+  // cursor: "pointer",
   display: "flex",
-  border: `1px solid ${theme.palette.border.main}`,
+  border: `1px solid rgba(55, 88, 148, 0.5)`,
   color: theme.palette.text.main,
   padding: "8px",
   alignItems: "center",
   fontSize: "12px",
+  background: "#141316",
 }));
 
 function Topbar() {
@@ -204,6 +219,15 @@ function Topbar() {
   useEffect(() => {
     getImageData(source);
   }, [source]);
+
+  useEffect(() => {
+    if(networkId === 1) {
+      window.location.reload(false);
+    }
+    SetNetworkSelectOpen(
+      networkId !== 0 && networkMap[networkId] === undefined
+    );
+  }, [networkId]);
 
   const handleNetworkSelectionOption = () => {
     SetNetworkSelectOpen(!isNetworkSelectOpen);
@@ -248,14 +272,18 @@ function Topbar() {
     let url = networkScanUrl[networkId];
     window.open(`${url}address/${account}`, "_blank").focus();
   };
-
+  console.log(isNetworkSelectOpen, networkId, account);
   return (
     <Fragment>
       <div className={classes.headerContainer}>
         <div className={classes.header}>
           <div className={classes.grow}>
             <NetworkSelection
-              open={isNetworkSelectOpen}
+              open={
+                isNetworkSelectOpen ||
+                Boolean(!networkMap[networkId] && account && networkId !== 0)
+              }
+              // open={isNetworkSelectOpen}
               handleClose={handleNetworkSelectionOption}
               networkImages={networkImages}
               title={!networkMap[networkId]}
@@ -265,8 +293,12 @@ function Topbar() {
                 <Typography
                   variant="body1"
                   className={classes.optionsList}
+                  sx={{ marginTop: "15px" }}
                   noWrap
-                  onClick={changeWallet}
+                  onClick={() => {
+                    SetOpenOptions(!openOptions);
+                    changeWallet();
+                  }}
                 >
                   Change wallet
                 </Typography>
@@ -274,35 +306,47 @@ function Topbar() {
                   variant="body1"
                   className={classes.optionsList}
                   noWrap
-                  onClick={disconnectWallet}
+                  onClick={() => {
+                    SetOpenOptions(!openOptions);
+                    disconnectWallet();
+                  }}
                 >
                   Disconnect
                 </Typography>
                 <Typography
                   variant="body1"
                   className={classes.optionsList}
+                  sx={{ marginBottom: "15px" }}
                   noWrap
-                  onClick={openEtherScanLink}
+                  onClick={() => {
+                    SetOpenOptions(!openOptions);
+                    openEtherScanLink();
+                  }}
                 >
-                  View On Etherscan
+                  View On Explorer
                 </Typography>
               </div>
             )}
           </div>
-          {account && (
+          {account && networkMap[networkId] && (
             <NetworkSelectButton
               className={classes.networkDropDown}
-              onClick={handleNetworkSelectionOption}
+              // onClick={handleNetworkSelectionOption}
             >
-              <img
-                src={networkImages[networkMap[networkId]]}
-                alt=""
-                className={classes.networkLogo}
-              />
-              <SelectedNetwork className={classes.networkName} noWrap>
-                &nbsp; &nbsp;{networkMap[networkId]}&nbsp;
-              </SelectedNetwork>
-              <ArrowDropDown className={classes.dropDownIcon} />
+              <div style={{display: "flex", flexDirection:"row", alignItems: "center"}}>
+                <img
+                  src={AvalancheImage}
+                  alt=""
+                  className={classes.networkLogo}
+                />
+                <Typography sx={{marginLeft:"8px", marginRight: "4px"}}>{CapitalizeFirstLetter(networkMap[networkId])} {networkMap[networkId] && <span>Network</span>}</Typography>
+                {/* <SelectedNetwork className={classes.networkName}>
+                  &nbsp; &nbsp;{CapitalizeFirstLetter(networkMap[networkId])}
+                  &nbsp;{networkMap[networkId] && <span>Network</span>}
+                </SelectedNetwork> */}
+              </div>
+            
+              {/* <ArrowDropDown className={classes.dropDownIcon} /> */}
             </NetworkSelectButton>
           )}
           {account && (

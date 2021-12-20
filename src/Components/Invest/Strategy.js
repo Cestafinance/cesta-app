@@ -6,9 +6,10 @@ import {
   AccordionDetails,
   Typography,
   Grid,
+  Box, Tooltip,
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import InfoIcon from '@mui/icons-material/Info';
 import { makeStyles } from "@mui/styles";
 import { useSelector } from "react-redux";
 
@@ -19,6 +20,7 @@ import {
   getPricePerFullShare,
 } from "../../store/interactions/vaults";
 import { accountSelector } from "../../store/selectors/web3";
+import ArrowDown from '../../assets/commons/arrow-down.png';
 
 const StyledAccordion = styled(Accordion)(({ theme }) => ({
   "&.MuiPaper-root": {
@@ -32,9 +34,14 @@ const StyledAccordion = styled(Accordion)(({ theme }) => ({
 const useStyles = makeStyles((theme) => ({
   assetImages: {
     height: "30px",
-    marginLeft: "-10px",
-    borderRadius: "50%",
+    marginLeft: "25px",
+    top: '21%',
+    position: 'absolute'
   },
+  downArrow: {
+    height: '8px',
+    marginBottom: '4px'
+  }
 }));
 
 const StyledAccordionSummary = styled(AccordionSummary)(({ theme }) => ({
@@ -42,6 +49,7 @@ const StyledAccordionSummary = styled(AccordionSummary)(({ theme }) => ({
     background: "rgba(39, 62, 112, 0.25)",
     borderRadius: "1.5rem",
     border: 0,
+    margin: "10px 0 10px 0"
   },
 }));
 
@@ -50,11 +58,11 @@ const TokenName = styled(Typography)((theme) => ({
     fontFamily: "Inter",
     fontStyle: "normal",
     fontWeight: "bold",
-    fontSize: "1rem",
-    lineHeight: "1rem",
+    fontSize: "1.1rem",
+    lineHeight: "1.1rem",
     alignItems: "center",
     position: "absolute",
-    top: "28%",
+    top: "36%",
     left: "12%",
     color: "#FFFFFF",
   },
@@ -65,12 +73,12 @@ const ValueLabel = styled(Typography)((theme) => ({
     fontFamily: "Inter",
     fontStyle: "normal",
     fontWeight: "normal",
-    fontSize: "1rem",
-    lineHeight: "1rem",
+    fontSize: "1.1rem",
+    lineHeight: "1.1rem",
     alignItems: "right",
     position: "absolute",
-    top: "28%",
-    left: "45%",
+    top: "36%",
+    marginLeft: "5px",
     color: "#FFFFFF",
   },
 }));
@@ -80,12 +88,13 @@ const LiquidityLabel = styled(Typography)((theme) => ({
     fontFamily: "Inter",
     fontStyle: "normal",
     fontWeight: "normal",
-    fontSize: "1rem",
-    lineHeight: "1rem",
+    fontSize: "1.1rem",
+    lineHeight: "1.1rem",
     alignItems: "center",
     position: "absolute",
-    top: "28%",
-    left: "63%",
+    marginLeft: "-2px",
+    top: "36%",
+    // left: "63%",
     color: "#FFFFFF",
   },
 }));
@@ -95,14 +104,20 @@ const RoiLabel = styled(Typography)((theme) => ({
     fontFamily: "Inter",
     fontStyle: "normal",
     fontWeight: "normal",
-    fontSize: "18px",
-    lineHeight: "18px",
+    fontSize: "1.1rem",
+    lineHeight: "1.1rem",
     alignItems: "right",
     position: "absolute",
-    top: "28%",
-    right: "13%",
+    top: "36%",
+    // right: "13%",
     color: "#15C73E",
   },
+}));
+
+const StyledAccordionDetails = styled(AccordionDetails)(() => ({
+  "&.MuiAccordionDetails-root": {
+    padding: '8px 0 8px 0'
+  }
 }));
 
 function Strategy({ strategyData, strategyContract, vaultContract }) {
@@ -164,29 +179,64 @@ function Strategy({ strategyData, strategyContract, vaultContract }) {
         }}
       >
         <StyledAccordionSummary
-          expandIcon={<ExpandMoreIcon fill={"red"} />}
+          expandIcon={
+            <Box
+              sx={{
+                background: "rgba(39, 62, 112, 0.25)",
+                borderRadius: "50%",
+                height: "24px",
+                width: "24px",
+                padding: '4px'
+              }}
+            >
+              <img src={ArrowDown} alt="" className={classes.downArrow}/>
+              {/*<ExpandMoreIcon />*/}
+            </Box>
+          }
           aria-controls="panel1a-content"
           id="panel1a-header"
         >
           <Grid container>
-            <Grid item xs={3}>
+            <Grid item xs={6}>
               <img src={strategyImage} className={classes.assetImages} alt="" />
               {/*<img src={Asset2} className={classes.assetImages} alt=""/>*/}
               {/*<img src={Asset3} className={classes.assetImages} alt=""/>*/}
               <TokenName variant="body">{strategyData.name}</TokenName>
             </Grid>
-            <Grid item xs={3}>
-              <ValueLabel>$ {depositedAmount.toLocaleString()}</ValueLabel>
+            <Grid item xs={2} sx={{ textAlign: "center", marginLeft: "-15px" }}>
+              <ValueLabel component={"span"}>
+                {new Intl.NumberFormat("en-US", {
+                    style: "currency",
+                    currency: "USD",
+                    maximumFractionDigits: 3,
+                    minimumFractionDigits: 2,
+                  }).format(Number(depositedAmount).toFixed(2))}
+              </ValueLabel>
             </Grid>
-            <Grid item xs={3}>
-              <LiquidityLabel>$ {strategyData.liquidity}</LiquidityLabel>
+            <Grid item xs={2} sx={{ textAlign: "center" }}>
+              <LiquidityLabel component={"span"}>
+                {new Intl.NumberFormat("en-US", {
+                    style: "currency",
+                    currency: "USD",
+                    maximumFractionDigits: 3,
+                    minimumFractionDigits: 2,
+                  }).format(Number(strategyData.liquidity).toFixed(2))}
+              </LiquidityLabel>
             </Grid>
-            <Grid item xs={3}>
-              <RoiLabel>{strategyData.ROI} %</RoiLabel>
+            <Grid item xs={2} sx={{ textAlign: "center", marginLeft: "10px" }}>
+              <RoiLabel component={"span"}>{strategyData.ROI} %</RoiLabel>
+              {/*<Box sx={{right: '10%', top: '30%', position: 'absolute'}}>*/}
+              {/*  <Tooltip*/}
+              {/*      title={"ROI"}*/}
+              {/*      placement="top-end"*/}
+              {/*  >*/}
+              {/*    <InfoIcon sx={{color: 'rgba(55, 88, 148, 1)'}}/>*/}
+              {/*  </Tooltip>*/}
+              {/*</Box>*/}
             </Grid>
           </Grid>
         </StyledAccordionSummary>
-        <AccordionDetails>
+        <StyledAccordionDetails>
           <StrategyDetails
             getShareAndUSDValue={getShareAndUSDValue}
             depositedAmount={depositedAmount}
@@ -196,7 +246,7 @@ function Strategy({ strategyData, strategyContract, vaultContract }) {
             depositedShares={depositedShares}
             vaultContract={vaultContract}
           />
-        </AccordionDetails>
+        </StyledAccordionDetails>
       </StyledAccordion>
     </Fragment>
   );

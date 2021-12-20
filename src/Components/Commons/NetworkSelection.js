@@ -9,7 +9,7 @@ import {
     Dialog,
     Button, CircularProgress, Grid,
 } from '@mui/material';
-import { styled } from '@mui/material/styles';
+import {styled} from '@mui/material/styles';
 import {
     makeStyles
 } from '@mui/styles';
@@ -18,13 +18,17 @@ import {
     ChainID,
 } from '../../Constants/mains';
 import {useSelector} from "react-redux";
-import {networkIdSelector} from '../../store/selectors/web3.js';
+import {networkIdSelector, accountSelector} from '../../store/selectors/web3.js';
+import {
+    CapitalizeFirstLetter
+} from "../../Util/textUtil";
+import Warning from '../../assets/commons/warning.png';
 
 const DialogTitle = (props) => {
-    const { children, onClose, ...other } = props;
+    const {children, onClose, ...other} = props;
 
     return (
-        <MuiDialogTitle sx={{ m: 0, p: 2 }} {...other}>
+        <MuiDialogTitle sx={{m: 0, p: 2}} {...other}>
             {children}
             {onClose ? (
                 <IconButton
@@ -37,7 +41,7 @@ const DialogTitle = (props) => {
                         color: (theme) => theme.palette.grey[500],
                     }}
                 >
-                    <CloseIcon />
+                    <CloseIcon/>
                 </IconButton>
             ) : null}
         </MuiDialogTitle>
@@ -60,28 +64,49 @@ const DialogMain = styled(Dialog)(({theme}) => ({
     '& .MuiDialog-paper': {
         background: '#0F1322',
         borderRadius: '16px',
-        border: "1px solid rgba(75, 134, 242, 0.5)" ,
+        border: "1px solid rgba(75, 134, 242, 0.5)",
         width: "100%"
     }
 }));
 
 const ButtonStyle = styled(Button)(({theme}) => ({
     '&.MuiButton-root': {
-        background: "rgba(13, 153, 184, 0.2)",
+        background: "none",
+        border: "1px solid rgba(75, 134, 242, 0.5)",
         borderRadius: "13px",
         width: "100%",
         height: "52px",
         cursor: "pointer",
         justifyContent: "start",
         '&:hover': {
-            background: "rgba(0, 209, 255,0.5)"
+            background: "#4B86F2"
+        }
+    },
+}));
+
+
+const SelectNetworkButton = styled(Button)(({theme}) => ({
+    '&.MuiButton-root': {
+        background: "#4B86F2",
+        border: "1px solid rgba(55, 88, 148, 0.2)",
+        borderRadius: "12px",
+        width: "50%",
+        height: "40px",
+        cursor: "pointer",
+        justifyContent: "center",
+        margin: "15px 0px",
+        "&.MuiTypography-root": {
+            marginLeft: "0px",
+        },
+        '&:hover': {
+            background: "#4B86F2"
         }
     },
 }));
 
 const useStyles = makeStyles((theme) => ({
     networkName: {
-        fontFamily: "Ambit",
+        fontFamily: "Inter",
         fontStyle: "normal",
         fontWeight: "normal",
         display: "flex",
@@ -89,25 +114,28 @@ const useStyles = makeStyles((theme) => ({
         marginLeft: "20px"
     },
     selectWalletHeader: {
-        fontFamily: "Ambit",
-        fontStyle: "normal",
-        fontWeight: "bold",
         display: "flex",
-        color: "#00D1FF",
+        color: "#4B86F2",
+        "&.MuiTypography-root": {
+            fontStyle: "normal",
+            fontWeight: "bold",
+            fontSize: "20px",
+        }
     },
     selectWalletMessage: {
-        fontFamily: "Ambit",
-        fontStyle: "normal",
-        fontWeight: "normal",
         alignItems: "center",
-        color: "#FFFFFF",
+        "&.MuiTypography-root": {
+            fontStyle: "normal",
+            color: "#FFFFFF",
+            fontWeight: "bold"
+        }
     },
     selectWalletMessageNetworkName: {
-        fontFamily: "Ambit",
-        fontStyle: "normal",
-        fontWeight: "normal",
         alignItems: "center",
-        color: "#00D1FF",
+        color: "#4B86F2",
+        "&.MuiTypography-root": {
+            fontWeight: "bold",
+        }
     },
     networkLogo: {
         height: "14px",
@@ -115,24 +143,90 @@ const useStyles = makeStyles((theme) => ({
         marginRight: "41%"
     },
     selectedNetwork: {
-        background: "#0D99B8"
+        background: "#375894 !important"
     }
 }));
 
 const NetworkName = styled(Typography)(({theme}) => ({
-    fontFamily: "Inter",
-    fontStyle: "normal",
-    fontWeight: "normal",
-    display: "flex",
     color: "#FFFFFF",
-    marginLeft: "20px"
+    "&.MuiTypography-root": {
+        marginLeft: "20px",
+        fontWeight: "bold",
+        "&:first-letter": {
+            textTransform: "capitalize"
+        }
+    }
 }));
 
-const Networks = Object.values(networkMap);
+const SwitchNetworkName = styled(Typography)(({theme}) => ({
+    color: "#FFFFFF",
+    "&.MuiTypography-root": {
+        fontWeight: "normal",
+        fontFamily: "Inter",
+        "&:first-letter": {
+            textTransform: "capitalize"
+        }
+    }
+}));
+
+const WrongNetworkMessage = styled(Typography)(({theme}) => ({
+    "&.MuiTypography-root": {
+        color: "rgba(75, 134, 242, 1)",
+        fontFamily: 'Inter',
+        fontStyle: 'normal',
+        fontWeight: 'normal',
+        fontSize: '20px',
+        lineHeight: '14px',
+        "&:first-letter": {
+            textTransform: "capitalize"
+        }
+    }
+}));
+
+const SelectNetworkMessage = styled(Typography)(({theme}) => ({
+    "&.MuiTypography-root": {
+        color: "rgba(75, 134, 242, 1)",
+        fontFamily: 'Inter',
+        fontStyle: 'normal',
+        fontWeight: 'normal',
+        fontSize: '18px',
+        lineHeight: '14px',
+        "&:first-letter": {
+            textTransform: "capitalize"
+        }
+    }
+}));
+
+const CestaNetworkMessage = styled(Typography)(({theme}) => ({
+    "&.MuiTypography-root": {
+        color: "#FFFFFF",
+        fontFamily: 'Inter',
+        fontStyle: 'normal',
+        fontWeight: 'normal',
+        fontSize: '18px',
+        lineHeight: '18px',
+    }
+}));
+
+const Network =  styled(Typography)(({theme}) => ({
+    "&.MuiTypography-root": {
+        color: "rgba(75, 134, 242, 1)",
+        fontFamily: 'Inter',
+        fontStyle: 'normal',
+        fontWeight: 'normal',
+        fontSize: '18px',
+        lineHeight: '18px',
+    }
+}));
+
+const mainnet = [
+    "avalanche",
+]
+const Networks = Object.values(networkMap).filter(n => mainnet.includes(n));
 
 function NetworkSelection({
-    open, handleClose, networkImages,
-    title
+                              open, handleClose, networkImages,
+                              title
                           }) {
 
     const classes = useStyles();
@@ -141,16 +235,17 @@ function NetworkSelection({
 
     const changeNetwork = async (networkName) => {
         let networkStringName = networkName.toUpperCase();
-        let netAddress  = ChainID[networkStringName]?ChainID[networkStringName].toString(): null;
-        if(!netAddress) {
+        let netAddress = ChainID[networkStringName] ? ChainID[networkStringName].toString() : null;
+        if (!netAddress) {
             return;
         }
         netAddress = (+netAddress).toString(16);
         netAddress = '0x' + netAddress;
         await window.ethereum.request({
             method: 'wallet_switchEthereumChain',
-            params: [{ chainId: netAddress }], // chainId must be in hexadecimal numbers
+            params: [{chainId: netAddress}], // chainId must be in hexadecimal numbers
         });
+        handleClose();
     }
 
     const getWidthPercentage = () => {
@@ -160,11 +255,11 @@ function NetworkSelection({
             body = doc.getElementsByTagName('body')[0],
             x = win.innerWidth || docElem.clientWidth || body.clientWidth;
 
-        if(x> 1600) {
+        if (x > 1600) {
             return '35%'
-        } else if(x> 1200) {
+        } else if (x > 1200) {
             return '50%'
-        }else if(x> 800) {
+        } else if (x > 800) {
             return '75%'
         } else {
             return '85%'
@@ -173,63 +268,106 @@ function NetworkSelection({
 
     return <Fragment>
         <DialogMain
-                    onClose={handleClose}
-                    aria-labelledby="customized-dialog-title"
-                    open={open}>
-            {!title ?<DialogTitle id="customized-dialog-title" onClose={handleClose}>
-                <Typography variant="body1" className={classes.selectWalletHeader}>
-                    Select Network
-                </Typography>
-                <Typography component="span" className={classes.selectWalletMessage}>
-                    Currently You are using
-                </Typography>
-                <Typography component="span" className={classes.selectWalletMessageNetworkName}>
-                    &nbsp;{networkMap[networkId]}&nbsp;
-                </Typography>
-                <Typography component="span" className={classes.selectWalletMessage}>
-                     network
-                </Typography>
-            </DialogTitle> : <DialogTitle id="customized-dialog-title">
-                <Typography variant="body1" className={classes.selectWalletHeader}>
-                    You are in unsupported network
-                </Typography>
-                <Typography component="span" className={classes.selectWalletMessage}>
-                    Please select network from below
-                </Typography>
-            </DialogTitle>}
-            <DialogContent dividers >
-                <Grid container spacing={2}>
-                    <Grid item xs={1}>
-                    </Grid>
-                    <Grid item xs={10}>
-                        <Grid
-                            container
-                            direction="row"
-                            spacing={3}
-                        >
-                            {Networks.map((network, index) => {
-                                return <Grid item key={index}
-                                             xs={12} sm={6}
-                                >
-                                    <ButtonStyle
-                                        key={network}
-                                        className={network === networkMap[networkId]? classes.selectedNetwork: ''}
-                                        onClick={() => changeNetwork(network)}
-                                    >
-                                        <img src={networkImages[network]} alt="" className={classes.networkLogo}/>
+            onClose={(event, reason) => {
+                if(reason !== 'backdropClick') {
+                    handleClose()
+                }
+            }}
+            aria-labelledby="customized-dialog-title"
+            open={open}>
+            <DialogTitle id="customized-dialog-title" onClose={handleClose}>
+            </DialogTitle>
 
-                                        <NetworkName variant="body1">
-                                            {network}
-                                        </NetworkName>
-                                    </ButtonStyle>
-                                </Grid>
-                            })}
-                        </Grid>
+            {!title ? <DialogContent dividers>
+                <Grid
+                    container
+                    spacing={3}
+                >
+                    <Grid item xs={12} sx={{textAlign: 'center'}}>
+                        <SelectNetworkMessage>
+                            Select Network
+                        </SelectNetworkMessage>
                     </Grid>
-                    <Grid item xs={1}>
+                    <Grid item xs={12} sx={{textAlign: 'center', paddingBottom: '10px !important'}}>
+                        <CestaNetworkMessage  component={'span'}>
+                            Currently You are Using <Network component={'span'}>{CapitalizeFirstLetter(networkMap[networkId])}</Network> Network
+                        </CestaNetworkMessage>
+                    </Grid>
+                    <Grid item xs={12} sx={{textAlign: 'center'}}>
+                        {Networks.map((network, index) => {
+                            return <SelectNetworkButton
+                                key={network}
+                                className={network === networkMap[networkId] ? classes.selectedNetwork : ''}
+                                onClick={() => changeNetwork(network)}
+                            >
+                                {/*<img src={networkImages[network]} alt="" className={classes.networkLogo}/>*/}
+
+                                <CestaNetworkMessage variant="body1">
+                                    Switch To {CapitalizeFirstLetter(network)} Mainnet
+                                </CestaNetworkMessage>
+                            </SelectNetworkButton>
+                        })}
                     </Grid>
                 </Grid>
-            </DialogContent>
+                {/*<Grid*/}
+                {/*    container*/}
+                {/*    direction="row"*/}
+                {/*    spacing={3}*/}
+                {/*    sx={{padding: "15px 0px"}}*/}
+                {/*>*/}
+                {/*    {Networks.map((network, index) => {*/}
+                {/*        return <Grid item key={index}*/}
+                {/*                     xs={12} sm={6}*/}
+                {/*        >*/}
+                {/*            <ButtonStyle*/}
+                {/*                key={network}*/}
+                {/*                className={network === networkMap[networkId] ? classes.selectedNetwork : ''}*/}
+                {/*                onClick={() => changeNetwork(network)}*/}
+                {/*            >*/}
+                {/*                <img src={networkImages[network]} alt="" className={classes.networkLogo}/>*/}
+
+                {/*                <NetworkName variant="body1">*/}
+                {/*                    {CapitalizeFirstLetter(network)}*/}
+                {/*                </NetworkName>*/}
+                {/*            </ButtonStyle>*/}
+                {/*        </Grid>*/}
+                {/*    })}*/}
+                {/*</Grid>*/}
+            </DialogContent> : <DialogContent dividers>
+                <Grid
+                    container
+                    spacing={3}
+                >
+                    <Grid item xs={12} sx={{textAlign: 'center'}}>
+                        <img src={Warning} alt=""/>
+                    </Grid>
+                    <Grid item xs={12} sx={{textAlign: 'center', paddingTop: '0px !important'}}>
+                        <WrongNetworkMessage>
+                            Wrong Network
+                        </WrongNetworkMessage>
+                    </Grid>
+                    <Grid item xs={12} sx={{textAlign: 'center', paddingBottom: '10px !important'}}>
+                        <CestaNetworkMessage>
+                            Cesta.finance only works on Avalanche Mainnet.
+                        </CestaNetworkMessage>
+                    </Grid>
+                    <Grid item xs={12} sx={{textAlign: 'center'}}>
+                        {Networks.map((network, index) => {
+                            return <SelectNetworkButton
+                                key={network}
+                                className={network === networkMap[networkId] ? classes.selectedNetwork : ''}
+                                onClick={() => changeNetwork(network)}
+                            >
+                                {/*<img src={networkImages[network]} alt="" className={classes.networkLogo}/>*/}
+
+                                <CestaNetworkMessage variant="body1">
+                                    Switch To {CapitalizeFirstLetter(network)} Mainnet
+                                </CestaNetworkMessage>
+                            </SelectNetworkButton>
+                        })}
+                    </Grid>
+                </Grid>
+            </DialogContent>}
         </DialogMain>
     </Fragment>
 

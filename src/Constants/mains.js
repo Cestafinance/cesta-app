@@ -3,7 +3,7 @@ import {lazy} from 'react';
 export const ChainID = {
     ETHEREUM: 1,
     KOVAN: 42,
-    MATIC: 137,
+    POLYGON: 137,
     MUMBAI: 80001,
     BSCTEST: 97,
     BSC: 56,
@@ -18,12 +18,8 @@ export const ChainID = {
 
 
 export const networkMap = {
-    42:'kovan',
-    1: 'ethereum',
-    137: 'polygon',
     43113: 'fuji',
     43114: 'avalanche',
-    42161: 'arbitrum'
 }
 
 
@@ -61,6 +57,8 @@ export const GraphTimeRanges = [{
 export const networkScanUrl = {
     42:'https://kovan.etherscan.io/',
     1: 'https://etherscan.io/',
+    43114: 'https://snowtrace.io/',
+    43113: 'https://testnet.snowtrace.io/',
     137: "https://polygonscan.com/"
 }
 

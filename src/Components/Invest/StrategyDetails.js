@@ -45,7 +45,7 @@ const useStyles = makeStyles((theme) => ({
         marginTop: '30px !important'
     },
     paddingGrid: {
-        padding: '20px',
+        padding: '20px 0 20px 0px',
         marginTop: '30px !important'
     },
     activeTimeRange: {
@@ -172,6 +172,7 @@ function StrategyDetails({
             container
             columnSpacing={3}
             rowSpacing={1}
+            sx={{paddingLeft: '0'}}
         >
             <Grid item xs={12}>
                 <Box sx={{
@@ -212,7 +213,8 @@ function StrategyDetails({
                     >
                         <Grid item xs={12}>
                             <Box sx={{
-                                textAlign: 'end'
+                                textAlign: 'end',
+                                marginRight: "16px"
                             }}>
                                 {GraphTimeRanges.map((timeRange, index) => {
                                     return <TimerangeLabel variant='body' key={index}

@@ -44,7 +44,9 @@ function web3(state = {}, action) {
         case 'WEB3_PROVIDER_LOADED':
             return {
                 ...state,
-                provider: action.provider
+                provider: action.provider,
+                networkId: 0,
+                disconnect: null
             }
         default:
             return state;
