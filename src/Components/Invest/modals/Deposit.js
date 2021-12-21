@@ -150,7 +150,7 @@ function DepositTemplate({
   const web3 = useSelector(web3Selector);
   const source = useSelector(sourceSelector);
   const { getTokenPriceMin } = useTokenMinPriceDeposit();
-  const GAEventsTracker = useGAEventsTracker("Final Approval");
+  const GAEventsTracker = useGAEventsTracker("Deposit Approval");
 
   const checkAllowanceApprovalNeeded = async () => {
     SetCheckingForApproval(true);
@@ -214,11 +214,6 @@ function DepositTemplate({
     );
     SetIsApproving(false);
     SetHasApproved(approvalData.success);
-    console.log("Hi");
-    approvalData.success
-      ? GAEventsTracker("Success", symbol, feeInfo.finalAmount)
-      : GAEventsTracker("Failure", symbol, feeInfo.finalAmount);
-    console.log("Bye");
     SetIsApprovalError(!approvalData.success);
     SetNeedStrategyApproval(!approvalData.success);
   };
@@ -253,12 +248,14 @@ function DepositTemplate({
       SetDepositCompleted(true);
       getStableCoinWalletDetails();
       getShareAndUSDValue();
+      GAEventsTracker("Success", symbol, feeInfo.finalAmount);
       setTimeout(() => {
         closeDialog();
       }, 5000);
     } else {
       SetDepositError(true);
       SetDepositCompleted(false);
+      GAEventsTracker("Failure", symbol, feeInfo.finalAmount);
     }
   };
 

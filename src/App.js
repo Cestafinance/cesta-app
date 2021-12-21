@@ -66,6 +66,7 @@ function App() {
 
   useEffect(() => {
     ReactGA.pageview(window.location.pathname + window.location.search);
+    console.log("Page View code");
   });
 
   return (
