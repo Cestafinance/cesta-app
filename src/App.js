@@ -15,6 +15,9 @@ import "./App.css";
 import { networkMap } from "./Constants/mains";
 import TagManager from "react-gtm-module";
 import ReactGA from "react-ga";
+import { hotjar } from "react-hotjar";
+
+hotjar.initialize(process.env.HOTJAR_HJID, process.env.HOTJAR_HJSV);
 
 const tagManagerArgs = {
   gtmId: process.env.REACT_GTM_TRACKING,
