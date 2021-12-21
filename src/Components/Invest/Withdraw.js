@@ -14,6 +14,7 @@ import { stableCoinsSelector } from "../../store/selectors/commons";
 import ActionConfirm from "./modals/Modal";
 import WithdrawTemplate from "./modals/WithDraw";
 import DepositTemplate from "./modals/Deposit";
+import useGAEventsTracker from "../../Analytics/useGAEventsTracker";
 
 const useStyles = makeStyles(({ theme }) => ({
   assetScaleLabel: {
@@ -107,6 +108,7 @@ function WithDraw({
 
   const account = useSelector(accountSelector);
   const stableCoinsContracts = useSelector(stableCoinsSelector);
+  const GAEventsTracker = useGAEventsTracker("Withdraw Modal");
 
   const selectPercentage = (value) => {
     const amt = depositedAmount * (value / 100);
@@ -143,6 +145,11 @@ function WithDraw({
     const ratio = amountToWithdraw / depositedAmount;
     const sharesToExit = (ratio * depositedShares).toFixed(4);
     SetToWithdrawShares(sharesToExit * 10 ** strategyData.decimals);
+    GAEventsTracker(
+      "Opened",
+      strategyData.tokens[selectedCoinIndex],
+      amountToWithdraw
+    );
     SetOpen(true);
   };
 
