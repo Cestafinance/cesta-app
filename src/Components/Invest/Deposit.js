@@ -48,7 +48,7 @@ const StyledTextField = styled(TextField)(({ theme }) => ({
   },
 }));
 
-const StyledButton = styled(Button)(({ theme }) => ({
+export const StyledButton = styled(Button)(({ theme }) => ({
   "&.MuiButton-root": {
     background: theme.palette.primary.main,
     width: "100%",

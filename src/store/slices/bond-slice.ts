@@ -24,6 +24,11 @@ interface IChangeApproval {
     address: string;
 }
 
+// Store bond list fetched from API
+export const storeBonds = createAsyncThunk("bonding/list", async(bondList: Bond[]) => {
+    return { bondList };
+})
+
 export const changeApproval = createAsyncThunk("bonding/changeApproval", async ({ bond, provider, networkID, address }: IChangeApproval, { dispatch }) => {
     if (!provider) {
         dispatch(warning({ text: messages.please_connect_wallet }));
@@ -106,11 +111,12 @@ export const calcBondDetails = createAsyncThunk("bonding/calcBondDetails", async
     const addresses = getAddresses(networkID);
 
     const bondContract = bond.getContractForBond(networkID, provider);
-    const bondCalcContract = getBondCalculator(networkID, provider);
+    // const bondCalcContract = getBondCalculator(networkID, provider);
 
     const terms = await bondContract.terms();
     const maxBondPrice = (await bondContract.maxPayout()) / Math.pow(10, 9);
 
+    // Getting price for CESTA <-> MIM pair
     let marketPrice = await getMarketPrice(networkID, provider);
 
     const mimPrice = getTokenPrice("MIM");
@@ -133,13 +139,13 @@ export const calcBondDetails = createAsyncThunk("bonding/calcBondDetails", async
     const maxBodValue = ethers.utils.parseEther("1");
 
     if (bond.isLP) {
-        valuation = await bondCalcContract.valuation(bond.getAddressForReserve(networkID), amountInWei);
-        bondQuote = await bondContract.payoutFor(valuation);
-        bondQuote = bondQuote / Math.pow(10, 9);
+        // valuation = await bondCalcContract.valuation(bond.getAddressForReserve(networkID), amountInWei);
+        // bondQuote = await bondContract.payoutFor(valuation);
+        // bondQuote = bondQuote / Math.pow(10, 9);
 
-        const maxValuation = await bondCalcContract.valuation(bond.getAddressForReserve(networkID), maxBodValue);
-        const maxBondQuote = await bondContract.payoutFor(maxValuation);
-        maxBondPriceToken = maxBondPrice / (maxBondQuote * Math.pow(10, -9));
+        // const maxValuation = await bondCalcContract.valuation(bond.getAddressForReserve(networkID), maxBodValue);
+        // const maxBondQuote = await bondContract.payoutFor(maxValuation);
+        // maxBondPriceToken = maxBondPrice / (maxBondQuote * Math.pow(10, -9));
     } else {
         bondQuote = await bondContract.payoutFor(amountInWei);
         bondQuote = bondQuote / Math.pow(10, 18);
@@ -157,16 +163,16 @@ export const calcBondDetails = createAsyncThunk("bonding/calcBondDetails", async
     let purchased = await token.balanceOf(addresses.TREASURY_ADDRESS);
 
     if (bond.isLP) {
-        const assetAddress = bond.getAddressForReserve(networkID);
-        const markdown = await bondCalcContract.markdown(assetAddress);
+        // const assetAddress = bond.getAddressForReserve(networkID);
+        // const markdown = await bondCalcContract.markdown(assetAddress);
 
-        purchased = await bondCalcContract.valuation(assetAddress, purchased);
-        purchased = (markdown / Math.pow(10, 18)) * (purchased / Math.pow(10, 9));
+        // purchased = await bondCalcContract.valuation(assetAddress, purchased);
+        // purchased = (markdown / Math.pow(10, 18)) * (purchased / Math.pow(10, 9));
 
-        if (bond.name === avaxTime.name) {
-            const avaxPrice = getTokenPrice("AVAX");
-            purchased = purchased * avaxPrice;
-        }
+        // if (bond.name === avaxTime.name) {
+        //     const avaxPrice = getTokenPrice("AVAX");
+        //     purchased = purchased * avaxPrice;
+        // }
     } else {
         if (bond.tokensInStrategy) {
             purchased = BigNumber.from(purchased).add(BigNumber.from(bond.tokensInStrategy)).toString();
@@ -327,6 +333,10 @@ const bondingSlice = createSlice({
             .addCase(calcBondDetails.rejected, (state, { error }) => {
                 state.loading = false;
                 console.log(error);
+            })
+            .addCase(storeBonds.fulfilled, (state, action) => {
+                const { bondList } = action.payload;
+                state.bonds = bondList;
             });
     },
 });

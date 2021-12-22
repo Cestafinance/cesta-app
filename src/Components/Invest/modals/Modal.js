@@ -27,6 +27,7 @@ const BootstrapDialog = styled(Dialog)(({ theme }) => ({
 
 const MuiDialogTitle = styled(DialogTitle)(({ theme }) => ({
   color: "#FFFFFF",
+  fontFamily: "Inter",
   minHeight: "60px",
 }));
 

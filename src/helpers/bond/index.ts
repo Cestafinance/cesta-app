@@ -73,4 +73,24 @@ export const avaxTime = new CustomLPBond({
     lpUrl: "https://www.traderjoexyz.com/#/pool/AVAX/0xb54f16fB19478766A268F172C9480f8da1a7c9C3",
 });
 
+export const mimCesta = new LPBond({
+    name: "mim_cesta_lp",
+    displayName: "CESTA-MIM LP",
+    bondToken: "MIM",
+    bondIconSvg: "",
+    bondContractABI: [],
+    reserveContractAbi: LpReserveContract,
+    networkAddrs: {
+        [Networks.FUJI]: {
+            bondAddress: "",
+            reserveAddress: "0x8c03a0821b86A839aAAe85e9bBf11003d076359f",
+        },
+        [Networks.AVAX]: {
+            bondAddress: "",
+            reserveAddress: "", // TODO: Remember to update here
+        },
+    },
+    lpUrl: "https://www.traderjoexyz.com/#/pool/0x130966628846BFd36ff31a822705796e8cb8C18D/0xb54f16fB19478766A268F172C9480f8da1a7c9C3", // TODO: Remember to update
+})
+
 export default [mim, wavax, mimTime, avaxTime];

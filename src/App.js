@@ -21,12 +21,12 @@ import './App.css';
 import {
     networkMap
 } from './Constants/mains';
-import useBonds from "./hooks/bonds";
-import useTokens from "./hooks/tokens";
+import useBonds from "./Hooks/bonds";
+import useTokens from "./Hooks/tokens";
 import { accountSelector, providerSelector, networkIdSelector, connectedSelector } from './store/selectors/web3';
 import { calculateUserBondDetails, calculateUserTokenDetails, loadAccountDetails } from './store/slices/account-slice';
 import { loadAppDetails } from './store/slices/app-slice';
-import { calcBondDetails } from './store/slices/bond-slice';
+import { loadTokenPrices } from "src/helpers/token-price";
 
 const Invest = lazy(() => import('./Components/Invest'));
 const Bond = lazy(() => import('./Components/Bond'));
@@ -49,7 +49,6 @@ function App() {
     const chainID = useSelector(networkIdSelector);
     const connected = useSelector(connectedSelector);
 
-    console.log('chainID', chainID);
 
     const blockChainInit = async (web3, networkId, provider) => {
         try {
@@ -108,9 +107,9 @@ function App() {
     const loadApp = useCallback(
         loadProvider => {
             dispatch(loadAppDetails({ networkID: chainID, provider: loadProvider }));
-            bonds.map(bond => {
-                dispatch(calcBondDetails({ bond, value: null, provider: loadProvider, networkID: chainID }));
-            });
+            // bonds.map(bond => {
+            //     dispatch(calcBondDetails({ bond, value: null, provider: loadProvider, networkID: chainID }));
+            // });
             tokens.map(token => {
                 dispatch(calculateUserTokenDetails({ address: "", token, provider, networkID: chainID }));
             });
@@ -125,13 +124,19 @@ function App() {
         [connected],
     );
 
+    const loadTokenCoingeckoPrice = useCallback(async() => {
+        await loadTokenPrices();
+    });
+
     useEffect(() => {
         console.log('connected', connected);
         if (connected && chainID !== 0) {
             loadDetails("app");
             loadDetails("account");
             loadDetails("userBonds");
-            loadDetails("userTokens");
+            loadDetails("userTokens"); 
+
+            loadTokenCoingeckoPrice();
         }
     }, [connected, chainID]);
 

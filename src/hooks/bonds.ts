@@ -14,32 +14,36 @@ export const initialBondArray = allBonds;
 function useBonds() {
     const bondLoading = useSelector<IReduxState, boolean>(state => state.bonding.loading);
     const bondState = useSelector<IReduxState, IBondSlice>(state => state.bonding);
+    const allBonds = useSelector<IReduxState, IBondSlice>(state => state.bonding.bonds)
     const accountBondsState = useSelector<IReduxState, { [key: string]: IUserBondDetails }>(state => state.account.bonds);
     //@ts-ignore
-    const [bonds, setBonds] = useState<IAllBondData[]>(initialBondArray);
+    const [bonds, setBonds] = useState<IAllBondData[]>([]);
 
     useEffect(() => {
-        let bondDetails: IAllBondData[];
-        bondDetails = allBonds
-            .flatMap(bond => {
-                if (bondState[bond.name] && bondState[bond.name].bondDiscount) {
-                    return Object.assign(bond, bondState[bond.name]); // Keeps the object type
-                }
-                return bond;
-            })
-            .flatMap(bond => {
-                if (accountBondsState[bond.name]) {
-                    return Object.assign(bond, accountBondsState[bond.name]);
-                }
-                return bond;
+        if(allBonds !== undefined) {
+            let bondDetails: IAllBondData[];
+            bondDetails = allBonds
+                .flatMap((bond: any) => {
+                    if (bondState[bond.name] && bondState[bond.name].bondDiscount) {
+                        return Object.assign(bond, bondState[bond.name]); // Keeps the object type
+                    }
+                    return bond;
+                })
+                .flatMap((bond: any) => {
+                    if (accountBondsState[bond.name]) {
+                        return Object.assign(bond, accountBondsState[bond.name]);
+                    }
+                    return bond;
+                });
+
+    
+            const mostProfitableBonds = bondDetails.concat().sort((a, b) => {
+                return a["bondDiscount"] > b["bondDiscount"] ? -1 : b["bondDiscount"] > a["bondDiscount"] ? 1 : 0;
             });
-
-        const mostProfitableBonds = bondDetails.concat().sort((a, b) => {
-            return a["bondDiscount"] > b["bondDiscount"] ? -1 : b["bondDiscount"] > a["bondDiscount"] ? 1 : 0;
-        });
-
-        setBonds(mostProfitableBonds);
-    }, [bondState, accountBondsState, bondLoading]);
+    
+            setBonds(mostProfitableBonds);
+        }
+    }, [bondState, accountBondsState, bondLoading, allBonds]);
 
     return { bonds, loading: bondLoading };
 }

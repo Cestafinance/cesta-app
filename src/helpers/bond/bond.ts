@@ -10,7 +10,7 @@ export interface BondOpts {
     readonly displayName: string; // Displayname on UI
     readonly bondIconSvg: string; //  SVG path for icons
     readonly bondContractABI: ContractInterface; // ABI for contract
-    readonly networkAddrs: NetworkAddresses; // Mapping of network --> Addresses
+    readonly networkAddrs: any; // Mapping of network --> Addresses
     readonly bondToken: string; // Unused, but native token to buy the bond.
 }
 
@@ -20,7 +20,7 @@ export abstract class Bond {
     public readonly type: BondType;
     public readonly bondIconSvg: string;
     public readonly bondContractABI: ContractInterface; // Bond ABI
-    public readonly networkAddrs: NetworkAddresses;
+    public readonly networkAddrs: any;
     public readonly bondToken: string;
     public readonly lpUrl?: string;
     public readonly tokensInStrategy?: string;
