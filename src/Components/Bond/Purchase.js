@@ -66,8 +66,14 @@ function Purchase({
     const [openModal, setOpenModal] = useState(false);
     const [modalProps, setModalProps] = useState(null);
     const [contentProps, setContentProps] = useState(null);
-    
 
+    const closeModal = () => {
+        setTimeout(() => { 
+            setOpenModal(false) 
+            setIsTransacting(false);
+        }, 2000);
+    }
+    
     useEffect(() => {
         setRequireApprove(bondData.allowance !== undefined ? bondData.allowance<=0 : false);
         setTokenBalance(bondData.balance ? bondData.balance : 0);
@@ -83,7 +89,9 @@ function Purchase({
                     isTransacting: false, 
                     isError: true
                 });
-                setIsTransacting(false);
+                
+                // Close Modal
+                closeModal();
             } else {
                 // Successful approval
                 if(transaction.isTransacting && transaction.transactionCompleted) {
@@ -95,10 +103,7 @@ function Purchase({
                     });
 
                     // Close Modal
-                    setTimeout(() => { 
-                        setOpenModal(false) 
-                        setIsTransacting(false);
-                    }, 2000);
+                    closeModal();
                 }
 
                 // No ongoing transaction
