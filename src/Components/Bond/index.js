@@ -18,8 +18,10 @@ import {
   BannerBox
 } from "../Commons/SharedComponent";
 import { useInitiateBonds } from "./Hooks/useInitialBonds";
-import useBonds from "src/Hooks/bonds";
+import useBonds from "src/hooks/bonds";
 import BondDetail from "./BondDetail";
+import { useSelector } from "react-redux";
+import { accountSelector } from "src/store/selectors/web3";
 
 const useStyles = makeStyles((theme) => ({
   mainContainer: {
@@ -106,6 +108,8 @@ function Bond() {
   const classes = useStyles();
   const theme = useTheme();
 
+  const account = useSelector(accountSelector);
+
   const { findBonds } = useInitiateBonds();
   const bonds = useBonds();
 
@@ -114,7 +118,7 @@ function Bond() {
 
   useEffect(() => {
     findBonds();
-  }, [])
+  }, [account])
 
   useEffect(() => {
     setBondList(bonds.bonds);

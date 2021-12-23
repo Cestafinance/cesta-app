@@ -36,4 +36,9 @@ function useTokens() {
     return { tokens, loading: accountLoading };
 }
 
+export function useAccountTokens() {
+    const accountTokensState = useSelector<IReduxState, { [key: string]: IUserTokenDetails }>(state => state.account.tokens);
+    return accountTokensState;
+}
+
 export default useTokens;

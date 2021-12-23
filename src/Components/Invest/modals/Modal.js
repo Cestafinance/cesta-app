@@ -78,7 +78,12 @@ function ActionConfirm({ open, handleClose, titleMain, subTitle, content }) {
   return (
     <Fragment>
       <BootstrapDialog
-        onClose={handleClose}
+        onClose={(event, reason) => {
+            if(reason !== 'backdropClick') {
+                handleClose()
+            }
+        }}
+        // onClose={handleClose}
         aria-labelledby="customized-dialog-title"
         open={open}
       >

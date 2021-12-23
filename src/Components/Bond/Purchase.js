@@ -1,9 +1,14 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { styled, makeStyles } from "@mui/styles";
-import { scales } from "../../Constants/utils";
-import { TextField, Typography, Box } from "@mui/material";
+import { TextField, Box } from "@mui/material";
 import { StyledButton } from "../Invest/Deposit";
-import { ErrorText } from "../Commons/SharedComponent";
+import { ErrorText, ScaleButtons, BondProcessingTemplate } from "../Commons/SharedComponent";
+import { useDispatch, useSelector } from "react-redux";
+import ActionConfirm from "../Invest/modals/Modal";
+import { ReminderText } from "./Redeem";
+import { messages } from "../../Constants/messages";
+import { bondAsset, changeApproval } from "../../store/slices/bond-slice";
+import { accountSelector, networkIdSelector, providerSelector } from "src/store/selectors/web3";
 
 const StyledTextField = styled(TextField)(({ theme }) => ({
     "&.MuiTextField-root": {
@@ -25,18 +30,6 @@ const StyledTextField = styled(TextField)(({ theme }) => ({
 }));
 
 const useStyles = makeStyles(({ theme }) => ({
-    assetScaleLabel: {
-      margin: "0.3rem",
-      cursor: "pointer",
-    },
-    assetSelectedlabel: {
-      marginLeft: "0.3rem",
-      cursor: "pointer",
-      background: "#375894",
-      borderRadius: "10px",
-      padding: "0 6px",
-    },
-  
     logoStableCoins: {
       height: "20px",
       marginTop: "2px",
@@ -52,77 +45,148 @@ const useStyles = makeStyles(({ theme }) => ({
     }
 }));
 
-function ScaleButtons({
-    onPercentSelected
-}) {
-    const classes = useStyles();
-
-    const [selectedValue, setSelectedValue] = useState(null);
-
-    const handlePercentSelected = (scale) => {
-        setSelectedValue(scale);
-        onPercentSelected({percent: scale});
-    }
-    return <Box
-            sx={{
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-                paddingRight: "1rem",
-                fontWeight: "600",
-            }}
-        >
-        {scales.map((scale, index) => {
-            return (
-                <span
-                    key={index}
-                    className={
-                        selectedValue === scale.value
-                            ? classes.assetSelectedlabel
-                            : classes.assetScaleLabel
-                    }
-                    onClick={() => handlePercentSelected(scale.value)}
-                >
-                    {scale.label}
-                </span>
-            );
-        })}
-    </Box>
-}
-
 function Purchase({  
-    availableBalance
+   bondData
 }) {
     const classes = useStyles();
+    const dispatch = useDispatch();
+    const transaction = useSelector(state => state.bondTransaction.transaction);
 
+    const provider = useSelector(providerSelector);
+    const networkID = useSelector(networkIdSelector);
+    const account = useSelector(accountSelector);
+    
     const [amount, setAmount] = useState(0);
     const [error, setError] = useState(false);
+    const [tokenBalance, setTokenBalance] = useState(0);
+    const [requireApprove, setRequireApprove] = useState(false);
+
+    const [isTransacting, setIsTransacting] = useState(false);
+    
+    const [openModal, setOpenModal] = useState(false);
+    const [modalProps, setModalProps] = useState(null);
+    const [contentProps, setContentProps] = useState(null);
+    
+
+    useEffect(() => {
+        setRequireApprove(bondData.allowance !== undefined ? bondData.allowance<=0 : false);
+        setTokenBalance(bondData.balance ? bondData.balance : 0);
+    }, [bondData.allowance, bondData.balance])
+
+    useEffect(() => {
+        if(["approve", "bond"].includes(transaction.type)) {
+            // Transaction Error
+            if(transaction.isError) {
+                setContentProps({
+                    message: transaction.type === 'approve' ? messages.approve_failed : messages.bond_failed,
+                    subMessage: messages.failed_sub,
+                    isTransacting: false, 
+                    isError: true
+                });
+                setIsTransacting(false);
+            } else {
+                // Successful approval
+                if(transaction.isTransacting && transaction.transactionCompleted) {
+                    setContentProps({
+                        message: transaction.type === 'approve' ? messages.approve_successful : messages.bond_successful_main,
+                        subMessage: transaction.type === 'approve' ? "" : `${messages.bond_successful_sub} ${bondData.bondToken}`,
+                        isTransacting: false, 
+                        isError: false
+                    });
+
+                    // Close Modal
+                    setTimeout(() => { 
+                        setOpenModal(false) 
+                        setIsTransacting(false);
+                    }, 2000);
+                }
+
+                // No ongoing transaction
+                if(!transaction.isTransacting && transaction.txHash === undefined) {
+                    setContentProps({
+                        message: null,
+                        subMessage: null,
+                        isTransacting: false, 
+                        isError: false
+                    });
+                }
+            }
+        }
+    }, [transaction])
 
     const onInputChange = (value) => {
         let decimals = value.match(/\./g);
-        if (decimals && decimals.length > 1) {
-          return value;
-        }
-        // let balance = parseFloat(
-        //   coinBalances[strategyData.tokens[selectedCoinIndex]]
-        // );
-        let balance = 0;
+        
         if (
-          (decimals && decimals.length === 1 && value[value.length - 1] === ".") ||
+          (decimals &&
+            decimals.length === 1 &&
+            value[value.length - 1] === ".") ||
           value[value.length - 1] === "0"
         ) {
-            setError(balance < value);
-            setAmount(value);
-            return;
+          setError(tokenBalance < value);
+          setAmount(value);
+          return;
         }
+
         let newVal = parseFloat(value);
         newVal = isNaN(newVal) ? 0 : newVal;
-        setError(balance < value);
+        setError(tokenBalance < value);
         setAmount(newVal);
     };
 
     const handlePercentSelected = ({percent}) => {
-        console.log(percent);
+        const newAmount = (Math.floor(tokenBalance * 1000) / 1000) * (percent / 100);
+        setAmount(newAmount);
+    }
+
+    const onApproveToken = async() => {
+        setIsTransacting(true);
+        setModalProps({ titleMain: "Approve Bond", subTitle: `for Bond Contract ${bondData.bondToken}`});
+        setOpenModal(true);
+
+        setContentProps({
+            message: messages.approve_transacting,
+            subMessage: null,
+            isTransacting: true, 
+            isError: false
+        });
+
+        dispatch(changeApproval({
+            bond: bondData, 
+            provider,
+            networkID,
+            address: account
+        }))
+    }
+
+    const onBonding = async() => {
+        if(Number(amount) === 0 || isNaN(amount)) {
+            setError(true);
+            return;
+        }
+        
+        // TODO: Add bond interest due and pending payout checking
+        
+        setIsTransacting(true);
+        setModalProps({ titleMain: "Purchase Bond", subTitle: `for Bond Contract ${bondData.bondToken}`});
+        setOpenModal(true);
+
+        setContentProps({
+            message: messages.bond_transacting,
+            subMessage: messages.bond_transacting_sub,
+            isTransacting: true, 
+            isError: false
+        });
+
+        dispatch(bondAsset({
+            value: amount.toString(),
+            slippage: null, // TODO: Slippage setting
+            bond: bondData,
+            networkID,
+            provider, 
+            address: account,
+            useAvax: false
+        }))
     }
 
     return <div style={{color: "#ffffff", width: "100%"}}>
@@ -141,14 +205,14 @@ function Purchase({
             }}>
                 <div style={{display: "flex", alignItems:"center"}}>
                     <img src={"https://via.placeholder.com/20"} alt="token"/>
-                    <span style={{marginLeft: "8px"}}>AVAX</span>
+                    <span style={{marginLeft: "8px"}}>{bondData.bondToken}</span>
                 </div>
             </Box>
         </div>
 
         <div className={classes.errorContainer}>
             <div style={{width:"60%"}}>   
-                {error && <ErrorText sx={{textAlign: "start"}}>Invalid Error</ErrorText>}
+                {error && <ErrorText sx={{textAlign: "start"}}>Invalid Amount</ErrorText>}
             </div>
            
             <div style={{width:"40%"}}>
@@ -156,11 +220,24 @@ function Purchase({
             </div>
         </div>
 
-        <div style={{margin:"24px 0px"}}>
-            <StyledButton>
-                BOND
+        <div style={{margin:"20px 0px"}}>
+            <StyledButton disabled={isTransacting}
+                onClick={() => requireApprove ? onApproveToken() : onBonding()}
+                >
+                {requireApprove ? 'APPROVE' : 'BOND' } 
             </StyledButton>
+
+            <ReminderText sx={{marginTop: "16px", color: "grey"}}> 
+                {tokenBalance>0 && requireApprove && <span>{`First time bonding ${bondData.bondToken} ? Please approve Cesta Finance to use your ${bondData.bondToken} for bonding.`}</span>}
+            </ReminderText>
         </div>
+
+        <ActionConfirm 
+            open={openModal}
+            handleClose={() => setOpenModal(!openModal)}
+            {...modalProps}
+            content={<BondProcessingTemplate {...contentProps} />}
+        />
     </div>
 }
 

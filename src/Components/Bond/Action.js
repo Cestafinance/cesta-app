@@ -41,7 +41,7 @@ function Action ({
     return <Box sx={{padding: "16px"}}>
         <Tabs onTabSelected={handleTabSelected}/>
         {selectedTab===0 && <div style={{margin: "32px 0px"}}>
-            <Purchase availableBalance={"10000000"}/>
+            <Purchase bondData={bondData}/>
         </div>}
         {selectedTab===1 && <div style={{margin: "32px 0px"}}>
             <Redeem/>

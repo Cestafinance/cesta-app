@@ -16,6 +16,7 @@ import { getGasPrice } from "../../helpers/get-gas-price";
 import { metamaskErrorWrap } from "../../helpers/metamask-error-wrap";
 import { sleep } from "../../helpers";
 import { BigNumber } from "ethers";
+import { transactionCompleted, transactionError, transactionInitiated, transactionSuccess } from "./txn-slice";
 
 interface IChangeApproval {
     bond: Bond;
@@ -50,14 +51,28 @@ export const changeApproval = createAsyncThunk("bonding/changeApproval", async (
                 type: "approve_" + bond.name,
             }),
         );
+
+        // For bondTransaction state
+        dispatch(transactionInitiated({
+            txnHash: approveTx.hash,
+            type: "approve"
+        }))
+
         await approveTx.wait();
         dispatch(success({ text: messages.tx_successfully_send }));
+        dispatch(transactionSuccess());
+    
     } catch (err: any) {
         metamaskErrorWrap(err, dispatch);
+        dispatch(transactionError({ type: 'approve' }));
     } finally {
         if (approveTx) {
             dispatch(clearPendingTxn(approveTx.hash));
         }
+        
+        setTimeout(() => {
+            dispatch(transactionCompleted());
+        }, 2000);
     }
 
     await sleep(2);
@@ -222,10 +237,11 @@ export const bondAsset = createAsyncThunk("bonding/bondAsset", async ({ value, a
         const gasPrice = await getGasPrice(provider);
 
         if (useAvax) {
-            bondTx = await bondContract.deposit(valueInWei, maxPremium, depositorAddress, { value: valueInWei, gasPrice });
+            bondTx = await bondContract.deposit(valueInWei, maxPremium.toString(), depositorAddress, { value: valueInWei, gasPrice });
         } else {
-            bondTx = await bondContract.deposit(valueInWei, maxPremium, depositorAddress, { gasPrice });
+            bondTx = await bondContract.deposit(valueInWei, maxPremium.toString(), depositorAddress, { gasPrice });
         }
+
         dispatch(
             fetchPendingTxns({
                 txnHash: bondTx.hash,
@@ -233,19 +249,33 @@ export const bondAsset = createAsyncThunk("bonding/bondAsset", async ({ value, a
                 type: "bond_" + bond.name,
             }),
         );
+        dispatch(transactionInitiated({
+            txnHash: bondTx.hash,
+            type: "bond"
+        }))
+
         await bondTx.wait();
         dispatch(success({ text: messages.tx_successfully_send }));
+        dispatch(transactionSuccess());
         dispatch(info({ text: messages.your_balance_update_soon }));
+
         await sleep(10);
         await dispatch(calculateUserBondDetails({ address, bond, networkID, provider }));
         dispatch(info({ text: messages.your_balance_updated }));
+
         return;
     } catch (err: any) {
+        console.error(`bond deposit error`, err);
+        dispatch(transactionError({ type: 'bond' }));
         return metamaskErrorWrap(err, dispatch);
     } finally {
         if (bondTx) {
             dispatch(clearPendingTxn(bondTx.hash));
         }
+
+        setTimeout(() => {
+            dispatch(transactionCompleted());
+        }, 2000);
     }
 });
 

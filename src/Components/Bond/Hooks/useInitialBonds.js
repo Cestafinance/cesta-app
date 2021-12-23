@@ -1,4 +1,4 @@
-import { useWeb3React } from "@web3-react/core";
+import { ethers } from "ethers";
 import { useCallback } from "react";
 import { useSelector } from "react-redux";
 import { getAllBonds } from "src/Services/contracts";
@@ -7,12 +7,30 @@ import { useDispatch } from "react-redux";
 import { storeBonds, calcBondDetails } from "../../../store/slices/bond-slice";
 import { LPBond } from "src/helpers/bond/lp-bond";
 import { StableBond } from "src/helpers/bond/stable-bond";
-import { providerSelector, networkIdSelector } from "../../../store/selectors/web3";
+import { providerSelector, networkIdSelector, accountSelector } from "../../../store/selectors/web3";
+import { calculateUserBondDetails } from "src/store/slices/account-slice";
+
+export function useContract() {
+    const provider = useSelector(providerSelector);
+    const account = useSelector(accountSelector);
+
+    const createContract = useCallback(async(address, abi) => {
+        return new ethers.Contract(address, abi, provider);
+    }, [provider]);
+
+    const checkAllowance = useCallback(async(contract, spender) => {
+        return (await contract.allowance(account,spender)).toString();
+    }, [])
+
+    return { createContract, checkAllowance };
+}
+
 
 export function useInitiateBonds() {
     const dispatch = useDispatch();
     const provider = useSelector(providerSelector);
     const networkID = useSelector(networkIdSelector);
+    const account =useSelector(accountSelector);
 
     const findBonds = useCallback(async() => {
         let allBonds = [];
@@ -31,7 +49,16 @@ export function useInitiateBonds() {
                         ? new LPBond(b)
                         : new StableBond(b);
 
+                    // Getting bond detail
                     dispatch(calcBondDetails({ bond, value: null, provider, networkID }));
+
+                    // Getting user bond detail 
+                    dispatch(calculateUserBondDetails({
+                        address: account,
+                        bond,
+                        provider, 
+                        networkID
+                    }))
 
                     return { bond, token };
                 }));
@@ -46,7 +73,7 @@ export function useInitiateBonds() {
             return allBonds;
         }
         
-    }, [networkID])
+    }, [networkID, account])
 
     return { findBonds }
 }

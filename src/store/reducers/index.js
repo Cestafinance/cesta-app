@@ -8,6 +8,7 @@ import appReducer from "../slices/app-slice";
 import pendingTransactionsReducer from "../slices/pending-txns-slice";
 import messagesReducer from "../slices/messages-slice";
 import wrappingReducer from "../slices/wrap-slice";
+import bondTransactionReducer from "../slices/txn-slice";
 
 function app(state={
     theme: 'dark'
@@ -35,6 +36,7 @@ const rootReduces = combineReducers({
         appReducer
     },
     pendingTransactions: pendingTransactionsReducer,
+    bondTransaction: bondTransactionReducer,
     messages: messagesReducer,
     wrapping: wrappingReducer,
 });

@@ -53,6 +53,7 @@ export interface IToken {
     img: string;
     isAvax?: boolean;
     decimals: number;
+    abi?:any;
 }
 
 export const avax: IToken = {
