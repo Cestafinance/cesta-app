@@ -1,14 +1,15 @@
 import { useState, useEffect } from "react";
-import { useDispatch } from "react-redux";
-import { useWeb3React } from '@web3-react/core'
+import { useDispatch, useSelector } from "react-redux";
 import { StyledButton } from "../Invest/Deposit";
 import { Box, Typography } from '@mui/material';
 import { styled } from "@mui/material/styles";
 import { redeemBond } from "../../store/slices/bond-slice";
 import ActionConfirm from "../Invest/modals/Modal";
-import { DetailLabel } from "./Price";
+import { BondProcessingTemplate } from "../Commons/SharedComponent";
+import { messages } from "src/Constants/messages";
+import { accountSelector, networkIdSelector, providerSelector } from "src/store/selectors/web3";
 
-const ReminderText = styled(Typography)(({theme}) => ({
+export const ReminderText = styled(Typography)(({theme}) => ({
     color: "#FFFFFF",
     fontStyle: "italic",
     fontFamily: "Inter",
@@ -16,97 +17,88 @@ const ReminderText = styled(Typography)(({theme}) => ({
     textAlign: "justify"
 }))
 
-const RewardsDetailContainer = styled(Box)(({theme}) => ({
-    width: "100%",
-    background: "none",
-    border: "1px solid #565656",
-    borderRadius: "16px",
-    padding: "15px",
-    color: "rgba(255, 255, 255, 0.6)"
-}))
+function Redeem({ bondData }) { 
+    const [openModal, setOpenModal] = useState(false);
+    
+    const [modalProps, setModalProps] = useState(null);
+    const [contentProps, setContentProps] = useState(null);
+    
+    const [isTransacting, setIsTransacting] = useState(false);
 
-const RewardLabel = styled(DetailLabel) (({theme}) => ({
-    fontSize: "16px",
-    margin: "2px"
-}))
-
-function RewardsDetail() {
-    return <>
-        <Box sx={{display: "flex", alignItems: "center", justifyContent:"space-between"}}>
-            <RewardLabel>Pending Rewards</RewardLabel>
-            <RewardLabel>0 CESTA</RewardLabel>
-        </Box>
-
-        <Box sx={{display: "flex", alignItems: "center", justifyContent:"space-between"}}>
-            <RewardLabel>Claimable Rewards</RewardLabel>
-            <RewardLabel>0 CESTA</RewardLabel>
-        </Box>
-
-        <Box sx={{display: "flex", alignItems: "center", justifyContent:"space-between"}}>
-            <RewardLabel>Time until fully vested</RewardLabel>
-            <RewardLabel>Hello</RewardLabel>
-        </Box>
-
-        <Box sx={{display: "flex", alignItems: "center", justifyContent:"space-between"}}>
-            <RewardLabel>ROI</RewardLabel>
-            <RewardLabel>10 %</RewardLabel>
-        </Box>
-
-        <Box sx={{display: "flex", alignItems: "center", justifyContent:"space-between"}}>
-            <RewardLabel>Vesting Terms</RewardLabel>
-            <RewardLabel>5 dayss</RewardLabel>
-        </Box>
-    </>
-}
-
-function RedeemConfirm({
-    autoStake,
-    open, 
-    setOpen
-}) {
-    const { checkWrongNetwork, address, chainId, provider } = useWeb3React();
     const dispatch = useDispatch();
+    const networkID = useSelector(networkIdSelector);
+    const provider = useSelector(providerSelector);
+    const account = useSelector(accountSelector);
+    const transaction = useSelector(state => state.bondTransaction.transaction);
 
-    // const [open, setOpen] = useState(false);
-
-    const onRedeem = async() => {
-        if (await checkWrongNetwork()) {
-            return;
-        }
-
-        await dispatch(redeemBond({
-            address, 
-            // bond, 
-            networkID: chainId,
-            provider,
-            autoStake
-        }))
+    const closeModal = () => {
+        setTimeout(() => { 
+            setOpenModal(false) 
+            setIsTransacting(false);
+        }, 2000);
     }
-
-    const content= <>
-        <RewardsDetailContainer>
-            <RewardsDetail/>
-        </RewardsDetailContainer>
-
-        <StyledButton sx={{margin: "16px 0px"}}>{autoStake? "Claim and Stake" : "Claim"}</StyledButton>
-    </>
     
-    return <ActionConfirm
-        open={open}
-        handleClose={() => setOpen(!open)}
-        titleMain={`Redeem`}
-        content={content}
-    />;
-}
+    useEffect(() => {
+        if(["redeem_autostake", "redeem"].includes(transaction.type)) {
+            // Transaction Error
+            if(transaction.isError) {
+                setContentProps({
+                    message: transaction.type === 'redeem' ? `${messages.redeem_failed} ${bondData.bondToken}` : messages.autostake_failed,
+                    subMessage: transaction.type === 'redeem' ? messages.failed_sub : `${messages.autostake_failed_sub} ${bondData.bondToken}`,
+                    subMessage2: transaction.type === 'redeem' ? null : messages.failed_sub,
+                    isTransacting: false, 
+                    isError: true
+                })
 
+                // Close Modal
+                closeModal();
+            } else {
+                // Successful approval
+                if(transaction.isTransacting && transaction.transactionCompleted) {
+                    setContentProps({
+                        message: transaction.type === 'redeem' ? messages.redeem_successful : messages.autostake_successful,
+                        subMessage: transaction.type === 'redeem' ? `${bondData.bondToken} ${messages.redeem_successful_sub}` : messages.autostake_successful_sub,
+                        isTransacting: false, 
+                        isError: false
+                    });
 
-function Redeem() { 
-    const [open, setOpen] = useState(false);
-    const [autoStake, setAutoStake] = useState(false);
+                   // Close Modal
+                    closeModal();
+                }
+
+                // No ongoing transaction
+                if(!transaction.isTransacting && transaction.txHash === undefined) {
+                    setContentProps({
+                        message: null,
+                        subMessage: null,
+                        isTransacting: false, 
+                        isError: false
+                    });
+                }
+            }
+        }
+    }, [transaction])
     
-    const handleOpen = (autoStake) => {
-        setOpen(true);
-        setAutoStake(autoStake)
+    const onRedeem = async (autostake = false) => {
+        const modalTitle = autostake ? "Claim and Autostake" : "Claim Bond";
+        setIsTransacting(true);
+        setModalProps({ titleMain: modalTitle, subTitle: `from Bond Contract ${bondData.bondToken}`});
+        setOpenModal(true);
+
+        setContentProps({
+            message: autostake ? messages.autostake_transacting : messages.redeem_transacting,
+            subMessage: autostake ? messages.autostake_transacting_sub : messages.redeem_transacting_sub,
+            isTransacting: true, 
+            isError: false
+        });
+
+        await dispatch(redeemBond({ 
+            address: account, 
+            bond: bondData, 
+            networkID, 
+            provider, 
+            autostake 
+        }));
     }
 
     return <Box>
@@ -117,11 +109,17 @@ function Redeem() {
         </div>
 
         <div>
-            <StyledButton onClick={() => handleOpen(false)}>Claim</StyledButton>
-            <StyledButton sx={{marginTop: "16px"}} onClick={() => handleOpen(true)}>Claim and Stake</StyledButton>
+            <StyledButton disabled={isTransacting} onClick={() => onRedeem(false)}>Claim</StyledButton>
+            <StyledButton disabled={isTransacting} sx={{marginTop: "16px"}} onClick={() => onRedeem(true)}>Claim and Stake</StyledButton>
         </div>
 
-        <RedeemConfirm autoStake={autoStake} open={open} setOpen={setOpen}/>
+
+        <ActionConfirm 
+            open={openModal}
+            handleClose={() => setOpenModal(!openModal)}
+            {...modalProps}
+            content={<BondProcessingTemplate {...contentProps} />}
+        />
     </Box>
 }
 

@@ -44,7 +44,7 @@ function Action ({
             <Purchase bondData={bondData}/>
         </div>}
         {selectedTab===1 && <div style={{margin: "32px 0px"}}>
-            <Redeem/>
+            <Redeem bondData={bondData}/>
         </div>}
     </Box>;
 }

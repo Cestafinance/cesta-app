@@ -104,7 +104,7 @@ export const ScaleButtons = ({onPercentSelected}) => {
     </Box>
 }
 
-export const BondProcessingTemplate = ({ message, subMessage = null, isError = false, isTransacting = true }) => {
+export const BondProcessingTemplate = ({ message, subMessage = null, subMessage2 = null, isError = false, isTransacting = true }) => {
     const classes = useStyles();
 
     return <div style={{width: "100%", display: "flex", alignItems: "center", justifyContent:"center", minHeight: "160px", flexDirection:"column", textAlign: "center"}}>
@@ -115,6 +115,7 @@ export const BondProcessingTemplate = ({ message, subMessage = null, isError = f
         <Typography className={classes.bondProcessingTemplateText} sx={{color: `${isError ? "red" : 'rgba(255, 255, 255, 0.61)'}`}}>
             {message}
             {subMessage && <span style={{display: "block"}}>{subMessage}</span>}
+            {subMessage2 && <span style={{display: "block"}}>{subMessage2}</span>}
         </Typography>
     </div>
 }

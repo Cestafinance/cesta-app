@@ -1,11 +1,10 @@
-import { useState } from "react";
-import {
-    Box, 
-    Typography, 
-} from "@mui/material";
-import {styled} from "@mui/material/styles";
+import { useState, useEffect } from "react";
+import { useSelector } from "react-redux";
+import { Box, Typography, } from "@mui/material";
+import { styled} from "@mui/material/styles";
 import { makeStyles } from "@mui/styles";
 import { LoadingPulse } from "../Commons/SharedComponent";
+import { prettifySeconds } from "src/helpers";
 
 import {
     MainInfoContainer,
@@ -13,6 +12,7 @@ import {
     UpperLabel,
     LowerLabel
 } from "./index";
+import { trim } from "src/helpers";
 
 const useStyles = makeStyles((theme) => ({
    priceDetailContainer: {
@@ -26,157 +26,129 @@ export const DetailLabel = styled(Typography)(({theme}) => ({
         fontSize: '14px',
 }));
 
-const skeletonProps = { 
-    animation: "pulse",
-    variant: "text",
+function LabelBoxes({
+    loading, 
+    label, 
+    content
+}) {
+    return <Box sx={{display: "flex", alignItems: "center", justifyContent:"space-between"}}>
+        <DetailLabel>{label}</DetailLabel>
+        { loading 
+            ?<LoadingPulse skeletonWidth={60} /> 
+            :<DetailLabel>{content}</DetailLabel> }
+    </Box>;
+}
+
+function MainInfo({
+    loading,
+    bondPrice, 
+    marketPrice
+}) {
+    return <MainInfoContainer>
+        <InfoContainer>
+            <UpperLabel sx={{ fontSize: "16px" }}>Bond Price</UpperLabel>
+            {loading
+                ? <LoadingPulse skeletonWidth={100} />
+                : <LowerLabel sx={{ fontSize: "14px" }}>$21345678</LowerLabel>}
+        </InfoContainer>
+
+        <InfoContainer>
+            <UpperLabel sx={{ fontSize: "16px" }}>Market Price</UpperLabel>
+            {loading
+                ? <LoadingPulse skeletonWidth={100} />
+                : <LowerLabel sx={{ fontSize: "14px" }}>$21345674</LowerLabel>}
+        </InfoContainer>
+    </MainInfoContainer>
 }
 
 function BondingPrice({
-    priceDetail, 
+    bondData,
     loading = true
 }) {
     const classes = useStyles();
 
+    const bonding = useSelector(state => state.bonding);
+    const [content, setContent] = useState([]);
+
+    useEffect(() => {
+        const bondId = bondData.bond;
+        const priceDetail = bonding[bondId];
+
+        const priceContent = [
+            [
+                { label: "Available Balance", content: `1000 AVAX` },
+                { label: "You Will Get", content: `${priceDetail ? trim(priceDetail.bondQuote, 4) : '-'}  CESTA` },
+                { label: "Max You Can Buy", content: `${priceDetail ? trim(priceDetail.maxBondPrice, 4) : '-'} CESTA` },
+            ],
+            [
+                { label: "ROI (Bond Discount)", content: `${priceDetail ? trim(priceDetail.bondDiscount * 100, 2) : "-"}%` },
+                { label: "You Will Get", content: vestingPeriod() },
+            ],
+        ];
+
+        setContent(priceContent);
+
+    }, [bonding, bondData])
+
+    const vestingPeriod = () => {
+        return prettifySeconds(bondData.vestingTerm, "day");
+    };
+
     return <>
-        <MainInfoContainer>
-            <InfoContainer>
-                <UpperLabel sx={{fontSize: "16px"}}>Bond Price</UpperLabel>
-                {loading 
-                    ? <LoadingPulse skeletonWidth={100} /> 
-                    : <LowerLabel sx={{fontSize: "14px"}}>$21345678</LowerLabel> }
-            </InfoContainer>
-            
-            <InfoContainer>
-                <UpperLabel sx={{fontSize: "16px"}}>Market Price</UpperLabel>
-                {loading 
-                    ? <LoadingPulse skeletonWidth={100} /> 
-                    : <LowerLabel sx={{fontSize: "14px"}}>$21345674</LowerLabel> }
-            </InfoContainer>
-        </MainInfoContainer>
+        <MainInfo loading={loading} bondPrice={null} marketPrice={null} />
 
-        <div className={classes.priceDetailContainer}>
-            <Box sx={{display: "flex", alignItems: "center", justifyContent:"space-between"}}>
-                <DetailLabel>Available Balance</DetailLabel>
-                { loading 
-                    ?<LoadingPulse skeletonWidth={60} /> 
-                    :<DetailLabel>1000 AVAX</DetailLabel> }
-            </Box>
-
-            <Box sx={{display: "flex", alignItems: "center", justifyContent:"space-between"}}>
-                <DetailLabel>You Will Get</DetailLabel>
-                { loading 
-                    ?<LoadingPulse skeletonWidth={60} /> 
-                    :<DetailLabel>123 CESTA</DetailLabel> }
-            </Box>
-
-            <Box sx={{display: "flex", alignItems: "center", justifyContent:"space-between"}}>
-                <DetailLabel>Max You Can Buy</DetailLabel>
-                { loading 
-                    ?<LoadingPulse skeletonWidth={60} /> 
-                    :<DetailLabel>456 CESTA</DetailLabel> }
-            </Box>
-        </div>
-
-        <div className={classes.priceDetailContainer}>
-            <Box sx={{display: "flex", alignItems: "center", justifyContent:"space-between"}}>
-                <DetailLabel>ROI (Bond Discount)</DetailLabel>
-                { loading 
-                    ?<LoadingPulse skeletonWidth={60} /> 
-                    :<DetailLabel>8.56%</DetailLabel> }
-            </Box>
-
-            <Box sx={{display: "flex", alignItems: "center", justifyContent:"space-between"}}>
-                <DetailLabel>Vesting Term</DetailLabel>
-                { loading 
-                    ?<LoadingPulse skeletonWidth={60} /> 
-                    :<DetailLabel>5 days</DetailLabel> }
-            </Box>
-        </div>
-      
+        {content.map(c => {
+            return <div className={classes.priceDetailContainer}>
+                {c.map(d => {
+                    return <LabelBoxes loading={loading} label={d.label} content={d.content} />
+                })}
+            </div>
+        })}
     </>;
 }
 
 function RedeemPrice({
-    priceDetail, 
+    priceDetail,
     loading = true
 }) {
     const classes = useStyles();
 
+    const priceContent = [
+        [
+            { label: "Pending Rewards", content: `1000 AVAX` },
+            { label: "Claimable Rewards", content: `1000  CESTA` },
+            { label: "Time Until Fully Vested", content: `5 hours` },
+        ],
+        [
+            { label: "ROI (Bond Discount)", content: `-` },
+            { label: "You Will Get", content: "-" },
+        ],
+    ];
+
     return <>
-    <MainInfoContainer>
-        <InfoContainer>
-            <UpperLabel sx={{fontSize: "16px"}}>Bond Price</UpperLabel>
-            {loading 
-                ? <LoadingPulse skeletonWidth={100} /> 
-                : <LowerLabel sx={{fontSize: "14px"}}>$21345678</LowerLabel> }
-        </InfoContainer>
-        
-        <InfoContainer>
-            <UpperLabel sx={{fontSize: "16px"}}>Market Price</UpperLabel>
-            {loading 
-                ? <LoadingPulse skeletonWidth={100} /> 
-                : <LowerLabel sx={{fontSize: "14px"}}>$21345674</LowerLabel> }
-        </InfoContainer>
-    </MainInfoContainer>
+        <MainInfo loading={loading} bondPrice={null} marketPrice={null} />
 
-    <div className={classes.priceDetailContainer}>
-        <Box sx={{display: "flex", alignItems: "center", justifyContent:"space-between"}}>
-            <DetailLabel>Pending Rewards</DetailLabel>
-            { loading 
-                ?<LoadingPulse {...skeletonProps} skeletonWidth={60} /> 
-                :<DetailLabel>1000 CESTA</DetailLabel> }
-        </Box>
-
-        <Box sx={{display: "flex", alignItems: "center", justifyContent:"space-between"}}>
-            <DetailLabel>Claimable Rewards</DetailLabel>
-            { loading 
-                ?<LoadingPulse {...skeletonProps} skeletonWidth={60} /> 
-                :<DetailLabel>1200 CESTA</DetailLabel> }
-        </Box>
-
-        <Box sx={{display: "flex", alignItems: "center", justifyContent:"space-between"}}>
-            <DetailLabel>Time Until Fully Vested</DetailLabel>
-            { loading 
-                ?<LoadingPulse {...skeletonProps} skeletonWidth={60} /> 
-                :<DetailLabel>1 days 10 Hours</DetailLabel> }
-        </Box>
-    </div>
-
-    <div className={classes.priceDetailContainer}>
-        <Box sx={{display: "flex", alignItems: "center", justifyContent:"space-between"}}>
-            <DetailLabel>ROI (Bond Discount)</DetailLabel>
-            { loading 
-                ?<LoadingPulse {...skeletonProps} skeletonWidth={60} /> 
-                :<DetailLabel>8.56%</DetailLabel> }
-        </Box>
-
-        <Box sx={{display: "flex", alignItems: "center", justifyContent:"space-between"}}>
-            <DetailLabel>Vesting Term</DetailLabel>
-            { loading 
-                ?<LoadingPulse {...skeletonProps} skeletonWidth={60} /> 
-                :<DetailLabel>5 days</DetailLabel> }
-        </Box>
-    </div>
-  
-</>;
+        {priceContent.map(c => {
+            return <div className={classes.priceDetailContainer}>
+                {c.map(d => {
+                    return <LabelBoxes loading={loading} label={d.label} content={d.content} />
+                })}
+            </div>
+        })}
+    </>;
 }
-  
 
 function Price({
     bondData, 
-    tab = 0
+    tab = 0,
+    expanded
 }) {
-    const classes = useStyles();
-
-    const [loading, setLoading] = useState(false);
-
-    const skeletonProps = { 
-        animation: "pulse",
-        variant: "text",
-    }
+    const isLoading = useSelector(state => state.bonding.loading ?? true);
 
     return <>
-       {tab === 0 ? <BondingPrice/> : <RedeemPrice/>}
+       {tab === 0 
+        ? <BondingPrice {...{bondData, loading: isLoading}}/>  
+        : <RedeemPrice  {...{bondData, loading: isLoading}}/>}
     </>
 }
 

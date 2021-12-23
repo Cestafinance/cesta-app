@@ -309,21 +309,34 @@ export const redeemBond = createAsyncThunk("bonding/redeemBond", async ({ addres
                 type: pendingTxnType,
             }),
         );
+        dispatch(transactionInitiated({
+            txnHash: redeemTx.hash,
+            type: autostake ? 'redeem_autostake' : "redeem"
+        }))
+
         await redeemTx.wait();
         dispatch(success({ text: messages.tx_successfully_send }));
+        dispatch(transactionSuccess());
         await sleep(0.01);
         dispatch(info({ text: messages.your_balance_update_soon }));
+
         await sleep(10);
         await dispatch(calculateUserBondDetails({ address, bond, networkID, provider }));
         await dispatch(getBalances({ address, networkID, provider }));
         dispatch(info({ text: messages.your_balance_updated }));
+        
         return;
     } catch (err: any) {
         metamaskErrorWrap(err, dispatch);
+        dispatch(transactionError({ type: autostake ? 'redeem_autostake' : "redeem" }));
     } finally {
         if (redeemTx) {
             dispatch(clearPendingTxn(redeemTx.hash));
         }
+
+        setTimeout(() => {
+            dispatch(transactionCompleted());
+        }, 2000);
     }
 });
 
