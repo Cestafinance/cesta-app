@@ -149,7 +149,7 @@ function BondDetail({
                         {loadingDetail 
                             ? <LoadingPulse skeletonWidth={100}/>
                             : <DetailLabel component={"span"}>
-                                {Number(bondData.bondDiscount).toFixed(2)}
+                                {Number(bondData.bondDiscount).toFixed(2)} %
                             </DetailLabel>}
                     </Grid>
 
