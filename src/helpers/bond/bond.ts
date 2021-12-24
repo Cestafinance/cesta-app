@@ -34,7 +34,9 @@ export abstract class Bond {
     public abstract getTreasuryBalance(networkID: Networks, provider: StaticJsonRpcProvider): Promise<number>;
     public abstract getTokenAmount(networkID: Networks, provider: StaticJsonRpcProvider): Promise<number>;
     public abstract getTimeAmount(networkID: Networks, provider: StaticJsonRpcProvider): Promise<number>;
-
+    public abstract getMaxBondPrice(networkID: Networks, provider: StaticJsonRpcProvider, value: string): Promise<any>;
+    public abstract getPurchasedAmount(networkID: Networks, provider: StaticJsonRpcProvider): Promise<any>;
+    
     constructor(type: BondType, bondOpts: BondOpts) {
         this.name = bondOpts.name;
         this.displayName = bondOpts.displayName;
@@ -65,5 +67,29 @@ export abstract class Bond {
 
     protected getTokenPrice(): number {
         return getTokenPrice(this.bondToken);
+    }
+
+    public async getBondDiscount(networkID: Networks, provider: StaticJsonRpcProvider, marketPrice: number = 0): Promise<any>{
+        let bondDiscount = 0;
+        let bondPrice = 0;
+
+        try {
+            const bondContract = this.getContractForBond(networkID, provider);
+            bondPrice = await bondContract.bondPriceInUSD();
+            
+
+            // AVAX-TIME pair
+            // if (this.name === avaxTime.name) {
+            //     const avaxPrice = getTokenPrice("AVAX");
+            //     bondPrice = bondPrice * avaxPrice;
+            // }
+
+            bondDiscount = (marketPrice * Math.pow(10, 18) - bondPrice) / bondPrice;
+
+        } catch(err) {  
+            console.error(`Error in getBondDiscount() :`, err);
+        } finally { 
+            return { bondDiscount, bondPrice };
+        }
     }
 }

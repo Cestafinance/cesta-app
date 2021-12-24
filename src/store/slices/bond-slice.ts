@@ -116,100 +116,36 @@ export const calcBondDetails = createAsyncThunk("bonding/calcBondDetails", async
         value = "0";
     }
 
-    const amountInWei = ethers.utils.parseEther(value);
-
-    let bondPrice = 0,
-        bondDiscount = 0,
-        valuation = 0,
-        bondQuote = 0;
-
-    const addresses = getAddresses(networkID);
-
     const bondContract = bond.getContractForBond(networkID, provider);
-    // const bondCalcContract = getBondCalculator(networkID, provider);
-
     const terms = await bondContract.terms();
-    const maxBondPrice = (await bondContract.maxPayout()) / Math.pow(10, 9);
-
+   
     // Getting price for CESTA <-> MIM pair
     let marketPrice = await getMarketPrice(networkID, provider);
-
     const mimPrice = getTokenPrice("MIM");
     marketPrice = marketPrice * mimPrice;
 
-    try {
-        bondPrice = await bondContract.bondPriceInUSD();
-
-        if (bond.name === avaxTime.name) {
-            const avaxPrice = getTokenPrice("AVAX");
-            bondPrice = bondPrice * avaxPrice;
-        }
-
-        bondDiscount = (marketPrice * Math.pow(10, 18) - bondPrice) / bondPrice;
-    } catch (e) {
-        console.log("error getting bondPriceInUSD", e);
-    }
-
-    let maxBondPriceToken = 0;
-    const maxBodValue = ethers.utils.parseEther("1");
-
-    if (bond.isLP) {
-        // valuation = await bondCalcContract.valuation(bond.getAddressForReserve(networkID), amountInWei);
-        // bondQuote = await bondContract.payoutFor(valuation);
-        // bondQuote = bondQuote / Math.pow(10, 9);
-
-        // const maxValuation = await bondCalcContract.valuation(bond.getAddressForReserve(networkID), maxBodValue);
-        // const maxBondQuote = await bondContract.payoutFor(maxValuation);
-        // maxBondPriceToken = maxBondPrice / (maxBondQuote * Math.pow(10, -9));
-    } else {
-        bondQuote = await bondContract.payoutFor(amountInWei);
-        bondQuote = bondQuote / Math.pow(10, 18);
-
-        const maxBondQuote = await bondContract.payoutFor(maxBodValue);
-        maxBondPriceToken = maxBondPrice / (maxBondQuote * Math.pow(10, -18));
-    }
-
-    if (!!value && bondQuote > maxBondPrice) {
-        dispatch(error({ text: messages.try_mint_more(maxBondPrice.toFixed(2).toString()) }));
-    }
+    // Calculate bond discount
+    let {bondDiscount, bondPrice} = await bond.getBondDiscount(networkID, provider, marketPrice);
 
     // Calculate bonds purchased
-    const token = bond.getContractForReserve(networkID, provider);
-    let purchased = await token.balanceOf(addresses.TREASURY_ADDRESS);
+    let purchased = await bond.getPurchasedAmount(networkID, provider);
 
-    if (bond.isLP) {
-        // const assetAddress = bond.getAddressForReserve(networkID);
-        // const markdown = await bondCalcContract.markdown(assetAddress);
-
-        // purchased = await bondCalcContract.valuation(assetAddress, purchased);
-        // purchased = (markdown / Math.pow(10, 18)) * (purchased / Math.pow(10, 9));
-
-        // if (bond.name === avaxTime.name) {
-        //     const avaxPrice = getTokenPrice("AVAX");
-        //     purchased = purchased * avaxPrice;
-        // }
-    } else {
-        if (bond.tokensInStrategy) {
-            purchased = BigNumber.from(purchased).add(BigNumber.from(bond.tokensInStrategy)).toString();
-        }
-        purchased = purchased / Math.pow(10, 18);
-
-        if (bond.name === wavax.name) {
-            const avaxPrice = getTokenPrice("AVAX");
-            purchased = purchased * avaxPrice;
-        }
-    }
+    // Getting bond quote, max bond price and max bond price token
+    // const { bondQuote, maxBondPrice, maxBondPriceToken } = await bond.getMaxBondPrice(networkID, provider, value);
+    // if (!!value && bondQuote > maxBondPrice) {
+    //     dispatch(error({ text: messages.try_mint_more(maxBondPrice.toFixed(2).toString()) }));
+    // }
 
     return {
         bond: bond.name,
-        bondDiscount,
-        bondQuote,
-        purchased,
         vestingTerm: Number(terms.vestingTerm),
-        maxBondPrice,
-        bondPrice: bondPrice / Math.pow(10, 18),
         marketPrice,
-        maxBondPriceToken,
+        bondDiscount,
+        bondPrice: bondPrice / Math.pow(10, 18),
+        purchased,
+        // bondQuote,
+        // maxBondPrice,
+        // maxBondPriceToken,
     };
 });
 
