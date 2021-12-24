@@ -9,7 +9,7 @@ import { IReduxState } from "../store/slices/state.interface";
 // Smash all the interfaces together to get the BondData Type
 export interface IAllBondData extends Bond, IBondDetails, IUserBondDetails {}
 
-export const initialBondArray = allBonds;
+export const initialBondArray = [];
 // Slaps together bond data within the account & bonding states
 function useBonds() {
     const bondLoading = useSelector<IReduxState, boolean>(state => state.bonding.loading);

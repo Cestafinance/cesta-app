@@ -135,7 +135,7 @@ export const calcBondDetails = createAsyncThunk("bonding/calcBondDetails", async
     let marketPrice = await getMarketPrice(networkID, provider);
 
     const mimPrice = getTokenPrice("MIM");
-    marketPrice = (marketPrice / Math.pow(10, 9)) * mimPrice;
+    marketPrice = marketPrice * mimPrice;
 
     try {
         bondPrice = await bondContract.bondPriceInUSD();
@@ -212,6 +212,39 @@ export const calcBondDetails = createAsyncThunk("bonding/calcBondDetails", async
         maxBondPriceToken,
     };
 });
+
+export interface IBondAppDetails {
+    marketPrice: number,
+    treasuryBalance: number,
+}
+interface ICalcBondAppDetails {
+    bonds: Bond[];
+    provider: StaticJsonRpcProvider | JsonRpcProvider;
+    networkID: Networks;
+}
+
+export const loadBondAppDetail = createAsyncThunk("bonding/appDetail", async({ bonds, provider, networkID}: ICalcBondAppDetails) => {
+    try {
+          // CESTA price
+        let marketPrice = await getMarketPrice(networkID, provider);
+        const mimPrice = getTokenPrice("MIM");
+        // marketPrice = (marketPrice / Math.pow(10, 9)) * mimPrice;
+        // TODO: Market price need to divide by Math.pow(10, 9) ? 
+        marketPrice = marketPrice * mimPrice; 
+
+        // Treasury Balance
+        const tokenBalPromises = bonds.map(bond => bond.getTreasuryBalance(networkID, provider));
+        const tokenBalances = await Promise.all(tokenBalPromises);
+        const treasuryBalance = tokenBalances.reduce((tokenBalance0, tokenBalance1) => tokenBalance0 + tokenBalance1, 0);
+
+        return {
+            treasuryBalance, 
+            marketPrice
+        }
+    } catch(err) {
+        console.error(`Error in loadBondAppDetail(): `, err)
+    }
+})
 
 interface IBondAsset {
     value: string;
@@ -347,6 +380,7 @@ export interface IBondSlice {
 
 const initialState: IBondSlice = {
     loading: true,
+    appLoading: true
 };
 
 const setBondState = (state: IBondSlice, payload: any) => {
@@ -380,7 +414,17 @@ const bondingSlice = createSlice({
             .addCase(storeBonds.fulfilled, (state, action) => {
                 const { bondList } = action.payload;
                 state.bonds = bondList;
-            });
+            })
+            .addCase(loadBondAppDetail.pending, (state, action) => {
+                state.appLoading = true;
+            })
+            .addCase(loadBondAppDetail.rejected, (state, action) => {
+                state.appLoading = false;
+            })
+            .addCase(loadBondAppDetail.fulfilled, (state, action) => {
+                state.app = action.payload;
+                state.appLoading = false;
+            })
     },
 });
 

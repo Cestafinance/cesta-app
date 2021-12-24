@@ -4,9 +4,9 @@ import { useSelector } from "react-redux";
 import { getAllBonds } from "src/Services/contracts";
 import { networkMap } from "src/Constants/mains";
 import { useDispatch } from "react-redux";
-import { storeBonds, calcBondDetails } from "../../../store/slices/bond-slice";
-import { LPBond } from "src/helpers/bond/lp-bond";
-import { StableBond } from "src/helpers/bond/stable-bond";
+import { storeBonds, calcBondDetails, loadBondAppDetail } from "../../../store/slices/bond-slice";
+import { LPBond } from "../../../helpers/bond/lp-bond";
+import { StableBond } from "../../../helpers/bond/stable-bond";
 import { providerSelector, networkIdSelector, accountSelector } from "../../../store/selectors/web3";
 import { calculateUserBondDetails } from "src/store/slices/account-slice";
 
@@ -62,8 +62,16 @@ export function useInitiateBonds() {
 
                     return { bond, token };
                 }));
+              
                 const bonds = allBonds.map(a => a.bond);
                 dispatch(storeBonds(bonds));
+
+                // To get CESTA price and Treasury Balance
+                dispatch(loadBondAppDetail({
+                    bonds, 
+                    provider,
+                    networkID
+                }))
             }
 
         } catch (err) { 

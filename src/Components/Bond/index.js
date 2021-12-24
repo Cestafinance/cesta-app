@@ -15,7 +15,7 @@ import {
   TableRow,
 } from "@mui/material";
 import { 
-  BannerBox
+  BannerBox, LoadingPulse
 } from "../Commons/SharedComponent";
 import { useInitiateBonds } from "./Hooks/useInitialBonds";
 import useBonds from "src/hooks/bonds";
@@ -109,6 +109,8 @@ function Bond() {
   const theme = useTheme();
 
   const account = useSelector(accountSelector);
+  const bondAppDetail = useSelector(state => state.bonding.app);
+  const bondAppDetailLoading = useSelector(state => state.bonding.appLoading);
 
   const { findBonds } = useInitiateBonds();
   const bonds = useBonds();
@@ -140,13 +142,29 @@ function Bond() {
               {/** Treasure Balance */}
               <InfoContainer sx={{margin: "0px 32px"}}>
                 <UpperLabel>Treasure Balance</UpperLabel>
-                <LowerLabel>$21,466,879</LowerLabel>
+                <LowerLabel>
+                  {bondAppDetailLoading
+                    ? <LoadingPulse skeletonWidth={160} />
+                    :  new Intl.NumberFormat("en-US", {
+                      style: "currency",
+                      currency: "USD",
+                      maximumFractionDigits: 3,
+                      minimumFractionDigits: 2,
+                  }).format(Number(bondAppDetail.treasuryBalance))}
+                </LowerLabel>
               </InfoContainer>
 
               {/** CESTA Price */}
               <InfoContainer sx={{margin: "0px 32px"}}>
                 <UpperLabel>CESTA Price</UpperLabel>
-                <LowerLabel>$21,466,879</LowerLabel>
+                <LowerLabel> {bondAppDetailLoading
+                    ? <LoadingPulse skeletonWidth={160} />
+                    :  new Intl.NumberFormat("en-US", {
+                      style: "currency",
+                      currency: "USD",
+                      maximumFractionDigits: 3,
+                      minimumFractionDigits: 2,
+                  }).format(Number(bondAppDetail.marketPrice))}</LowerLabel>
               </InfoContainer>
           </MainInfoContainer>
 
