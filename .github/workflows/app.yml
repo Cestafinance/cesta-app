@@ -10,7 +10,12 @@ on:
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
-
+env:
+  REACT_APP_BASE_URL: ${{ secrets.REACT_APP_BASE_URL }}
+  REACT_APP_GA_TRACKING: ${{ secrets.REACT_APP_GA_TRACKING }}
+  REACT_APP_GTM_TRACKING: ${{ secrets.REACT_APP_GTM_TRACKING }}
+  REACT_APP_HOTJAR_HJID: ${{ secrets.REACT_APP_HOTJAR_HJID }}
+  REACT_APP_HOTJAR_HJSV: ${{ secrets.REACT_APP_HOTJAR_HJSV }}
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   # This workflow contains a single job called "build"
