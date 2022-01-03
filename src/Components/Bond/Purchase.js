@@ -196,6 +196,13 @@ function Purchase({
         }
         
         // TODO: Add bond interest due and pending payout checking
+        if(bondData.pendingPayout > 0 || bondData.interestDue > 0) {
+            const shouldProceed = window.confirm(messages.existing_mint);
+            console.log(`proceed`, shouldProceed);
+            if(!shouldProceed) {
+                return;
+            }
+        }
         
         setIsTransacting(true);
         setModalProps({ titleMain: "Purchase Bond", subTitle: `for Bond Contract ${bondData.bondToken}`});
@@ -207,6 +214,8 @@ function Purchase({
             isTransacting: true, 
             isError: false
         });
+
+        console.log(`bond before dispatch`, bondData);
 
         dispatch(bondAsset({
             value: amount.toString(),
