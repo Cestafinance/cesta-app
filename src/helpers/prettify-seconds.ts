@@ -12,8 +12,12 @@ export const prettifySeconds = (seconds?: number, resolution?: string, withMin: 
     }
 
     const dDisplay = d > 0 ? d + (d == 1 ? " day, " : " days, ") : "";
-    const hDisplay = h > 0 ? h + (h == 1 ? " Hour, " : " Hours ") : "";
-    const mDisplay = m > 0 ? m + (m == 1 ? " Min" : ", Mins") : "";
+    const hDisplay = h > 0 ? h + (h == 1 ? " Hour, " : ` Hours ${withMin ? ',' : ''}`  ) : "";
+    const mDisplay = m > 0 ? m + (m == 1 ? " Min" : " Mins") : "";
+
+    if(d <= 0 && h <= 0) {
+        withMin = true
+    }
 
     return dDisplay + hDisplay + (withMin ? mDisplay : "");
 };

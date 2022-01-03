@@ -143,10 +143,8 @@ function RedeemPrice({
     };
 
     const vestingTime = () => {
-        if (!userBond) {
-            return "";
-        }
-        return prettyVestingPeriod(currentBlockTime, userBond.bondMaturationBlock, false);
+        let result = !userBond ? "" : prettyVestingPeriod(currentBlockTime, userBond.bondMaturationBlock, false);
+        return result === ""  ? "-" : result;
     };
 
     useEffect(() => {
@@ -155,9 +153,9 @@ function RedeemPrice({
 
         const redeemContent = [
             [
-                { label: "Pending Rewards", content: `${userBond && userBond.interestDue? `${userBond.interestDue} CESTA` : "-"}` },
-                { label: "Claimable Rewards", content: `${userBond && userBond.pendingPayout ? trim(userBond.pendingPayout, 4) : '-'}  CESTA` },
-                { label: "Time Until Fully Vested", content: `${userBond && vestingTime() } CESTA` },
+                { label: "Pending Rewards", content: `${userBond && userBond.interestDue? `${userBond.interestDue}` : "0"}  CESTA` },
+                { label: "Claimable Rewards", content: `${userBond && userBond.pendingPayout ? trim(userBond.pendingPayout, 4) : '0'}  CESTA` },
+                { label: "Time Until Fully Vested", content: `${userBond && vestingTime() }` },
             ],
             [
                 { label: "ROI (Bond Discount)", content: `${bondData && bondData.bondDiscount ? trim(bondData.bondDiscount * 100, 2) : "-"}%` },
