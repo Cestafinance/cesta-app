@@ -1,8 +1,8 @@
-import { ContractInterface, ethers } from "ethers";
+import { ContractInterface, ethers, Contract } from "ethers";
 import { Bond, BondOpts } from "./bond";
 import { BondType } from "./constants";
 import { Networks } from "../../Constants/v2/blockchain";
-import { StaticJsonRpcProvider } from "@ethersproject/providers";
+import { StaticJsonRpcProvider, JsonRpcSigner } from "@ethersproject/providers";
 import { getBondCalculator } from "../bond-calculator";
 import { getAddresses } from "../../Constants/v2/addresses";
 import { getTokenPrice } from "../../helpers";
@@ -10,6 +10,7 @@ import { getTokenPrice } from "../../helpers";
 // Keep all LP specific fields/logic within the LPBond class
 export interface LPBondOpts extends BondOpts {
     readonly reserveContractAbi: ContractInterface;
+    readonly bondCalcContractAbi: ContractInterface;
     readonly lpUrl: string;
 }
 
@@ -18,12 +19,14 @@ export class LPBond extends Bond {
     readonly lpUrl: string;
     readonly reserveContractAbi: ContractInterface;
     readonly displayUnits: string;
+    readonly bondCalcContractAbi: ContractInterface;
 
     constructor(lpBondOpts: LPBondOpts) {
         super(BondType.LP, lpBondOpts);
 
         this.lpUrl = lpBondOpts.lpUrl;
         this.reserveContractAbi = lpBondOpts.reserveContractAbi;
+        this.bondCalcContractAbi = lpBondOpts.bondCalcContractAbi;
         this.displayUnits = "LP";
     }
 
@@ -32,13 +35,22 @@ export class LPBond extends Bond {
 
         const token = this.getContractForReserve(networkID, provider);
         const tokenAddress = this.getAddressForReserve(networkID);
-        const bondCalculator = getBondCalculator(networkID, provider);
+        const bondCalculator = this.getContractForBondCalc(networkID, provider);
         const tokenAmount = await token.balanceOf(addresses.TREASURY_ADDRESS);
         const valuation = await bondCalculator.valuation(tokenAddress, tokenAmount);
         const markdown = await bondCalculator.markdown(tokenAddress);
-        const tokenUSD = (valuation / Math.pow(10, 9)) * (markdown / Math.pow(10, 18));
-
+        // TODO: Valuation markdown
+        const tokenUSD = (valuation / Math.pow(10, 18)) * (markdown / Math.pow(10, 18));
         return tokenUSD;
+    }
+
+    public getAddressForBondCalculator(networkID: Networks) {
+        return this.networkAddrs[networkID].bondCalcAddress;
+    }
+
+    public getContractForBondCalc(networkID: Networks, provider: StaticJsonRpcProvider | JsonRpcSigner) {
+        const bondCalcAddress = this.getAddressForBondCalculator(networkID);
+        return new Contract(bondCalcAddress, this.bondCalcContractAbi, provider);
     }
 
     public getTokenAmount(networkID: Networks, provider: StaticJsonRpcProvider) {
@@ -48,6 +60,7 @@ export class LPBond extends Bond {
     public getTimeAmount(networkID: Networks, provider: StaticJsonRpcProvider) {
         return this.getReserves(networkID, provider, false);
     }
+
 
     private async getReserves(networkID: Networks, provider: StaticJsonRpcProvider, isToken: boolean): Promise<number> {
         const addresses = getAddresses(networkID);
@@ -78,16 +91,20 @@ export class LPBond extends Bond {
 
         try {
             const bondContract = super.getContractForBond(networkID, provider);
-            const bondCalcContract = super.getContractForBond(networkID, provider);
+            const bondCalcContract = this.getContractForBondCalc(networkID, provider);
 
-            maxBondPrice = (await bondContract.maxPayout()) / Math.pow(10, 9);
+            // Max you can buy
+            maxBondPrice = (await bondContract.maxPayout()) / Math.pow(10, 18);
             valuation = (await bondCalcContract.valuation(super.getAddressForReserve(networkID), amountInWei));
+            console.log(`valuation ${valuation.toString()}, amountInWei ${amountInWei.toString()}, reserve: ${super.getAddressForReserve(networkID)}}`)
+            
+            // `You will get` on frontend
             bondQuote = await bondContract.payoutFor(valuation);
-            bondQuote = bondQuote / Math.pow(10, 9);
+            bondQuote = bondQuote / Math.pow(10, 18);
 
             const maxValuation = await bondCalcContract.valuation(super.getAddressForReserve(networkID), maxBodValue);
             maxBondQuote = await bondContract.payoutFor(maxValuation);
-            maxBondPriceToken = maxBondPrice / (maxBondQuote * Math.pow(10, -9));
+            maxBondPriceToken = maxBondPrice / (maxBondQuote * Math.pow(10, -18));
 
         } catch(err) {
             console.error(`Error in getMaxBondPrice(): `, err);
@@ -109,12 +126,12 @@ export class LPBond extends Bond {
             purchased = await token.balanceOf(addresses.TREASURY_ADDRESS);
 
             const assetAddress = super.getAddressForReserve(networkID);
-            const bondCalcContract = super.getContractForBond(networkID, provider);
+            const bondCalcContract = this.getContractForBondCalc(networkID, provider);
 
             const markdown = await bondCalcContract.markdown(assetAddress);
 
             purchased = await bondCalcContract.valuation(assetAddress, purchased);
-            purchased = (markdown / Math.pow(10, 18)) * (purchased / Math.pow(10, 9));
+            purchased = (markdown / Math.pow(10, 18)) * (purchased / Math.pow(10, 18));
 
             // if (this.name === avaxTime.name) {
             //     const avaxPrice = getTokenPrice("AVAX");
