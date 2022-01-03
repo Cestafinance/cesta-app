@@ -3,6 +3,14 @@ services:
   nginx:
     container_name: 'frontend'
     restart: always
+    env_file:
+      - .env
+    environment:
+      - REACT_APP_BASE_URL=${REACT_APP_BASE_URL}
+      - REACT_APP_GA_TRACKING=${REACT_APP_GA_TRACKING}
+      - REACT_APP_GTM_TRACKING=${REACT_APP_GTM_TRACKING}
+      - REACT_APP_HOTJAR_HJID=${REACT_APP_HOTJAR_HJID}
+      - REACT_APP_HOTJAR_HJSV=${REACT_APP_HOTJAR_HJSV}
     image: cestafi/frontend-app:latest
     ports: 
       - 80:80
