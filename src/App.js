@@ -23,13 +23,13 @@ const Stake = lazy(() => import("./Components/Stake"));
 
 function App() {
   const dispatch = useDispatch();
-  hotjar.initialize(process.env.HOTJAR_HJID, process.env.HOTJAR_HJSV);
+  hotjar.initialize(process.env.REACT_APP_HOTJAR_HJID, process.env.REACT_APP_HOTJAR_HJSV);
 
   const tagManagerArgs = {
-    gtmId: process.env.REACT_GTM_TRACKING,
+    gtmId: process.env.REACT_APP_GTM_TRACKING,
   };
   TagManager.initialize(tagManagerArgs);
-  ReactGA.initialize(process.env.REACT_GA_TRACKING);
+  ReactGA.initialize(process.env.REACT_APP_GA_TRACKING);
 
   const [coinLoaded, SetAllCoinsLoaded] = useState(false);
 
