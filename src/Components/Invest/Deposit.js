@@ -9,6 +9,7 @@ import ActionConfirm from "./modals/Modal";
 import DepositTemplate from "./modals/Deposit";
 import { stableCoinsSelector } from "../../store/selectors/commons";
 import { accountSelector } from "../../store/selectors/web3";
+import useGAEventsTracker from "../../Analytics/useGAEventsTracker";
 
 const useStyles = makeStyles(({ theme }) => ({
   assetScaleLabel: {
@@ -86,6 +87,7 @@ function Deposit({
   const [open, SetOpen] = useState(false);
   const stableCoinsContracts = useSelector(stableCoinsSelector);
   const account = useSelector(accountSelector);
+  const GAEventsTracker = useGAEventsTracker("Deposit Modal");
 
   const selectPercentage = (value) => {
     let balance = parseFloat(
@@ -98,6 +100,11 @@ function Deposit({
   };
 
   const confirmDeposit = () => {
+    GAEventsTracker(
+      "Opened",
+      strategyData.tokens[selectedCoinIndex],
+      depositAmount
+    );
     SetOpen(true);
   };
 
