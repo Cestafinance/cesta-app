@@ -20,6 +20,7 @@ import { calcBondDetails, calcBondExtraDetails } from "src/store/slices/bond-sli
 import { useDispatch, useSelector } from "react-redux";
 import { accountSelector, networkIdSelector, providerSelector } from "src/store/selectors/web3";
 import { calculateUserBondDetails } from "src/store/slices/account-slice";
+import { render } from "@testing-library/react";
 
 const useStyles = makeStyles((theme) => ({
     assetImages: {
@@ -98,12 +99,23 @@ function BondDetail({
     const classes = useStyles();
     const [isExpanded, setIsExpanded] = useState(false);
     const [selectedTab, setSelectedTab] = useState(0);
+    const [firstTimeLoad, setFirstTimeLoad] = useState(true);
+    
+    const [discount, setDiscount] = useState(0);
+    const [bondPrice, setBondPrice] = useState(null);
+    const [purchased, setPurchased] = useState(null);
 
     const dispatch = useDispatch();
 
     const provider = useSelector(providerSelector);
     const networkID = useSelector(networkIdSelector);
     const account = useSelector(accountSelector);
+
+    useEffect(() => {
+        if(!loadingDetail) {
+            setFirstTimeLoad(false);
+        }
+    }, [loadingDetail])
 
     useEffect(() => {
         if(isExpanded){
@@ -121,8 +133,46 @@ function BondDetail({
         }
     }, [isExpanded])
 
+    // Set discount
+    useEffect(() => {
+        const discountLabel =  `${bondData.bondDiscount === undefined ? "0.00" :trim(bondData.bondDiscount * 100, 2)} %` 
+        setDiscount(discountLabel);
+    }, [bondData.bondDiscount])
+
+    // Set bond price
+    useEffect(() => {
+        const bondPrice = new Intl.NumberFormat("en-US", {
+            style: "currency",
+            currency: "USD",
+            maximumFractionDigits: 3,
+            minimumFractionDigits: 2,
+        }).format(isNaN(Number(bondData.bondPrice).toFixed(2)) ? 0 : Number(bondData.bondPrice).toFixed(2));
+
+        setBondPrice(bondPrice);
+    }, [bondData.bondPrice])
+
+    // Set purchased
+    useEffect(() => {
+        const bondPurchased =  new Intl.NumberFormat("en-US", {
+            style: "currency",
+            currency: "USD",
+            maximumFractionDigits: 3,
+            minimumFractionDigits: 2,
+        }).format(isNaN(Number(bondData.purchased).toFixed(2)) ? 0 : Number(bondData.purchased).toFixed(2));
+
+        setPurchased(bondPurchased);
+    }, [bondData.purchased])
+
     const handleTabSelected = (event) => {
         setSelectedTab(event);
+    }
+
+    const renderLabel = (value) => {
+        return  firstTimeLoad 
+            ? <LoadingPulse skeletonWidth={100}/>
+            : <DetailLabel component={"span"}>
+                {value}
+            </DetailLabel>
     }
 
     return <TableRow>
@@ -158,39 +208,17 @@ function BondDetail({
 
                     {/** Price */}
                     <Grid item xs={2} className={classes.textAlignStart}>
-                        {loadingDetail 
-                            ? <LoadingPulse skeletonWidth={100}/>
-                            : <DetailLabel component={"span"}>
-                                {new Intl.NumberFormat("en-US", {
-                                    style: "currency",
-                                    currency: "USD",
-                                    maximumFractionDigits: 3,
-                                    minimumFractionDigits: 2,
-                                }).format(Number(bondData.bondPrice).toFixed(2))}
-                            </DetailLabel>}
+                        {renderLabel(bondPrice)}
                     </Grid>
 
                     {/** ROI */}
                     <Grid item xs={2} className={classes.textAlignStart}>
-                        {loadingDetail 
-                            ? <LoadingPulse skeletonWidth={100}/>
-                            : <DetailLabel component={"span"}>
-                                {trim(bondData.bondDiscount * 100, 2)} %
-                            </DetailLabel>}
+                        {renderLabel(discount)}
                     </Grid>
 
                     {/** Purchased */}
                     <Grid item xs={2} className={classes.textAlignStart}>
-                        {loadingDetail 
-                            ? <LoadingPulse skeletonWidth={100} /> 
-                            : <DetailLabel component={"span"}>
-                                {new Intl.NumberFormat("en-US", {
-                                    style: "currency",
-                                    currency: "USD",
-                                    maximumFractionDigits: 3,
-                                    minimumFractionDigits: 2,
-                                }).format(Number(bondData.purchased).toFixed(2))}
-                        </DetailLabel>}
+                        {renderLabel(purchased)}
                     </Grid>
                 </Grid>
             </StyledAccordionSummary>

@@ -195,10 +195,8 @@ function Purchase({
             return;
         }
         
-        // TODO: Add bond interest due and pending payout checking
         if(bondData.pendingPayout > 0 || bondData.interestDue > 0) {
             const shouldProceed = window.confirm(messages.existing_mint);
-            console.log(`proceed`, shouldProceed);
             if(!shouldProceed) {
                 return;
             }
@@ -214,8 +212,6 @@ function Purchase({
             isTransacting: true, 
             isError: false
         });
-
-        console.log(`bond before dispatch`, bondData);
 
         dispatch(bondAsset({
             value: amount.toString(),
