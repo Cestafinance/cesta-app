@@ -1,21 +1,17 @@
 import { ethers, constants } from "ethers";
 import { getMarketPrice, getTokenPrice } from "../../helpers";
 import { calculateUserBondDetails, getBalances } from "./account-slice";
-import { getAddresses } from "../../Constants/v2";
 import { fetchPendingTxns, clearPendingTxn } from "./pending-txns-slice";
 import { createSlice, createSelector, createAsyncThunk } from "@reduxjs/toolkit";
 import { JsonRpcProvider, StaticJsonRpcProvider } from "@ethersproject/providers";
 import { fetchAccountSuccess } from "./account-slice";
 import { Bond } from "../../helpers/bond/bond";
 import { Networks } from "../../Constants/v2/blockchain";
-import { getBondCalculator } from "../../helpers/bond-calculator";
-import { avaxTime, wavax } from "../../helpers/bond";
 import { error, warning, success, info } from "../slices/messages-slice";
 import { messages } from "../../Constants/v2/messages";
 import { getGasPrice } from "../../helpers/get-gas-price";
 import { metamaskErrorWrap } from "../../helpers/metamask-error-wrap";
 import { sleep } from "../../helpers";
-import { BigNumber } from "ethers";
 import { transactionCompleted, transactionError, transactionInitiated, transactionSuccess } from "./txn-slice";
 
 interface IChangeApproval {
@@ -368,14 +364,14 @@ const bondingSlice = createSlice({
                 console.log(error);
             })
             .addCase(calcBondExtraDetails.pending, state => {
-                state.loading = true;
+                state.extraLoading = true;
             })
             .addCase(calcBondExtraDetails.fulfilled, (state, action) => {
                 setBondState(state, action.payload);
-                state.loading = false;
+                state.extraLoading = false;
             })
             .addCase(calcBondExtraDetails.rejected, (state, { error }) => {
-                state.loading = false;
+                state.extraLoading = false;
                 console.log(error);
             })
             .addCase(storeBonds.fulfilled, (state, action) => {

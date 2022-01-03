@@ -119,26 +119,46 @@ function Purchase({
         }
     }, [transaction])
 
-    const onInputChange = (value) => {
-        let decimals = value.match(/\./g);
-        
-        if (
-          (decimals &&
-            decimals.length === 1 &&
-            value[value.length - 1] === ".") ||
-          value[value.length - 1] === "0"
-        ) {
-          setError(tokenBalance < value);
-          setAmount(value);
-          return;
+    useEffect(() => {
+        if(!error){
+            dispatch(calcBondExtraDetails({ 
+                bond: bondData, 
+                value: amount.toString(), 
+                provider, 
+                networkID 
+            })); 
+        }
+    }, [amount, error])
+
+    const validateInput = (value) => {
+        const pattern = /^[0-9]\d*(\.\d+)?$/; // Accept only decimals or integer
+        const isDigit = pattern.test(value);
+       
+        if(!isDigit) {
+            setError(true);
+            setAmount(value);
+          
+            return false;
         }
 
-        let newVal = parseFloat(value);
-        newVal = isNaN(newVal) ? 0 : newVal;
-        setError(tokenBalance < value);
-        setAmount(newVal);
+        if(value === "" || value === null || value === undefined || value === 0 ) {
+            setError(true);
+            setAmount(0);
+           
+            return false;
+        }
+        
+        let newAmount = value;
+        const sufficientBalance =  newAmount <= tokenBalance;
+      
+        setError(!sufficientBalance);
+        setAmount(newAmount);
 
-        dispatch(calcBondExtraDetails({ bond: bondData, value: newVal.toString(), provider, networkID }));
+        return sufficientBalance;
+    }
+
+    const onInputChange = (value) => {
+        validateInput(value);
     };
 
     const handlePercentSelected = ({percent}) => {
@@ -147,23 +167,26 @@ function Purchase({
     }
 
     const onApproveToken = async() => {
-        setIsTransacting(true);
-        setModalProps({ titleMain: "Approve Bond", subTitle: `for Bond Contract ${bondData.bondToken}`});
-        setOpenModal(true);
-
-        setContentProps({
-            message: messages.approve_transacting,
-            subMessage: null,
-            isTransacting: true, 
-            isError: false
-        });
-
-        dispatch(changeApproval({
-            bond: bondData, 
-            provider,
-            networkID,
-            address: account
-        }))
+        const valid = validateInput(amount);
+        if(valid) {
+            setIsTransacting(true);
+            setModalProps({ titleMain: "Approve Bond", subTitle: `for Bond Contract ${bondData.bondToken}`});
+            setOpenModal(true);
+    
+            setContentProps({
+                message: messages.approve_transacting,
+                subMessage: null,
+                isTransacting: true, 
+                isError: false
+            });
+    
+            dispatch(changeApproval({
+                bond: bondData, 
+                provider,
+                networkID,
+                address: account
+            }))
+        }
     }
 
     const onBonding = async() => {
@@ -228,7 +251,7 @@ function Purchase({
         </div>
 
         <div style={{margin:"20px 0px"}}>
-            <StyledButton disabled={isTransacting}
+            <StyledButton disabled={isTransacting || error}
                 onClick={() => requireApprove ? onApproveToken() : onBonding()}
                 >
                 {requireApprove ? 'APPROVE' : 'BOND' } 

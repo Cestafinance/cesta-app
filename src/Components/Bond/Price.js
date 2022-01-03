@@ -81,7 +81,7 @@ function BondingPrice({
     const classes = useStyles();
 
     const bonding = useSelector(state => state.bonding);
-    const loading = useSelector(state => state.bonding.loading);
+    const loading = useSelector(state => state.bonding.extraLoading);
     const bond = bonding[bondData.bond];
      
     const [content, setContent] = useState([]);

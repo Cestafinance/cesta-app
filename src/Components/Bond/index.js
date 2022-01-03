@@ -111,20 +111,19 @@ function Bond() {
   const account = useSelector(accountSelector);
   const bondAppDetail = useSelector(state => state.bonding.app);
   const bondAppDetailLoading = useSelector(state => state.bonding.appLoading);
+  const bondLoading = useSelector(state => state.bonding.loading);
 
   const { findBonds } = useInitiateBonds();
   const bonds = useBonds();
 
   const [bondList, setBondList] = useState([]);
-  const [isLoadingBondList, setIsLoadingBondList] = useState(false);
-
+  
   useEffect(() => {
     findBonds();
   }, [account])
 
   useEffect(() => {
     setBondList(bonds.bonds);
-    setIsLoadingBondList(bonds.loading);
   },[bonds])
 
   return (
@@ -202,7 +201,7 @@ function Bond() {
               <TableBody>
                 {bondList.map((bond, index) => {
                     return (
-                      <BondDetail bondData={bond} loadingDetail={isLoadingBondList}/>
+                      <BondDetail bondData={bond} loadingDetail={bondLoading}/>
                     )
                 })}
               </TableBody>
