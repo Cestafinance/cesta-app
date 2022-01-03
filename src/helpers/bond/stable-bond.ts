@@ -56,11 +56,13 @@ export class StableBond extends Bond {
 
         try {
             const bondContract = super.getContractForBond(networkID, provider);
-            maxBondPrice = (await bondContract.maxPayout()) / Math.pow(10, 9);
+            // Max you can buy
+            maxBondPrice = (await bondContract.maxPayout()) / Math.pow(10, 18);
             
-            bondQuote = await bondContract.payoutFor(amountInWei);
+            // 'You will get' on frontend
+            bondQuote = (await bondContract.payoutFor(amountInWei)).toString();
             bondQuote = bondQuote / Math.pow(10, 18);
-
+            
             maxBondQuote = await bondContract.payoutFor(maxBodValue);
             maxBondPriceToken = maxBondPrice / (maxBondQuote * Math.pow(10, -18));
 

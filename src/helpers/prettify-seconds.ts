@@ -1,4 +1,4 @@
-export const prettifySeconds = (seconds?: number, resolution?: string) => {
+export const prettifySeconds = (seconds?: number, resolution?: string, withMin: boolean = true) => {
     if (seconds !== 0 && !seconds) {
         return "";
     }
@@ -12,8 +12,8 @@ export const prettifySeconds = (seconds?: number, resolution?: string) => {
     }
 
     const dDisplay = d > 0 ? d + (d == 1 ? " day, " : " days, ") : "";
-    const hDisplay = h > 0 ? h + (h == 1 ? " Hour, " : " Hours, ") : "";
-    const mDisplay = m > 0 ? m + (m == 1 ? " Min" : " Mins") : "";
+    const hDisplay = h > 0 ? h + (h == 1 ? " Hour, " : " Hours ") : "";
+    const mDisplay = m > 0 ? m + (m == 1 ? " Min" : ", Mins") : "";
 
-    return dDisplay + hDisplay + mDisplay;
+    return dDisplay + hDisplay + (withMin ? mDisplay : "");
 };

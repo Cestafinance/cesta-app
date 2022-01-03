@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
     Accordion,
     AccordionSummary,
@@ -15,6 +15,11 @@ import bond from "src/helpers/bond";
 import Price from "./Price";
 import Action from "./Action";
 import { LoadingPulse } from "../Commons/SharedComponent";
+import { trim } from "src/helpers"; 
+import { calcBondDetails, calcBondExtraDetails } from "src/store/slices/bond-slice";
+import { useDispatch, useSelector } from "react-redux";
+import { accountSelector, networkIdSelector, providerSelector } from "src/store/selectors/web3";
+import { calculateUserBondDetails } from "src/store/slices/account-slice";
 
 const useStyles = makeStyles((theme) => ({
     assetImages: {
@@ -94,8 +99,29 @@ function BondDetail({
     const [isExpanded, setIsExpanded] = useState(false);
     const [selectedTab, setSelectedTab] = useState(0);
 
+    const dispatch = useDispatch();
+
+    const provider = useSelector(providerSelector);
+    const networkID = useSelector(networkIdSelector);
+    const account = useSelector(accountSelector);
+
+    useEffect(() => {
+        if(isExpanded){
+            // Refresh bond detail, and adding extra detail
+            dispatch(calcBondDetails({ bond: bondData, value: null, provider, networkID }));
+            dispatch(calcBondExtraDetails({bond: bondData,  value: null, provider, networkID }));
+
+            // Getting user bond detail
+            dispatch(calculateUserBondDetails({
+                address: account,
+                bond: bondData,
+                provider, 
+                networkID
+            }))
+        }
+    }, [isExpanded])
+
     const handleTabSelected = (event) => {
-        console.log(event);
         setSelectedTab(event);
     }
 
@@ -126,7 +152,7 @@ function BondDetail({
                     <Grid item xs={6}>
                         <Box sx={{display:"flex", alignItems: "center"}}>
                             <img src={"https://via.placeholder.com/30"} className={classes.assetImages} alt={bond.name} />
-                            <DetailLabel variant="body" sx={{marginLeft: "8px", fontWeight: "bold"}}>{bondData.displayName}</DetailLabel>} 
+                            <DetailLabel variant="body" sx={{marginLeft: "8px", fontWeight: "bold"}}>{bondData.displayName}</DetailLabel> 
                         </Box>
                     </Grid>
 
@@ -149,7 +175,7 @@ function BondDetail({
                         {loadingDetail 
                             ? <LoadingPulse skeletonWidth={100}/>
                             : <DetailLabel component={"span"}>
-                                {Number(bondData.bondDiscount).toFixed(2)} %
+                                {trim(bondData.bondDiscount * 100, 2)} %
                             </DetailLabel>}
                     </Grid>
 

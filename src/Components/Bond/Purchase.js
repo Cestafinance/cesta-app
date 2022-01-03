@@ -7,7 +7,7 @@ import { useDispatch, useSelector } from "react-redux";
 import ActionConfirm from "../Invest/modals/Modal";
 import { ReminderText } from "./Redeem";
 import { messages } from "../../Constants/messages";
-import { bondAsset, changeApproval } from "../../store/slices/bond-slice";
+import { bondAsset, changeApproval, calcBondExtraDetails } from "../../store/slices/bond-slice";
 import { accountSelector, networkIdSelector, providerSelector } from "src/store/selectors/web3";
 
 const StyledTextField = styled(TextField)(({ theme }) => ({
@@ -137,6 +137,8 @@ function Purchase({
         newVal = isNaN(newVal) ? 0 : newVal;
         setError(tokenBalance < value);
         setAmount(newVal);
+
+        dispatch(calcBondExtraDetails({ bond: bondData, value: newVal.toString(), provider, networkID }));
     };
 
     const handlePercentSelected = ({percent}) => {

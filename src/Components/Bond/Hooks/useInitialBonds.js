@@ -8,7 +8,6 @@ import { storeBonds, calcBondDetails, loadBondAppDetail } from "../../../store/s
 import { LPBond } from "../../../helpers/bond/lp-bond";
 import { StableBond } from "../../../helpers/bond/stable-bond";
 import { providerSelector, networkIdSelector, accountSelector } from "../../../store/selectors/web3";
-import { calculateUserBondDetails } from "src/store/slices/account-slice";
 
 export function useContract() {
     const provider = useSelector(providerSelector);
@@ -53,12 +52,12 @@ export function useInitiateBonds() {
                     dispatch(calcBondDetails({ bond, value: null, provider, networkID }));
 
                     // Getting user bond detail 
-                    dispatch(calculateUserBondDetails({
-                        address: account,
-                        bond,
-                        provider, 
-                        networkID
-                    }))
+                    // dispatch(calculateUserBondDetails({
+                    //     address: account,
+                    //     bond,
+                    //     provider, 
+                    //     networkID
+                    // }))
 
                     return { bond, token };
                 }));

@@ -149,6 +149,26 @@ export const calcBondDetails = createAsyncThunk("bonding/calcBondDetails", async
     };
 });
 
+export const calcBondExtraDetails = createAsyncThunk("bonding/calcBondExtraDetails", async ({ bond, value, provider, networkID }: ICalcBondDetails, { dispatch }) => {
+    if (!value) {
+        value = "0";
+    }
+
+    // Getting bond quote, max bond price and max bond price token
+    const { bondQuote, maxBondPrice, maxBondPriceToken } = await bond.getMaxBondPrice(networkID, provider, value);
+    if (!!value && bondQuote > maxBondPrice) {
+        dispatch(error({ text: messages.try_mint_more(maxBondPrice.toFixed(2).toString()) }));
+    }
+
+    return {
+        bond: bond.name,
+        bondQuote,
+        maxBondPrice,
+        maxBondPriceToken,
+    };
+});
+
+
 export interface IBondAppDetails {
     marketPrice: number,
     treasuryBalance: number,
@@ -344,6 +364,17 @@ const bondingSlice = createSlice({
                 state.loading = false;
             })
             .addCase(calcBondDetails.rejected, (state, { error }) => {
+                state.loading = false;
+                console.log(error);
+            })
+            .addCase(calcBondExtraDetails.pending, state => {
+                state.loading = true;
+            })
+            .addCase(calcBondExtraDetails.fulfilled, (state, action) => {
+                setBondState(state, action.payload);
+                state.loading = false;
+            })
+            .addCase(calcBondExtraDetails.rejected, (state, { error }) => {
                 state.loading = false;
                 console.log(error);
             })

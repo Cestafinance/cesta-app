@@ -31,10 +31,11 @@ const rootReduces = combineReducers({
     stableCoins,
     account: accountReducer,
     bonding: bondingReducer,
-    app: {
-        ...app,
-        appReducer
-    },
+    // app: {
+    //     ...app,
+    //     appReducer
+    // },
+    app: appReducer,
     pendingTransactions: pendingTransactionsReducer,
     bondTransaction: bondTransactionReducer,
     messages: messagesReducer,

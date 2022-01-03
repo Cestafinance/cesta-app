@@ -4,7 +4,7 @@ import { Box, Typography, } from "@mui/material";
 import { styled} from "@mui/material/styles";
 import { makeStyles } from "@mui/styles";
 import { LoadingPulse } from "../Commons/SharedComponent";
-import { prettifySeconds } from "src/helpers";
+import { trim, prettifySeconds, prettyVestingPeriod } from "../../helpers";
 
 import {
     MainInfoContainer,
@@ -12,7 +12,7 @@ import {
     UpperLabel,
     LowerLabel
 } from "./index";
-import { trim } from "src/helpers";
+
 
 const useStyles = makeStyles((theme) => ({
    priceDetailContainer: {
@@ -49,53 +49,69 @@ function MainInfo({
             <UpperLabel sx={{ fontSize: "16px" }}>Bond Price</UpperLabel>
             {loading
                 ? <LoadingPulse skeletonWidth={100} />
-                : <LowerLabel sx={{ fontSize: "14px" }}>$21345678</LowerLabel>}
+                : <LowerLabel sx={{ fontSize: "14px" }}>
+                     {new Intl.NumberFormat("en-US", {
+                                    style: "currency",
+                                    currency: "USD",
+                                    maximumFractionDigits: 3,
+                                    minimumFractionDigits: 2,
+                                }).format(trim(bondPrice, 2))}
+                </LowerLabel>}
         </InfoContainer>
 
         <InfoContainer>
             <UpperLabel sx={{ fontSize: "16px" }}>Market Price</UpperLabel>
             {loading
                 ? <LoadingPulse skeletonWidth={100} />
-                : <LowerLabel sx={{ fontSize: "14px" }}>$21345674</LowerLabel>}
+                : <LowerLabel sx={{ fontSize: "14px" }}>
+                     {new Intl.NumberFormat("en-US", {
+                                    style: "currency",
+                                    currency: "USD",
+                                    maximumFractionDigits: 3,
+                                    minimumFractionDigits: 2,
+                                }).format(trim(marketPrice, 2))}
+                </LowerLabel>}
         </InfoContainer>
     </MainInfoContainer>
 }
 
 function BondingPrice({
     bondData,
-    loading = true
 }) {
     const classes = useStyles();
 
     const bonding = useSelector(state => state.bonding);
+    const loading = useSelector(state => state.bonding.loading);
+    const bond = bonding[bondData.bond];
+     
     const [content, setContent] = useState([]);
-
+    
     useEffect(() => {
-        const bondId = bondData.bond;
-        const priceDetail = bonding[bondId];
-
         const priceContent = [
             [
-                { label: "Available Balance", content: `1000 AVAX` },
-                { label: "You Will Get", content: `${priceDetail ? trim(priceDetail.bondQuote, 4) : '-'}  CESTA` },
-                { label: "Max You Can Buy", content: `${priceDetail ? trim(priceDetail.maxBondPrice, 4) : '-'} CESTA` },
+                { label: "Available Balance", content: `${bondData !== undefined && bondData.balance !== undefined ? `${bondData.balance} ${bondData.bondToken}` : "0"}` },
+                { label: "You Will Get", content: `${bond !== undefined && bond.bondQuote !== undefined ? trim(bond.bondQuote, 4) : '0'}  CESTA` },
+                { label: "Max You Can Buy", content: `${bond !== undefined && bond.maxBondPrice !== undefined ? trim(bond.maxBondPrice, 4) : '0'} CESTA` },
             ],
             [
-                { label: "ROI (Bond Discount)", content: `${priceDetail ? trim(priceDetail.bondDiscount * 100, 2) : "-"}%` },
-                { label: "You Will Get", content: vestingPeriod() },
+                { label: "ROI (Bond Discount)", content: `${bond !== undefined && bond.bondDiscount !== undefined ? trim(bond.bondDiscount * 100, 2) : ""}%` },
+                { label: "Vesting Term", content: vestingPeriod() },
             ],
         ];
 
         setContent(priceContent);
 
-    }, [bonding, bondData])
+    }, [bond, bondData.balance])
 
     const vestingPeriod = () => {
-        return prettifySeconds(bondData.vestingTerm, "day");
+        if(bond === undefined) {
+            return "";
+        } 
+        return prettifySeconds(bond.vestingTerm, "day");
     };
 
     return <>
-        <MainInfo loading={loading} bondPrice={null} marketPrice={null} />
+        <MainInfo loading={loading} bondPrice={bond ? bond.bondPrice : 0} marketPrice={bond ? bond.marketPrice : 0} />
 
         {content.map(c => {
             return <div className={classes.priceDetailContainer}>
@@ -108,27 +124,55 @@ function BondingPrice({
 }
 
 function RedeemPrice({
-    priceDetail,
-    loading = true
+    bondData,
 }) {
     const classes = useStyles();
 
-    const priceContent = [
-        [
-            { label: "Pending Rewards", content: `1000 AVAX` },
-            { label: "Claimable Rewards", content: `1000  CESTA` },
-            { label: "Time Until Fully Vested", content: `5 hours` },
-        ],
-        [
-            { label: "ROI (Bond Discount)", content: `-` },
-            { label: "You Will Get", content: "-" },
-        ],
-    ];
+    const bonding = useSelector(state => state.account.bonds);
+    const loading = useSelector(state => state.account.loading);
+    const userBond = bonding[bondData.bond];
+    const currentBlockTime = useSelector(state => state.app.currentBlockTime);
+
+    const [content, setContent] = useState([]);
+
+    const vestingPeriod = () => {
+        if(bondData === undefined) {
+            return "";
+        }
+        return prettifySeconds(bondData.vestingTerm, "day");
+    };
+
+    const vestingTime = () => {
+        if (!userBond) {
+            return "";
+        }
+        return prettyVestingPeriod(currentBlockTime, userBond.bondMaturationBlock, false);
+    };
+
+    useEffect(() => {
+        // console.log(`user bond detail from account bonds`, userBond);
+        // console.log(`user bond detail from bond data`, bondData);
+
+        const redeemContent = [
+            [
+                { label: "Pending Rewards", content: `${userBond && userBond.interestDue? `${userBond.interestDue} CESTA` : "-"}` },
+                { label: "Claimable Rewards", content: `${userBond && userBond.pendingPayout ? trim(userBond.pendingPayout, 4) : '-'}  CESTA` },
+                { label: "Time Until Fully Vested", content: `${userBond && vestingTime() } CESTA` },
+            ],
+            [
+                { label: "ROI (Bond Discount)", content: `${bondData && bondData.bondDiscount ? trim(bondData.bondDiscount * 100, 2) : "-"}%` },
+                { label: "Vesting Term", content: vestingPeriod() },
+            ],
+        ];
+
+        setContent(redeemContent);
+
+    }, [userBond, bondData.bondDiscount])
 
     return <>
-        <MainInfo loading={loading} bondPrice={null} marketPrice={null} />
+         <MainInfo loading={loading} bondPrice={bondData ? bondData.bondPrice : 0} marketPrice={bondData ? bondData.marketPrice : 0} />
 
-        {priceContent.map(c => {
+        {content.map(c => {
             return <div className={classes.priceDetailContainer}>
                 {c.map(d => {
                     return <LabelBoxes loading={loading} label={d.label} content={d.content} />
@@ -147,8 +191,8 @@ function Price({
 
     return <>
        {tab === 0 
-        ? <BondingPrice {...{bondData, loading: isLoading}}/>  
-        : <RedeemPrice  {...{bondData, loading: isLoading}}/>}
+        ? <BondingPrice {...{bondData}}/>  
+        : <RedeemPrice  {...{bondData}}/>}
     </>
 }
 

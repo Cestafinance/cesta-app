@@ -21,8 +21,8 @@ import './App.css';
 import {
     networkMap
 } from './Constants/mains';
-import useBonds from "./Hooks/bonds";
-import useTokens from "./Hooks/tokens";
+import useBonds from "./hooks/bonds";
+import useTokens from "./hooks/tokens";
 import { accountSelector, providerSelector, networkIdSelector, connectedSelector } from './store/selectors/web3';
 import { calculateUserBondDetails, calculateUserTokenDetails, loadAccountDetails } from './store/slices/account-slice';
 import { loadAppDetails } from './store/slices/app-slice';
@@ -40,8 +40,8 @@ function App() {
 
     const { bonds } = useBonds();
     const { tokens } = useTokens();
-    console.log('bonds', bonds);
-    console.log('tokens', tokens);
+    // console.log('bonds', bonds);
+    // console.log('tokens', tokens);
 
     const address = useSelector(accountSelector);
     const provider = useSelector(providerSelector);
@@ -132,9 +132,9 @@ function App() {
         console.log('connected', connected);
         if (connected && chainID !== 0) {
             loadDetails("app");
-            loadDetails("account");
-            loadDetails("userBonds");
-            loadDetails("userTokens"); 
+            // loadDetails("account");
+            // loadDetails("userBonds");
+            // loadDetails("userTokens"); 
 
             loadTokenCoingeckoPrice();
         }

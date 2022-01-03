@@ -5,4 +5,6 @@ export * from "./sleep";
 export * from "./prettify-seconds";
 export * from "./shorten";
 export * from "./trim";
+export * from "./pretty-vesting-period";
+export * from "./seconds-until-block";
 

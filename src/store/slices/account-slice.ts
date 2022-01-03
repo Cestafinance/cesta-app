@@ -146,40 +146,46 @@ export const calculateUserBondDetails = createAsyncThunk("account/calculateUserB
         });
     }
 
-    const bondContract = bond.getContractForBond(networkID, provider);
-    const reserveContract = bond.getContractForReserve(networkID, provider);
+    try { 
+        const bondContract = bond.getContractForBond(networkID, provider);
+        const reserveContract = bond.getContractForReserve(networkID, provider);
 
-    let interestDue, pendingPayout, bondMaturationBlock;
-
-    const bondDetails = await bondContract.bondInfo(address);
-    interestDue = bondDetails.payout / Math.pow(10, 9);
-    bondMaturationBlock = Number(bondDetails.vesting) + Number(bondDetails.lastTime);
-    pendingPayout = await bondContract.pendingPayoutFor(address);
-
-    let allowance,
-        balance = "0";
-
-    allowance = await reserveContract.allowance(address, bond.getAddressForBond(networkID));
-    balance = await reserveContract.balanceOf(address);
-    const balanceVal = ethers.utils.formatEther(balance);
-
-    const avaxBalance = await provider.getSigner().getBalance();
-    const avaxVal = ethers.utils.formatEther(avaxBalance);
-
-    const pendingPayoutVal = ethers.utils.formatUnits(pendingPayout, "gwei");
-
-    return {
-        bond: bond.name,
-        displayName: bond.displayName,
-        bondIconSvg: bond.bondIconSvg,
-        isLP: bond.isLP,
-        allowance: Number(allowance),
-        balance: Number(balanceVal),
-        avaxBalance: Number(avaxVal),
-        interestDue,
-        bondMaturationBlock,
-        pendingPayout: Number(pendingPayoutVal),
-    };
+    
+        let interestDue, pendingPayout, bondMaturationBlock;
+    
+        const bondDetails = await bondContract.bondInfo(address);
+        interestDue = bondDetails.payout / Math.pow(10, 18);
+        bondMaturationBlock = Number(bondDetails.vesting) + Number(bondDetails.lastTimestamp);
+        pendingPayout = await bondContract.pendingPayoutFor(address);
+    
+        let allowance,
+            balance = "0";
+    
+        allowance = await reserveContract.allowance(address, bond.getAddressForBond(networkID));
+        balance = await reserveContract.balanceOf(address);
+        const balanceVal = ethers.utils.formatEther(balance);
+    
+        const avaxBalance = await provider.getSigner().getBalance();
+        const avaxVal = ethers.utils.formatEther(avaxBalance);
+    
+        const pendingPayoutVal = ethers.utils.formatEther(pendingPayout); // 18 decimals
+        
+        return {
+            bond: bond.name,
+            displayName: bond.displayName,
+            bondIconSvg: bond.bondIconSvg,
+            isLP: bond.isLP,
+            allowance: Number(allowance),
+            balance: Number(balanceVal),
+            avaxBalance: Number(avaxVal),
+            interestDue,
+            bondMaturationBlock,
+            pendingPayout: Number(pendingPayoutVal),
+        };
+    } catch(err) {
+        console.error(`Here is the error`, err);
+    }
+  
 });
 
 interface ICalcUserTokenDetails {
