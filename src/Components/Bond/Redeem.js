@@ -109,8 +109,8 @@ function Redeem({ bondData }) {
         </div>
 
         <div>
-            <StyledButton disabled={isTransacting} onClick={() => onRedeem(false)}>Claim</StyledButton>
-            <StyledButton disabled={isTransacting} sx={{marginTop: "16px"}} onClick={() => onRedeem(true)}>Claim and Stake</StyledButton>
+            <StyledButton disabled={parseFloat(bondData.pendingPayout) <= 0 || isTransacting} onClick={() => onRedeem(false)}>Claim</StyledButton>
+            <StyledButton disabled={parseFloat(bondData.pendingPayout) <= 0 || isTransacting} sx={{marginTop: "16px"}} onClick={() => onRedeem(true)}>Claim and Stake</StyledButton>
         </div>
 
 

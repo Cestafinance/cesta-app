@@ -127,7 +127,7 @@ function BondDetail({
             dispatch(calculateUserBondDetails({
                 address: account,
                 bond: bondData,
-                provider, 
+                provider,
                 networkID
             }))
         }
@@ -162,6 +162,18 @@ function BondDetail({
 
         setPurchased(bondPurchased);
     }, [bondData.purchased])
+
+    // Getting user bond detail
+    useEffect(() => {
+        if (selectedTab === 1) {
+            dispatch(calculateUserBondDetails({
+                address: account,
+                bond: bondData,
+                provider,
+                networkID
+            }))
+        }
+    }, [selectedTab])
 
     const handleTabSelected = (event) => {
         setSelectedTab(event);
