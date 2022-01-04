@@ -133,10 +133,13 @@ export class LPBond extends Bond {
             purchased = await bondCalcContract.valuation(assetAddress, purchased);
             purchased = (markdown / Math.pow(10, 18)) * (purchased / Math.pow(10, 18));
 
-            // if (this.name === avaxTime.name) {
-            //     const avaxPrice = getTokenPrice("AVAX");
-            //     purchased = purchased * avaxPrice;
-            // }
+            // TODO: name === avax_cesta_lp at backend
+            if (this.name === "avax_cesta_lp") {
+                const avaxPrice = getTokenPrice("AVAX");
+                purchased = purchased * avaxPrice;
+            }
+
+            getTokenPrice("AVAX");
 
         } catch(err) {
             console.error(`Error in getPurchasedAmount(): `, err);

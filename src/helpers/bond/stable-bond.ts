@@ -90,10 +90,11 @@ export class StableBond extends Bond {
             }
             purchased = purchased / Math.pow(10, 18);
     
-            // if (this.name === wavax.name) {
-            //     const avaxPrice = getTokenPrice("AVAX");
-            //     purchased = purchased * avaxPrice;
-            // }
+            if (this.name === "wavax") {
+                const avaxPrice = getTokenPrice("AVAX");
+                purchased = purchased * avaxPrice;
+            }
+            
         } catch(err) {
             console.error(`Error in getPurchasedAmount(): `, err);
         } finally {
