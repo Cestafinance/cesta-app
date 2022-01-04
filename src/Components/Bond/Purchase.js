@@ -7,6 +7,7 @@ import { useDispatch, useSelector } from "react-redux";
 import ActionConfirm from "../Invest/modals/Modal";
 import { ReminderText } from "./Redeem";
 import { messages } from "../../Constants/messages";
+import useDebounce from "../../hooks/debounce";
 import { bondAsset, changeApproval, calcBondExtraDetails } from "../../store/slices/bond-slice";
 import { accountSelector, networkIdSelector, providerSelector } from "src/store/selectors/web3";
 
@@ -46,7 +47,8 @@ const useStyles = makeStyles(({ theme }) => ({
 }));
 
 function Purchase({  
-   bondData
+   bondData,
+   expanded
 }) {
     const classes = useStyles();
     const dispatch = useDispatch();
@@ -73,7 +75,13 @@ function Purchase({
             setIsTransacting(false);
         }, 2000);
     }
-    
+
+    useEffect(() => { 
+        if(!expanded) {
+            setAmount(0);
+        }
+    }, [expanded])
+
     useEffect(() => {
         setRequireApprove(bondData.allowance !== undefined ? bondData.allowance<=0 : false);
         setTokenBalance(bondData.balance ? bondData.balance : 0);
@@ -119,16 +127,17 @@ function Purchase({
         }
     }, [transaction])
 
+    const bondDetailsDebounce = useDebounce(amount, 1000);
     useEffect(() => {
-        if(!error){
+        if(!error && bondDetailsDebounce !== undefined){
             dispatch(calcBondExtraDetails({ 
                 bond: bondData, 
                 value: amount.toString(), 
                 provider, 
                 networkID 
-            })); 
+            }));
         }
-    }, [amount, error])
+    }, [amount, bondDetailsDebounce])
 
     const validateInput = (value) => {
         const pattern = /^[0-9]\d*(\.\d+)?$/; // Accept only decimals or integer

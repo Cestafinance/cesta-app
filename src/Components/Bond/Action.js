@@ -29,7 +29,8 @@ function Tabs({
 
 function Action ({
     bondData,
-    onTabSelected
+    onTabSelected,
+    expanded
 }) {
     const [selectedTab, setSelectedTab] = useState(0);
 
@@ -41,7 +42,7 @@ function Action ({
     return <Box sx={{padding: "16px"}}>
         <Tabs onTabSelected={handleTabSelected}/>
         {selectedTab===0 && <div style={{margin: "32px 0px"}}>
-            <Purchase bondData={bondData}/>
+            <Purchase bondData={bondData} expanded={expanded}/>
         </div>}
         {selectedTab===1 && <div style={{margin: "32px 0px"}}>
             <Redeem bondData={bondData}/>

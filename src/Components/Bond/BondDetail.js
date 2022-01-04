@@ -240,7 +240,7 @@ function BondDetail({
                     <Price tab={selectedTab} expanded={isExpanded} bondData={bondData}/>
                 </div>
                 <div className={`${classes.actionContainer} ${classes.containerLayout}`}>
-                    <Action bondData={bondData} onTabSelected={handleTabSelected}/>
+                    <Action bondData={bondData} onTabSelected={handleTabSelected} expanded={isExpanded}/>
                 </div>
             </StyledAccordionDetails>
         </StyledAccordion>
