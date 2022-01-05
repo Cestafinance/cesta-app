@@ -221,9 +221,9 @@ function Topbar() {
   }, [source]);
 
   useEffect(() => {
-    if(networkId === 1) {
-      window.location.reload(false);
-    }
+    // if(networkId === 1) {
+    //   window.location.reload(false);
+    // }
     SetNetworkSelectOpen(
       networkId !== 0 && networkMap[networkId] === undefined
     );

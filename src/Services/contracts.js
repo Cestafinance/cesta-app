@@ -39,3 +39,11 @@ export const getStrategyChartData = (strategyId, days) =>  {
 export const getStrategyCoinDistribution = (id) => {
     return axios.get(`/v1/contracts/strategies/distribution?id=${id}`);
 }
+
+export const getStakeContracts = (network) => {
+    return axios.get(`/v1/contracts/stakes/all`,{
+        params: {
+            network
+        }
+    });
+}

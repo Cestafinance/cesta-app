@@ -4,12 +4,10 @@ import {
   Grid,
   Typography,
   Button,
-  Tooltip,
   Checkbox,
   CircularProgress,
 } from "@mui/material";
 import { makeStyles, styled } from "@mui/styles";
-import { Info as InfoIcon } from "@mui/icons-material";
 import fromExponential from "from-exponential";
 import { web3Selector, sourceSelector } from "../../../store/selectors/web3";
 import {

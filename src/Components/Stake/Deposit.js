@@ -1,11 +1,10 @@
 import {Fragment, useState} from "react";
 import {makeStyles, styled} from "@mui/styles";
-import {Box, Button, Grid, Tab, Tabs, TextField, Typography} from "@mui/material";
+import {Box, Button, Grid, TextField, Typography} from "@mui/material";
 import {scales} from "../../Constants/utils";
 import ActionConfirm from "./modals/Modal";
-import UnStakeTemplate from "./modals/Withdraw";
+import DepositStakeTemplate from "./modals/Deposit";
 import Decimal from "decimal.js";
-
 
 const useStyles = makeStyles((theme) => ({}));
 
@@ -50,9 +49,8 @@ const StyledButton = styled(Button)(({ theme }) => ({
     },
 }));
 
-
-function Unstake({
-                    fsCestaBalance,
+function Deposit({
+                     cestaBalance,
                      stakeContract,
                      tokenContract
                  }) {
@@ -60,7 +58,7 @@ function Unstake({
     const classes = useStyles();
 
     const [inputError, SetInputError] = useState(false);
-    const [unstakeAmount, SetUnstakeAmount] = useState(0);
+    const [depositAmount, SetDepositAmount] = useState(0);
     const [valueSelected, SetValueSelected] = useState(0);
     const [open, SetOpen] = useState(false);
 
@@ -74,21 +72,24 @@ function Unstake({
             (decimals && decimals.length === 1 && value[value.length - 1] === ".") ||
             value[value.length - 1] === "0"
         ) {
-            SetUnstakeAmount(value);
+            SetDepositAmount(value);
             return;
         }
         let newVal = parseFloat(value);
         newVal = isNaN(newVal) ? 0 : newVal;
         // SetInputError(balance < value);
-        SetUnstakeAmount(newVal);
+        SetDepositAmount(newVal);
     };
 
 
     const selectPercentage = (value) => {
         SetValueSelected(value);
-        let amount = new Decimal(fsCestaBalance.toString()).div(new Decimal(10).pow(tokenContract.decimals));
+        if(!tokenContract) {
+            return;
+        }
+        let amount = new Decimal(cestaBalance.toString()).div(new Decimal(10).pow(tokenContract.decimals));
         amount = amount.mul(new Decimal(value)).div(new Decimal(100));
-        SetUnstakeAmount(amount.toFixed(4));
+        SetDepositAmount(amount.toFixed(4));
         SetInputError(false);
     };
 
@@ -100,7 +101,8 @@ function Unstake({
         SetOpen(true);
     }
 
-    return <Box sx={{ color: "white" }}>
+
+    return   <Box sx={{ color: "white" }}>
         <Grid container>
             <Grid item xs={12}>
                 &nbsp;
@@ -112,7 +114,7 @@ function Unstake({
                 </Grid>
                 <Grid item xs={12} style={{ position: "relative" }}>
                     <StyledTextField
-                        value={unstakeAmount}
+                        value={depositAmount}
                         onChange={(e) => onInputChange(e.target.value)}
                         error={inputError}
                     />
@@ -166,9 +168,9 @@ function Unstake({
                 <Grid item xs={12}>
                     <StyledButton
                         onClick={confirmDeposit}
-                        disabled={inputError || !unstakeAmount}
+                        disabled={inputError || !depositAmount}
                     >
-                        Unstake
+                        Stake
                     </StyledButton>
                 </Grid>
                 <Grid>
@@ -177,8 +179,8 @@ function Unstake({
                         handleClose={handleClose}
                         titleMain={"Approve Stake"}
                         subTitle={`in Cesta Stake(3,3)`}
-                        content={<UnStakeTemplate
-                            amount={unstakeAmount}
+                        content={<DepositStakeTemplate
+                            amount={depositAmount}
                             stakeContractInfo={stakeContract}
                             tokenContractInfo={tokenContract}
                         />}
@@ -188,6 +190,6 @@ function Unstake({
         </Grid>
     </Box>
 
-}
+            }
 
-export default Unstake;
+export default Deposit;

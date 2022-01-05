@@ -28,10 +28,6 @@ const useStyles = makeStyles(({ theme }) => ({
     borderRadius: "10px",
     padding: "0 6px",
   },
-  assetScaleLabel: {
-    margin: "0.3rem",
-    cursor: "pointer",
-  },
   assetMaxlabel: {
     marginLeft: "0.3rem",
     cursor: "pointer",
