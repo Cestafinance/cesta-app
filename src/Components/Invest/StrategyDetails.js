@@ -57,18 +57,19 @@ const TimerangeLabel = styled(Typography)(({ theme }) => ({
   },
 }));
 
-const StyledTabs = styled(Tabs)(({ theme }) => ({
-  "& .MuiTabs-indicator": {
-    borderBottom: "2px solid #FFFFFF !important",
-  },
-}));
+export const StyledTabs = styled(Tabs)(({theme}) => ({
+    '& .MuiTabs-indicator': {
+        borderBottom: '2px solid #FFFFFF !important'
+    }
+}))
 
-const StyledTab = styled(Tab)(({ theme }) => ({
-  "&.MuiTab-root": {
-    color: "#FFFFFF",
-    borderBottom: "2px solid rgba(255, 255, 255, 0.34)",
-    marginRight: "10px",
-  },
+export const StyledTab = styled(Tab)(({theme}) => ({
+    '&.MuiTab-root': {
+        color: '#FFFFFF',
+        borderBottom: '2px solid rgba(255, 255, 255, 0.34)',
+        marginRight: '10px'
+    },
+
 }));
 
 function StrategyDetails({

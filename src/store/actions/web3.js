@@ -38,3 +38,10 @@ export function changeWalletAction() {
         value: new Date().getTime()
     }
 }
+
+export function setProvider(provider) {
+    return {
+        type: 'WEB3_PROVIDER_LOADED',
+        provider
+    }
+}

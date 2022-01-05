@@ -1,6 +1,7 @@
 import {createStore, applyMiddleware, compose} from "redux";
 import {createLogger} from 'redux-logger';
 import rootReducer from './reducers';
+import thunk from 'redux-thunk'
 
 const loggerMiddleware = createLogger();
 const middleware = [];
@@ -12,7 +13,7 @@ function ConfigureStore(preloadedState) {
     return createStore(
         rootReducer,
         preloadedState,
-        composeEnhancers(applyMiddleware(...middleware,loggerMiddleware))
+        composeEnhancers(applyMiddleware(...middleware,loggerMiddleware, thunk))
     )
 }
 
