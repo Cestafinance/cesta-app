@@ -143,7 +143,7 @@ function WithDraw({
 
   const withdrawNow = async () => {
     const ratio = amountToWithdraw / depositedAmount;
-    const sharesToExit = (ratio * depositedShares).toFixed(4);
+    const sharesToExit = ratio * depositedShares;
     SetToWithdrawShares(sharesToExit * 10 ** strategyData.decimals);
     GAEventsTracker(
       "Opened",

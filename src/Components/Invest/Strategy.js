@@ -178,7 +178,7 @@ function Strategy({ strategyData, strategyContract, vaultContract }) {
         account
       );
       strategyBalance = parseFloat(
-        (strategyBalance / 10 ** strategyData.decimals).toFixed(8)
+        strategyBalance / 10 ** strategyData.decimals
       );
       SetDepositedShares(strategyBalance);
 
