@@ -42,28 +42,20 @@ class CestaASADepositTokenMinPrice {
         // Assume all Stablecoins have same value
         // Strategy
         if (stablecoinAddr === DAIAddr) amountDeposit = amountDeposit.div(toWei(toBN(1), "micro")); // convert to 6 decimals
-        let [pool0, pool1, pool2] = await stableAvaxStrategy.methods.getEachPool().call();
-        pool0 = toBN(pool0); 
-        pool1 = toBN(pool1);
-        pool2 = toBN(pool2);
-        const pool = pool0.add(pool1).add(pool2).add(amountDeposit)
-        const USDTAVAXTargetPool = pool.mul(toBN(500)).div(toBN(10000))
-        const USDCAVAXTargetPool = pool.mul(toBN(4500)).div(toBN(10000))
-        const DAIAVAXTargetPool = pool.mul(toBN(5000)).div(toBN(10000))
+        const amountInvestUSDTAVAX = amountDeposit.mul(toBN(500)).div(denominator)
+        const amountInvestUSDCAVAX = amountDeposit.mul(toBN(4500)).div(denominator)
+        const amountInvestDAIAVAX = amountDeposit.mul(toBN(5000)).div(denominator)
 
         // Rebalancing - No rebalancing needed for this strategy
         // LYD
-        const amountInvestUSDTAVAX = USDTAVAXTargetPool.sub(pool0)
         const WAVAXAmtLYD = toBN((await getAmountsOut(lydRouter,amountInvestUSDTAVAX.div(toBN(2)), USDTAddr, WAVAXAddr))[1])
         const WAVAXAmtLYDMin = WAVAXAmtLYD.mul(amountOutMinPerc).div(denominator).toString()
 
         // PNG
-        const amountInvestUSDCAVAX = USDCAVAXTargetPool.sub(pool1)
         const WAVAXAmtPNG = toBN((await getAmountsOut(pngRouter, amountInvestUSDCAVAX.div(toBN(2)), USDCAddr, WAVAXAddr))[1])
         const WAVAXAmtPNGMin = WAVAXAmtPNG.mul(amountOutMinPerc).div(denominator).toString()
 
         // JOE
-        const amountInvestDAIAVAX = DAIAVAXTargetPool.sub(pool2)
         const WAVAXAmtJOE = toBN((await getAmountsOut(joeRouter,amountInvestDAIAVAX.mul(toWei(toBN(1), "micro")).div(toBN(2)), DAIAddr, WAVAXAddr))[1])
         const WAVAXAmtJOEMin = WAVAXAmtJOE.mul(amountOutMinPerc).div(denominator).toString()
 
