@@ -27,7 +27,6 @@ class CestaASADepositTokenMinPrice {
             strategy,
             strategyABI
         } = object;
-
         // Convert amount deposit to big number
         amountDeposit = toBN(amountDeposit);
         amountOutMinPerc = toBN(amountOutMinPerc);
@@ -43,9 +42,9 @@ class CestaASADepositTokenMinPrice {
         // Assume all Stablecoins have same value
         // Strategy
         if (stablecoinAddr === DAIAddr) amountDeposit = amountDeposit.div(toWei(toBN(1), "micro")); // convert to 6 decimals
-        const amountInvestUSDTAVAX = amountDeposit.mul(toBN(500)).div(denominator)
-        const amountInvestUSDCAVAX = amountDeposit.mul(toBN(8000)).div(denominator)
-        const amountInvestMIMAVAX = amountDeposit.mul(toBN(1500)).div(denominator)
+        const amountInvestUSDTAVAX = amountDeposit.mul(toBN(500)).div(toBN(10000))
+        const amountInvestUSDCAVAX = amountDeposit.mul(toBN(8000)).div(toBN(10000))
+        const amountInvestMIMAVAX = amountDeposit.mul(toBN(1500)).div(toBN(10000))
 
         // Rebalancing - No rebalancing needed for this strategy
         // LYD
