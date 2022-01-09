@@ -91,7 +91,6 @@ export const depositToken = (contract, amount, token, account) => {
 
 export const depositTokenThreeParam = (contract, amount, token, tokenPriceMin, account) => {
     return new Promise((resolve, reject) => {
-        console.log(amount, token, tokenPriceMin);
         contract.methods
             .deposit(amount, token, tokenPriceMin)
             .send({
