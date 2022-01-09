@@ -50,21 +50,15 @@ class CestaASADepositTokenMinPrice {
         // Rebalancing - No rebalancing needed for this strategy
         // LYD
         const WAVAXAmtLYD = toBN((await getAmountsOut(lydRouter,amountInvestUSDTAVAX.div(toBN(2)), USDTAddr, WAVAXAddr))[1])
-        console.log('WAVAXAmtLYD', WAVAXAmtLYD)
         const WAVAXAmtLYDMin = WAVAXAmtLYD.mul(amountOutMinPerc).div(denominator).toString()
-        console.log('WAVAXAmtLYDMin', WAVAXAmtLYDMin)
 
         // PNG
         const WAVAXAmtPNG = toBN((await getAmountsOut(pngRouter, amountInvestUSDCAVAX.div(toBN(2)), USDCAddr, WAVAXAddr))[1])
-        console.log('WAVAXAmtPNG', WAVAXAmtPNG)
         const WAVAXAmtPNGMin = WAVAXAmtPNG.mul(amountOutMinPerc).div(denominator).toString()
-        console.log('WAVAXAmtPNGMin', WAVAXAmtPNGMin)
 
         // JOE
         const WAVAXAmtJOE = toBN((await getAmountsOut(joeRouter,amountInvestMIMAVAX.mul(toWei(toBN(1), "micro")).div(toBN(2)), MIMAddr, WAVAXAddr))[1])
-        console.log('WAVAXAmtJOE', WAVAXAmtJOE)
         const WAVAXAmtJOEMin = WAVAXAmtJOE.mul(amountOutMinPerc).div(denominator).toString()
-        console.log('WAVAXAmtJOEMin', WAVAXAmtJOEMin)
 
         return [0, WAVAXAmtLYDMin, WAVAXAmtPNGMin, WAVAXAmtJOEMin]
     }
