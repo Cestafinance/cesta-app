@@ -43,15 +43,16 @@ const useStyles = makeStyles((theme) => ({
       width: "60px",
       marginLeft: "10px",
     },
-    ['@media (max-width:1000px)']: { // eslint-disable-line no-useless-computed-key
+    ["@media (max-width:1000px)"]: {
+      // eslint-disable-line no-useless-computed-key
       width: "55px",
       marginLeft: "10px",
     },
-    ['@media (max-width:800px)']: { // eslint-disable-line no-useless-computed-key
+    ["@media (max-width:800px)"]: {
+      // eslint-disable-line no-useless-computed-key
       width: "50px",
       marginLeft: "0px",
     },
-
   },
   downArrow: {
     height: "8px",
@@ -80,13 +81,16 @@ const TokenName = styled(Typography)((theme) => ({
     top: "36%",
     left: "12%",
     color: "#FFFFFF",
-    ['@media (max-width:1500px)']: { // eslint-disable-line no-useless-computed-key
+    ["@media (max-width:1500px)"]: {
+      // eslint-disable-line no-useless-computed-key
       left: "15%",
     },
-    ['@media (max-width:1200px)']: { // eslint-disable-line no-useless-computed-key
+    ["@media (max-width:1200px)"]: {
+      // eslint-disable-line no-useless-computed-key
       fontSize: "1.0rem",
     },
-    ['@media (max-width:890px)']: { // eslint-disable-line no-useless-computed-key
+    ["@media (max-width:890px)"]: {
+      // eslint-disable-line no-useless-computed-key
       fontSize: "0.8rem",
     },
   },

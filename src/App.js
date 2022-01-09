@@ -27,12 +27,7 @@ import { loadAppDetails } from './store/slices/app-slice';
 import { loadTokenPrices } from "src/helpers/token-price";
 import TagManager from "react-gtm-module";
 import ReactGA from "react-ga";
-
-const tagManagerArgs = {
-  gtmId: process.env.REACT_GTM_TRACKING,
-};
-TagManager.initialize(tagManagerArgs);
-ReactGA.initialize(process.env.REACT_GA_TRACKING);
+import { hotjar } from "react-hotjar";
 
 const Invest = lazy(() => import("./Components/Invest"));
 const Bond = lazy(() => import("./Components/Bond"));
@@ -40,6 +35,13 @@ const Stake = lazy(() => import("./Components/Stake"));
 
 function App() {
   const dispatch = useDispatch();
+  hotjar.initialize(process.env.REACT_APP_HOTJAR_HJID, process.env.REACT_APP_HOTJAR_HJSV);
+
+  const tagManagerArgs = {
+    gtmId: process.env.REACT_APP_GTM_TRACKING,
+  };
+  TagManager.initialize(tagManagerArgs);
+  ReactGA.initialize(process.env.REACT_APP_GA_TRACKING);
 
   const [coinLoaded, SetAllCoinsLoaded] = useState(false);
 

@@ -1,4 +1,4 @@
-import React, {Fragment, useEffect} from 'react';
+import React, {Fragment, useEffect, useState} from 'react';
 import CloseIcon from '@mui/icons-material/Close';
 import {
     DialogTitle as MuiDialogTitle,
@@ -226,12 +226,15 @@ const Networks = Object.values(networkMap).filter(n => mainnet.includes(n));
 
 function NetworkSelection({
                               open, handleClose, networkImages,
-                              title
+                              title,
+                              onNetworkChange
                           }) {
 
     const classes = useStyles();
 
     const networkId = useSelector(networkIdSelector);
+
+    const [networkName, setNetworkName] = useState(null);
 
     const changeNetwork = async (networkName) => {
         let networkStringName = networkName.toUpperCase();
@@ -245,6 +248,7 @@ function NetworkSelection({
             method: 'wallet_switchEthereumChain',
             params: [{chainId: netAddress}], // chainId must be in hexadecimal numbers
         });
+        onNetworkChange(networkName);
         handleClose();
     }
 

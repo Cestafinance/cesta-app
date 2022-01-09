@@ -24,6 +24,7 @@ import { useSelector } from "react-redux";
 import { useTokenMinPriceDeposit } from "../TokenMinPrice/hooks";
 import DoneMark from "../../../assets/commons/done.png";
 import Metamask from "../../../assets/commons/metaMask.png";
+import useGAEventsTracker from "../../../Analytics/useGAEventsTracker";
 
 const LabelMessage = styled(Typography)(({ theme }) => ({
   fontFamily: "Inter",
@@ -149,6 +150,7 @@ function DepositTemplate({
   const web3 = useSelector(web3Selector);
   const source = useSelector(sourceSelector);
   const { getTokenPriceMin } = useTokenMinPriceDeposit();
+  const GAEventsTracker = useGAEventsTracker("Deposit Approval");
 
   const checkAllowanceApprovalNeeded = async () => {
     SetCheckingForApproval(true);
@@ -246,12 +248,14 @@ function DepositTemplate({
       SetDepositCompleted(true);
       getStableCoinWalletDetails();
       getShareAndUSDValue();
+      GAEventsTracker("Success", symbol, feeInfo.finalAmount);
       setTimeout(() => {
         closeDialog();
       }, 5000);
     } else {
       SetDepositError(true);
       SetDepositCompleted(false);
+      GAEventsTracker("Failure", symbol, feeInfo.finalAmount);
     }
   };
 
@@ -261,7 +265,7 @@ function DepositTemplate({
   }, []);
 
   return (
-    <Box sx={{ color: 'rgb(255,255,255, 0.6)', fontFamily: "Inter" }}>
+    <Box sx={{ color: "rgb(255,255,255, 0.6)", fontFamily: "Inter" }}>
       <Box
         sx={{
           width: "86%",
@@ -293,9 +297,9 @@ function DepositTemplate({
             <Grid item xs={12}></Grid>
 
             {/** Deposit Currency and Amount */}
-            <Grid container style={{marginBottom: "16px", marginTop:"8px"}}>
+            <Grid container style={{ marginBottom: "16px", marginTop: "8px" }}>
               <Grid item xs={6} className={classes.label1}>
-                <Box sx={{display: "flex",alignItems: "center"}}>
+                <Box sx={{ display: "flex", alignItems: "center" }}>
                   <img src={logo} className={classes.logo} alt="" />
                   <BoxDetail>{symbol}</BoxDetail>
                 </Box>
@@ -304,13 +308,12 @@ function DepositTemplate({
                 {amount}
               </Grid>
             </Grid>
-          
 
             <Grid item xs={12}>
               <hr />
             </Grid>
 
-            <Grid container style={{marginTop: "8px"}}>
+            <Grid container style={{ marginTop: "8px" }}>
               <Grid item xs={6} className={classes.transactionDetails}>
                 Deposit
               </Grid>
@@ -318,7 +321,7 @@ function DepositTemplate({
                 {feeInfo.finalAmount} {symbol}
               </Grid>
               <Grid item xs={6} className={classes.transactionDetails}>
-                Fee ({feeInfo.feePercentage}%) {" "}
+                Fee ({feeInfo.feePercentage}%){" "}
                 {/* <Tooltip
                   className={classes.toolTip}
                   title={"test"}
@@ -337,7 +340,6 @@ function DepositTemplate({
                 {amount} {symbol}
               </Grid>
             </Grid>
-          
           </Grid>
         </Box>
       </Box>
@@ -372,7 +374,6 @@ function DepositTemplate({
           </Box>
         )}
         {needStrategyApproval && (
-
           <Box
             id="approval"
             sx={{
@@ -382,25 +383,26 @@ function DepositTemplate({
               marginBottom: "3rem",
               lineHeight: "1",
               letterSpacing: "1",
-              marginTop: "16px"
+              marginTop: "16px",
             }}
           >
-            <Box sx={{ fontSize: "14px", lineHeight: "1.1", color: "#ffffff"}}>
-              {!isApprovalError && <span>
-                Allow your {symbol} to be depositted in
-                <br />
-                {strategyInfo.name}
-              </span>}
-
-             
+            <Box sx={{ fontSize: "14px", lineHeight: "1.1", color: "#ffffff" }}>
+              {!isApprovalError && (
+                <span>
+                  Allow your {symbol} to be depositted in
+                  <br />
+                  {strategyInfo.name}
+                </span>
+              )}
 
               {isApprovalError && (
-                <div style={{ color: 'red', fontSize: "14px", fontWeight: "bold"}}>
+                <div
+                  style={{ color: "red", fontSize: "14px", fontWeight: "bold" }}
+                >
                   <span>Transaction Denied. Please try again</span>
                 </div>
               )}
             </Box>
-
 
             <Box sx={{ width: "30%", textAlign: "end" }}>
               <ApproveButton onClick={approveAmount} disabled={isApproving}>
@@ -411,7 +413,15 @@ function DepositTemplate({
         )}
 
         {isDepositing && (
-          <Box sx={{ display: "flex", textAlign: "center", fontSize: "14px", color: "#ffffff", marginTop: "16px" }}>
+          <Box
+            sx={{
+              display: "flex",
+              textAlign: "center",
+              fontSize: "14px",
+              color: "#ffffff",
+              marginTop: "16px",
+            }}
+          >
             <Box sx={{ width: "100%" }}>
               Depositing your {symbol} <br />
               in {strategyInfo.name} <br />
@@ -420,7 +430,16 @@ function DepositTemplate({
         )}
 
         {depositError && (
-          <Box sx={{ display: "flex", textAlign: "center", color: "red", fontSize:"14px", fontWeight: "bold", marginTop: "16px"}}>
+          <Box
+            sx={{
+              display: "flex",
+              textAlign: "center",
+              color: "red",
+              fontSize: "14px",
+              fontWeight: "bold",
+              marginTop: "16px",
+            }}
+          >
             <Box sx={{ width: "100%" }}>
               Failed to deposit {symbol} <br />
               in {strategyInfo.name}. <br />
@@ -430,15 +449,24 @@ function DepositTemplate({
         )}
 
         {depositCompleted && (
-          <Box sx={{ display: "flex", textAlign: "center",  fontSize: "14px", color: "#ffffff", marginTop: "16px"  }}>
+          <Box
+            sx={{
+              display: "flex",
+              textAlign: "center",
+              fontSize: "14px",
+              color: "#ffffff",
+              marginTop: "16px",
+            }}
+          >
             <Box sx={{ width: "100%" }}>
-              Your {symbol} has been deposited in {strategyInfo.name} successfully.
+              Your {symbol} has been deposited in {strategyInfo.name}{" "}
+              successfully.
             </Box>
           </Box>
         )}
 
         {depositCompleted && source === "metaMask" && (
-          <Box sx={{ display: "flex", textAlign: "center", marginTop: "16px"}}>
+          <Box sx={{ display: "flex", textAlign: "center", marginTop: "16px" }}>
             <Box sx={{ width: "100%" }}>
               <AddToMetamaskButton onClick={watchAssetToken}>
                 Add Token to Metamask &nbsp; &nbsp;{" "}
@@ -452,26 +480,28 @@ function DepositTemplate({
           </Box>
         )}
 
-        {!depositCompleted&&<Box sx={{ textAlign: "center" }}>
-          <DepositButton
-            disabled={
-              checkingForApproval ||
-              isDepositing ||
-              calculatingFees ||
-              !hasApproved ||
-              (slippageWarningNeeded && !slippageAccepted)
-            }
-            onClick={depositAmount}
-          >
-            {isDepositing ? (
-              <CircularProgress size={20} />
-            ) : depositCompleted ? (
-              <img src={DoneMark} alt="Done" />
-            ) : (
-              "DEPOSIT"
-            )}
-          </DepositButton>
-        </Box>}
+        {!depositCompleted && (
+          <Box sx={{ textAlign: "center" }}>
+            <DepositButton
+              disabled={
+                checkingForApproval ||
+                isDepositing ||
+                calculatingFees ||
+                !hasApproved ||
+                (slippageWarningNeeded && !slippageAccepted)
+              }
+              onClick={depositAmount}
+            >
+              {isDepositing ? (
+                <CircularProgress size={20} />
+              ) : depositCompleted ? (
+                <img src={DoneMark} alt="Done" />
+              ) : (
+                "DEPOSIT"
+              )}
+            </DepositButton>
+          </Box>
+        )}
       </Box>
     </Box>
   );
