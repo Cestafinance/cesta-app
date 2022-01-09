@@ -205,6 +205,7 @@ function Topbar() {
   const [imageData, setImageData] = React.useState(null);
   const [networkImages, setNetworkImages] = React.useState({});
   const [isNetworkSelectOpen, SetNetworkSelectOpen] = React.useState(false);
+  const [networkFromSelectButton,  setNetworkFromSelectButton] = React.useState(null);
 
   const classes = useStyles();
   const dispatch = useDispatch();
@@ -221,13 +222,20 @@ function Topbar() {
   }, [source]);
 
   useEffect(() => {
-    if(networkId === 1) {
+    if(networkId === 1 && networkFromSelectButton === "avalanche") {
+      setNetworkFromSelectButton(null);
       window.location.reload(false);
     }
     SetNetworkSelectOpen(
       networkId !== 0 && networkMap[networkId] === undefined
     );
-  }, [networkId]);
+  }, [networkId, networkFromSelectButton]);
+
+  
+  const handleNetworkChange = (network) => {
+    setNetworkFromSelectButton(network);
+  }
+
 
   const handleNetworkSelectionOption = () => {
     SetNetworkSelectOpen(!isNetworkSelectOpen);
@@ -272,7 +280,9 @@ function Topbar() {
     let url = networkScanUrl[networkId];
     window.open(`${url}address/${account}`, "_blank").focus();
   };
-  console.log(isNetworkSelectOpen, networkId, account);
+  // console.log(isNetworkSelectOpen, networkId, account);
+
+
   return (
     <Fragment>
       <div className={classes.headerContainer}>
@@ -287,6 +297,7 @@ function Topbar() {
               handleClose={handleNetworkSelectionOption}
               networkImages={networkImages}
               title={!networkMap[networkId]}
+              onNetworkChange={handleNetworkChange}
             />
             {openOptions && (
               <div className={classes.menuDropDown}>
