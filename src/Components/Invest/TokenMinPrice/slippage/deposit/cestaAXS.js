@@ -52,15 +52,15 @@ class CestaAXSDepositTokenMinPrice {
         // Rebalancing - No rebalancing for this strategy for now
         // JOE
         const JOEAmt = toBN((await getAmountsOut(joeRouter, amountInvestJOEUSDT.div(toBN(2)), USDTAddr, JOEAddr))[1])
-        const JOEAmtMin = JOEAmt.mul(amountOutMinPerc).div(denominator).toString()
+        const JOEAmtMin = JOEAmt.mul(amountOutMinPerc).div(toBN(1000)).toString()
 
         // PNG
         const PNGAmt = toBN((await getAmountsOut(pngRouter,amountInvestPNGUSDC.div(toBN(2)), USDCAddr, PNGAddr))[1])
-        const PNGAmtMin = PNGAmt.mul(amountOutMinPerc).div(denominator).toString();
+        const PNGAmtMin = PNGAmt.mul(amountOutMinPerc).div(toBN(1000)).toString();
 
         // LYD
         const LYDAmt = toBN((await getAmountsOut(lydRouter, amountInvestLYDDAI.mul(toWei(toBN(1), "micro")).div(toBN(2)), DAIAddr, LYDAddr))[1])
-        const LYDAmtMin = LYDAmt.mul(amountOutMinPerc).div(denominator).toString()
+        const LYDAmtMin = LYDAmt.mul(amountOutMinPerc).div(toBN(1000)).toString()
 
         return [0, JOEAmtMin, PNGAmtMin, LYDAmtMin]
     }
