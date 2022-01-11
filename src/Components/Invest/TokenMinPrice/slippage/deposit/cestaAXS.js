@@ -45,30 +45,22 @@ class CestaAXSDepositTokenMinPrice {
         // Assume all Stablecoins have same value
         // Strategy
         if (stablecoinAddr === DAIAddr) amountDeposit = amountDeposit.div(toBN(1).pow(12));
-        let [pool0, pool1, pool2] = await deXStableStrategy.methods.getEachPool().call();
-        pool0 = toBN(pool0); 
-        pool1 = toBN(pool1);
-        pool2 = toBN(pool2);
-        const pool = pool0.add(pool1).add(pool2).add(amountDeposit)
-        const JOEUSDCTargetPool = pool.mul(toBN(8000)).div(toBN(10000))
-        const PNGUSDTTargetPool = pool.mul(toBN(1000)).div(toBN(10000))
-        const LYDDAITargetPool = PNGUSDTTargetPool
+        const amountInvestJOEUSDT = amountDeposit.mul(toBN(6000)).div(denominator)
+        const amountInvestPNGUSDC = amountDeposit.mul(toBN(3000)).div(denominator)
+        const amountInvestLYDDAI = amountDeposit.mul(toBN(1000)).div(denominator)
 
         // Rebalancing - No rebalancing for this strategy for now
         // JOE
-        const amountInvestJOEUSDC = JOEUSDCTargetPool.sub(pool0)
-        const JOEAmt = toBN((await getAmountsOut(joeRouter, amountInvestJOEUSDC.div(toBN(2)), USDCAddr, JOEAddr))[1])
-        const JOEAmtMin = JOEAmt.mul(amountOutMinPerc).div(denominator).toString()
-        
+        const JOEAmt = toBN((await getAmountsOut(joeRouter, amountInvestJOEUSDT.div(toBN(2)), USDTAddr, JOEAddr))[1])
+        const JOEAmtMin = JOEAmt.mul(amountOutMinPerc).div(toBN(1000)).toString()
+
         // PNG
-        const amountInvestPNGUSDT = PNGUSDTTargetPool.sub(pool1)
-        const PNGAmt = toBN((await getAmountsOut(pngRouter,amountInvestPNGUSDT.div(toBN(2)), USDTAddr, PNGAddr))[1])
-        const PNGAmtMin = PNGAmt.mul(amountOutMinPerc).div(denominator).toString();
+        const PNGAmt = toBN((await getAmountsOut(pngRouter,amountInvestPNGUSDC.div(toBN(2)), USDCAddr, PNGAddr))[1])
+        const PNGAmtMin = PNGAmt.mul(amountOutMinPerc).div(toBN(1000)).toString();
 
         // LYD
-        const amountInvestLYDDAI = LYDDAITargetPool.sub(pool2)
         const LYDAmt = toBN((await getAmountsOut(lydRouter, amountInvestLYDDAI.mul(toWei(toBN(1), "micro")).div(toBN(2)), DAIAddr, LYDAddr))[1])
-        const LYDAmtMin = LYDAmt.mul(amountOutMinPerc).div(denominator).toString()
+        const LYDAmtMin = LYDAmt.mul(amountOutMinPerc).div(toBN(1000)).toString()
 
         return [0, JOEAmtMin, PNGAmtMin, LYDAmtMin]
     }

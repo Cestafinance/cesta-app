@@ -140,7 +140,6 @@ export const withdrawToken = (contract, amount, token, account) => {
 }
 
 export const withdrawTokenThreeParam = (contract, amount, token, tokenPriceMin, account) => {
-    console.log(amount, token);
     return new Promise((resolve, reject) => {
         contract.methods
             .withdraw(amount, token, tokenPriceMin)
