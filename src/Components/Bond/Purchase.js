@@ -30,7 +30,7 @@ const StyledTextField = styled(TextField)(({ theme }) => ({
     },
 }));
 
-const useStyles = makeStyles(({ theme }) => ({
+const useStyles = makeStyles(( theme ) => ({
     logoStableCoins: {
       height: "20px",
       marginTop: "2px",
@@ -42,7 +42,17 @@ const useStyles = makeStyles(({ theme }) => ({
         justifyContent: "space-between",
         marginTop: "15px",
         alignItems: "center",
-        width: "100%"
+        width: "100%",
+        [theme.breakpoints.down("md")]: {
+            flexDirection: "column",
+        }
+    },
+
+    errorContainerItems: {
+        width: "50%",
+        [theme.breakpoints.down("md")]: {
+            width: "100%"
+        }
     }
 }));
 
@@ -255,11 +265,11 @@ function Purchase({
         </div>
 
         <div className={classes.errorContainer}>
-            <div style={{width:"60%"}}>   
+            <div className={classes.errorContainerItems}>   
                 {error && <ErrorText sx={{textAlign: "start"}}>Invalid Amount</ErrorText>}
             </div>
            
-            <div style={{width:"40%"}}>
+            <div className={classes.errorContainerItems}>
                 <ScaleButtons onPercentSelected={handlePercentSelected}/>
             </div>
         </div>

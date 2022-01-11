@@ -82,8 +82,9 @@ export const ScaleButtons = ({onPercentSelected}) => {
                 display: "flex",
                 justifyContent: "space-between",
                 alignItems: "center",
-                paddingRight: "1rem",
+                paddingRight: "12px",
                 fontWeight: "600",
+                overflow: "overlay"
             }}
         >
         {scales.map((scale, index) => {

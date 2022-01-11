@@ -46,6 +46,7 @@ const useStyles = makeStyles((theme) => ({
     actionContainer: {
         width: "60%",
         [theme.breakpoints.down('md')]: {
+            marginTop: "16px",
             width: "100%",
         }
     },
