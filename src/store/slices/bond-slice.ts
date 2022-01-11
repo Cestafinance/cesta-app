@@ -244,7 +244,7 @@ export const bondAsset = createAsyncThunk("bonding/bondAsset", async ({ value, a
         dispatch(transactionSuccess());
         dispatch(info({ text: messages.your_balance_update_soon }));
 
-        await sleep(10);
+        await sleep(3);
         await dispatch(calculateUserBondDetails({ address, bond, networkID, provider }));
         dispatch(info({ text: messages.your_balance_updated }));
 
@@ -305,7 +305,7 @@ export const redeemBond = createAsyncThunk("bonding/redeemBond", async ({ addres
         await sleep(0.01);
         dispatch(info({ text: messages.your_balance_update_soon }));
 
-        await sleep(10);
+        await sleep(3);
         await dispatch(calculateUserBondDetails({ address, bond, networkID, provider }));
         await dispatch(getBalances({ address, networkID, provider }));
         dispatch(info({ text: messages.your_balance_updated }));
