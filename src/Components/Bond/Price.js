@@ -24,6 +24,9 @@ const useStyles = makeStyles((theme) => ({
 export const DetailLabel = styled(Typography)(({theme}) => ({
         fontStyle: 'normal',
         fontSize: '14px',
+        [theme.breakpoints.down('md')] : {
+            fontSize: '12px'
+        }
 }));
 
 function LabelBoxes({
@@ -153,7 +156,7 @@ function RedeemPrice({
 
         const redeemContent = [
             [
-                { label: "Pending Rewards", content: `${userBond && userBond.interestDue? `${userBond.interestDue}` : "0"}  CESTA` },
+                { label: "Pending Rewards", content: `${userBond && userBond.interestDue? trim(userBond.interestDue, 4) : "0"}  CESTA` },
                 { label: "Claimable Rewards", content: `${userBond && userBond.pendingPayout ? trim(userBond.pendingPayout, 4) : '0'}  CESTA` },
                 { label: "Time Until Fully Vested", content: `${userBond && vestingTime() }` },
             ],
