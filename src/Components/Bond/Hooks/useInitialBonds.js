@@ -71,6 +71,14 @@ export function useInitiateBonds() {
                     provider,
                     networkID
                 }))
+            } else {
+                const bonds = [];
+                dispatch(storeBonds(bonds));
+                dispatch(loadBondAppDetail({
+                    bonds, 
+                    provider,
+                    networkID
+                }))
             }
 
         } catch (err) { 

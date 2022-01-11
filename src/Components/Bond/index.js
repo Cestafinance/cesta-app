@@ -21,7 +21,7 @@ import { useInitiateBonds } from "./Hooks/useInitialBonds";
 import useBonds from "src/hooks/bonds";
 import BondDetail from "./BondDetail";
 import { useSelector } from "react-redux";
-import { accountSelector } from "src/store/selectors/web3";
+import { accountSelector, networkIdSelector } from "src/store/selectors/web3";
 
 const useStyles = makeStyles((theme) => ({
   mainContainer: {
@@ -109,6 +109,7 @@ function Bond() {
   const theme = useTheme();
 
   const account = useSelector(accountSelector);
+  const network = useSelector(networkIdSelector);
   const bondAppDetail = useSelector(state => state.bonding.app);
   const bondAppDetailLoading = useSelector(state => state.bonding.appLoading);
   const bondLoading = useSelector(state => state.bonding.loading);
@@ -119,8 +120,9 @@ function Bond() {
   const [bondList, setBondList] = useState([]);
   
   useEffect(() => {
+
     findBonds();
-  }, [account])
+  }, [account,network])
 
   useEffect(() => {
     setBondList(bonds.bonds);
@@ -149,7 +151,7 @@ function Bond() {
                       currency: "USD",
                       maximumFractionDigits: 3,
                       minimumFractionDigits: 2,
-                  }).format(Number(bondAppDetail.treasuryBalance))}
+                  }).format(bondAppDetail ? Number(bondAppDetail.treasuryBalance) : 0)}
                 </LowerLabel>
               </InfoContainer>
 
@@ -163,7 +165,7 @@ function Bond() {
                       currency: "USD",
                       maximumFractionDigits: 3,
                       minimumFractionDigits: 2,
-                  }).format(Number(bondAppDetail.marketPrice))}</LowerLabel>
+                  }).format(bondAppDetail ? Number(bondAppDetail.marketPrice) : 0)}</LowerLabel>
               </InfoContainer>
           </MainInfoContainer>
 
