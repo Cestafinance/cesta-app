@@ -71,8 +71,6 @@ class CestaAXAWithdrawTokenMinPrice {
 
         let totalWAVAXAmt = toBN(0);
 
-        debugger;
-
         // JOE <-> AVAX
         const JOEAVAXAmt = toBN((await balanceOf(JOEAVAXVault, strategy))).mul(sharePerc).div(oneEther)
         const JOEAVAXContract = await getContract(web3, PairABI, JOEAVAXAddr);
@@ -85,8 +83,6 @@ class CestaAXAWithdrawTokenMinPrice {
         const _WAVAXAmtJOE = toBN((await getAmountsOut(joeRouter, JOEAmt.toString(), JOEAddr, WAVAXAddr))[1])
         const WAVAXAmtMinJOE = _WAVAXAmtJOE.mul(amountOutMinPerc).div(denominator)
         totalWAVAXAmt = totalWAVAXAmt.add(WAVAXAmtJOE).add(_WAVAXAmtJOE)
-
-        debugger;
 
         // PNG <-> AVAX
         const PNGAVAXAmt = toBN((await balanceOf(PNGAVAXVault, strategy))).mul(sharePerc).div(oneEther)
