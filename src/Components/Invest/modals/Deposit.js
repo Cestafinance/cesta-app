@@ -368,8 +368,8 @@ function DepositTemplate({
               />
             </Box>
             <Box sx={{ lineHeight: "1.1" }}>
-              I understand that my deposit may experience high slippage due to
-              low liqudity
+              I understand that my withdrawal may experience high slippage due to
+              low liquidity
             </Box>
           </Box>
         )}
