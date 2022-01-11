@@ -18,8 +18,8 @@ const joeRouterAddr = "0x60aE616a2155Ee3d9A68541Ba4544862310933d4"
 const pngRouterAddr = "0xE54Ca86531e17Ef3616d22Ca28b0D458b6C89106"
 const lydRouterAddr = "0xA52aBE4676dbfd04Df42eF7755F01A3c41f28D27"
 
-const USDTAVAXVaultAddr = "0xC4029ad66AAe4DCF3F8A8C67F4000EAFE49E6d10"
-const USDCAVAXVaultAddr = "0x3d78fDb997995f0bF7C5d881a758C45F1B706b80"
+const USDTAVAXVaultAddr = "0x82aff9e3f08e34d61737b035c5890d57803b3958"
+const USDCAVAXVaultAddr = "0x5378b730711d1f57f888e4828b130e591c4ea97b"
 const DAIAVAXVaultAddr = "0x469b5620675a9988c24cDd57B1E7136E162D6a53"
 const MIMAVAXVaultAddr = "0x8fFa3a48eC7D7Ad9b8740733deCFB9876d8849b3"
 
@@ -99,7 +99,6 @@ class CestaASAWithdrawTokenMinPrice {
         const MIMAmt = toBN((await getAmountsOut(joeRouter, WAVAXAmtJOE.toString(), WAVAXAddr, MIMAddr))[1])
         const MIMAmtMin = MIMAmt.mul(amountOutMinPerc).div(denominator).toString()
 
-        debugger;
         return [0, USDTAmtMin, USDCAmtMin, MIMAmtMin];
     }
 }
