@@ -25,6 +25,7 @@ import { useTokenMinPriceDeposit } from "../TokenMinPrice/hooks";
 import DoneMark from "../../../assets/commons/done.png";
 import Metamask from "../../../assets/commons/metaMask.png";
 import useGAEventsTracker from "../../../Analytics/useGAEventsTracker";
+import useWeb3Util from "../../../Hooks/useWeb3Util";
 
 const LabelMessage = styled(Typography)(({ theme }) => ({
   fontFamily: "Inter",
@@ -128,6 +129,7 @@ function DepositTemplate({
   closeDialog,
   getStableCoinWalletDetails,
   getShareAndUSDValue,
+  resetInput
 }) {
   const classes = useStyles();
   const [needStrategyApproval, SetNeedStrategyApproval] = useState(false);
@@ -151,6 +153,8 @@ function DepositTemplate({
   const source = useSelector(sourceSelector);
   const { getTokenPriceMin } = useTokenMinPriceDeposit();
   const GAEventsTracker = useGAEventsTracker("Deposit Approval");
+
+  const { toWei } = useWeb3Util();
 
   const checkAllowanceApprovalNeeded = async () => {
     SetCheckingForApproval(true);
@@ -220,9 +224,11 @@ function DepositTemplate({
 
   const depositAmount = async () => {
     SetDepositing(true);
-    const roundedAmount = Math.round(amount * 10 ** 4);
-    const valueData =
-      roundedAmount * 10 ** (stableCoinsContractData.decimals - 4);
+    // const roundedAmount = Math.round(amount * 10 ** 4);
+    // const valueData =
+    //   roundedAmount * 10 ** (stableCoinsContractData.decimals - 4);
+
+    const valueData = toWei(amount.toString(), stableCoinsContractData.decimals); 
 
     // To prevent "1.2e+21" being passed into deposit function, should be "1200000000000000000000" instead
     const finalAmountToDeposit = fromExponential(valueData);
@@ -250,6 +256,7 @@ function DepositTemplate({
       getShareAndUSDValue();
       GAEventsTracker("Success", symbol, feeInfo.finalAmount);
       setTimeout(() => {
+        resetInput();
         closeDialog();
       }, 5000);
     } else {
