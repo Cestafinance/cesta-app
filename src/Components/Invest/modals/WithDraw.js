@@ -64,6 +64,7 @@ function WithdrawTemplate({
   account,
   getShareAndUSDValue,
   closeDialog,
+  resetInput
 }) {
   const classes = useStyles();
 
@@ -104,6 +105,7 @@ function WithdrawTemplate({
       getShareAndUSDValue();
       GAEventsTracker("Success", symbol, amount);
       setTimeout(() => {
+        resetInput();
         closeDialog();
       }, 2000);
     } else {
