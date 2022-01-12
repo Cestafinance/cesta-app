@@ -35,10 +35,6 @@ export const getPricePerFullShare = async(contract) => {
 
     try {
         pricePerFullShare = await contract.methods.getPricePerFullShare().call();
-
-        pricePerFullShare =  pricePerFullShare / 10 ** 18;
-
-
     } catch (err) {
 
 

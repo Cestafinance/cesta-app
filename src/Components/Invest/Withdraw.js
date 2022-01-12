@@ -15,6 +15,8 @@ import ActionConfirm from "./modals/Modal";
 import WithdrawTemplate from "./modals/WithDraw";
 import DepositTemplate from "./modals/Deposit";
 import useGAEventsTracker from "../../Analytics/useGAEventsTracker";
+import useValidateInput from "../../Hooks/useValidate";
+import useShares from "../../Hooks/useShares";
 
 const useStyles = makeStyles(({ theme }) => ({
   assetScaleLabel: {
@@ -94,6 +96,7 @@ function WithDraw({
   getShareAndUSDValue,
   depositedAmount,
   depositedShares,
+  sharesInfo
 }) {
   const classes = useStyles();
 
@@ -110,52 +113,71 @@ function WithDraw({
   const stableCoinsContracts = useSelector(stableCoinsSelector);
   const GAEventsTracker = useGAEventsTracker("Withdraw Modal");
 
+  const { validateInput } = useValidateInput();
+  const { calculateSharesToWithdraw } = useShares();
+
   const selectPercentage = (value) => {
-    const amt = depositedAmount * (value / 100);
-    SetAmountToWithdraw(amt.toFixed(4));
+    let amt = depositedAmount * (value / 100);
+    if(parseFloat(value) !== 100) {
+      // Make the amount as 4 decimals, 100 percent is excluded, since deposited amount are in 4 decimals already
+      amt = Math.floor(amt * 10000 ) / 10000; 
+    }
     SetValueSelected(value);
-    SetInputError(false);
+    validateWithdrawAmount(amt);
   };
 
   const onInputChange = (value) => {
-    let decimals = value.match(/\./g);
-    if (decimals && decimals.length > 1) {
-      return value;
-    }
-
-    if (
-      (decimals && decimals.length === 1 && value[value.length - 1] === ".") ||
-      value[value.length - 1] === "0"
-    ) {
-      SetInputError(depositedAmount < value);
-      SetAmountToWithdraw(value);
-      return;
-    }
-    let newVal = parseFloat(value);
-    newVal = isNaN(newVal) ? 0 : newVal;
-    SetInputError(depositedAmount < value);
-    SetAmountToWithdraw(newVal);
+    validateWithdrawAmount(value);
   };
+
+  const validateWithdrawAmount = (value) => {
+    const {
+      amount, 
+      error,
+      info
+    } = validateInput({ value , tokenBalance: depositedAmount});
+
+    SetAmountToWithdraw(amount);
+    SetInputError(error);
+
+    return { amount, error, info };
+  }
 
   const handleClose = () => {
     SetOpen(false);
   };
 
   const withdrawNow = async () => {
-    const ratio = amountToWithdraw / depositedAmount;
-    const sharesToExit = Math.floor(ratio * depositedShares);
-    SetToWithdrawShares(sharesToExit * 10 ** strategyData.decimals);
-    GAEventsTracker(
-      "Opened",
-      strategyData.tokens[selectedCoinIndex],
-      amountToWithdraw
-    );
-    SetOpen(true);
+    // Validate amount to withdraw before proceed with smart contract interaction
+    const { error } = validateWithdrawAmount(amountToWithdraw);
+
+    if(!error) {
+      const {
+        sharesToWithdrawRaw,
+      } = await calculateSharesToWithdraw({ sharesInfo, amountToWithdraw });
+  
+      SetToWithdrawShares(sharesToWithdrawRaw);
+  
+      GAEventsTracker(
+        "Opened",
+        strategyData.tokens[selectedCoinIndex],
+        amountToWithdraw
+      );
+      SetOpen(true);
+    }
+
   };
+
+  const handleResetInput = () => {
+    // Reset withdraw amount input as 0 once transaction is done.
+    SetAmountToWithdraw(0)
+  }
 
   const handleCoinSelected = (index) => {
     SetSelectedCoinIndex(index);
     SetOpenCoinSelecting(false);
+    SetAmountToWithdraw(0);
+    SetValueSelected(null);
   };
 
   return (
@@ -354,6 +376,7 @@ function WithDraw({
                 }
                 account={account}
                 symbol={strategyData.tokens[selectedCoinIndex]}
+                resetInput={handleResetInput}
               />
             }
           />
