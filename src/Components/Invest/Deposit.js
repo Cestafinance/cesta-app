@@ -1,4 +1,4 @@
-import { Fragment, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 
 import { Grid, Box, TextField, Button, Typography } from "@mui/material";
 import { styled, makeStyles } from "@mui/styles";
@@ -10,6 +10,7 @@ import DepositTemplate from "./modals/Deposit";
 import { stableCoinsSelector } from "../../store/selectors/commons";
 import { accountSelector } from "../../store/selectors/web3";
 import useGAEventsTracker from "../../Analytics/useGAEventsTracker";
+import useValidateInput from "../../Hooks/useValidate";
 
 const useStyles = makeStyles(({ theme }) => ({
   assetScaleLabel: {
@@ -84,60 +85,97 @@ function Deposit({
   const [selectedCoinIndex, SetSelectedCoinIndex] = useState(0);
   const [depositAmount, SetDepositAmount] = useState(0);
   const [valueSelected, SetValueSelected] = useState(0);
+  const [tokenBalance, setTokenBalance] = useState(0);
   const [open, SetOpen] = useState(false);
   const stableCoinsContracts = useSelector(stableCoinsSelector);
   const account = useSelector(accountSelector);
   const GAEventsTracker = useGAEventsTracker("Deposit Modal");
 
-  const selectPercentage = (value) => {
-    let balance = parseFloat(
+  const { validateInput } = useValidateInput();
+
+  useEffect(() => {
+    const balance = parseFloat(
       coinBalances[strategyData.tokens[selectedCoinIndex]]
     );
+    setTokenBalance(balance);
+  }, [coinBalances, selectedCoinIndex]);
+  
+  const selectPercentage = (value) => {
     SetValueSelected(value);
-    let amount = (balance * (value / 100)).toFixed(4);
-    SetDepositAmount(amount);
-    SetInputError(false);
+
+    let balance = tokenBalance * (value / 100);
+    // If balance = 0.23456, then 0.2345 will be taken, make it as 4 decimals
+    if(value !== 100) {
+      balance = Math.floor(balance * 10000) / 10000; 
+    }
+
+    validateDepositAmount(balance);
   };
 
   const confirmDeposit = () => {
-    GAEventsTracker(
-      "Opened",
-      strategyData.tokens[selectedCoinIndex],
-      depositAmount
-    );
-    SetOpen(true);
+    const { error }  = validateDepositAmount(depositAmount);
+
+    if(!error) {
+      GAEventsTracker(
+        "Opened",
+        strategyData.tokens[selectedCoinIndex],
+        depositAmount
+      );
+      SetOpen(true);
+    }
+  };
+
+  const onInputChange = (value) => {
+    // let decimals = value.match(/\./g);
+    // if (decimals && decimals.length > 1) {
+    //   return value;
+    // }
+    // let balance = parseFloat(
+    //   coinBalances[strategyData.tokens[selectedCoinIndex]]
+    // );
+    // if (
+    //   (decimals && decimals.length === 1 && value[value.length - 1] === ".") ||
+    //   value[value.length - 1] === "0"
+    // ) {
+    //   SetInputError(balance < value);
+    //   SetDepositAmount(value);
+    //   return;
+    // }
+    // let newVal = parseFloat(value);
+    // newVal = isNaN(newVal) ? 0 : newVal;
+    // SetInputError(balance < value);
+    // SetDepositAmount(newVal);
+    validateDepositAmount(value);
+  };
+
+  const validateDepositAmount = (value) => {
+    const {
+      amount, 
+      error,
+      info
+    } = validateInput({ value , tokenBalance});
+
+    SetDepositAmount(amount);
+    SetInputError(error);
+
+    return { amount, error, info};
+  }
+
+  const handleCoinSelected = (index) => {
+    SetSelectedCoinIndex(index);
+    SetOpenCoinSelecting(false);
+    SetDepositAmount(0);
+    SetValueSelected(null);
   };
 
   const handleClose = () => {
     SetOpen(false);
   };
 
-  const onInputChange = (value) => {
-    let decimals = value.match(/\./g);
-    if (decimals && decimals.length > 1) {
-      return value;
-    }
-    let balance = parseFloat(
-      coinBalances[strategyData.tokens[selectedCoinIndex]]
-    );
-    if (
-      (decimals && decimals.length === 1 && value[value.length - 1] === ".") ||
-      value[value.length - 1] === "0"
-    ) {
-      SetInputError(balance < value);
-      SetDepositAmount(value);
-      return;
-    }
-    let newVal = parseFloat(value);
-    newVal = isNaN(newVal) ? 0 : newVal;
-    SetInputError(balance < value);
-    SetDepositAmount(newVal);
-  };
+  const handleResetInput = () => {
+    SetDepositAmount(0)
+  }
 
-  const handleCoinSelected = (index) => {
-    SetSelectedCoinIndex(index);
-    SetOpenCoinSelecting(false);
-  };
   return (
     <Box sx={{ color: "white" }}>
       <Grid container>
@@ -178,7 +216,7 @@ function Deposit({
                 }}
               >
                 Available:{" "}
-                {coinBalances[strategyData.tokens[selectedCoinIndex]]}{" "}
+                {tokenBalance}{" "}
                 {strategyData.tokens[selectedCoinIndex]}
               </Box>
             </Box>
@@ -333,6 +371,7 @@ function Deposit({
                 getShareAndUSDValue={getShareAndUSDValue}
                 account={account}
                 symbol={strategyData.tokens[selectedCoinIndex]}
+                resetInput={handleResetInput}
               />
             }
           />
