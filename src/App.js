@@ -23,8 +23,9 @@ const Stake = lazy(() => import("./Components/Stake"));
 
 function App() {
   const dispatch = useDispatch();
-  hotjar.initialize(process.env.HOTJAR_HJID, process.env.HOTJAR_HJSV);
 
+  //Analytics Initialization
+  hotjar.initialize(process.env.HOTJAR_HJID, process.env.HOTJAR_HJSV);
   const tagManagerArgs = {
     gtmId: process.env.REACT_GTM_TRACKING,
   };
