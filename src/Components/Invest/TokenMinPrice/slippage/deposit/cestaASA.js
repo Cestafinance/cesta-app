@@ -41,7 +41,7 @@ class CestaASADepositTokenMinPrice {
         // Vault
         // Assume all Stablecoins have same value
         // Strategy
-        if (stablecoinAddr === DAIAddr) amountDeposit = amountDeposit.div(toWei(toBN(1), "micro")); // convert to 6 decimals
+        if (stablecoinAddr === DAIAddr || stablecoinAddr === MIMAddr) amountDeposit = amountDeposit.div(toWei(toBN(1), "micro")); // convert to 6 decimals
         const amountInvestUSDTAVAX = amountDeposit.mul(toBN(500)).div(toBN(10000))
         const amountInvestUSDCAVAX = amountDeposit.mul(toBN(8000)).div(toBN(10000))
         const amountInvestMIMAVAX = amountDeposit.mul(toBN(1500)).div(toBN(10000))
@@ -55,8 +55,8 @@ class CestaASADepositTokenMinPrice {
         const WAVAXAmtPNG = toBN((await getAmountsOut(pngRouter, amountInvestUSDCAVAX.div(toBN(2)), USDCAddr, WAVAXAddr))[1])
         const WAVAXAmtPNGMin = WAVAXAmtPNG.mul(amountOutMinPerc).div(denominator).toString()
 
-        // JOE
-        const WAVAXAmtJOE = toBN((await getAmountsOut(joeRouter,amountInvestMIMAVAX.mul(toWei(toBN(1), "micro")).div(toBN(2)), MIMAddr, WAVAXAddr))[1])
+        // JOE -> replace with PNG MIM-AVAX pair
+        const WAVAXAmtJOE = toBN((await getAmountsOut(pngRouter,amountInvestMIMAVAX.mul(toWei(toBN(1), "micro")).div(toBN(2)), MIMAddr, WAVAXAddr))[1])
         const WAVAXAmtJOEMin = WAVAXAmtJOE.mul(amountOutMinPerc).div(denominator).toString()
 
         return [0, WAVAXAmtLYDMin, WAVAXAmtPNGMin, WAVAXAmtJOEMin]

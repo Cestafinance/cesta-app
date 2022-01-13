@@ -90,13 +90,13 @@ class CestaASAWithdrawTokenMinPrice {
         const USDCAmt = toBN((await getAmountsOut(pngRouter, WAVAXAmtPNG.toString(), WAVAXAddr, USDCAddr))[1])
         const USDCAmtMin = USDCAmt.mul(amountOutMinPerc).div(denominator).toString();
 
-        // DAI <-> AVAX, JOE
+        // MIM <-> AVAX, PNG
         const MIMAVAXAmt = toBN((await balanceOf(MIMAVAXVault, strategy))).mul(sharePerc).div(oneEther)
         const MIMAVAXContract = await getContract(web3, PairABI, MIMAVAXAddr);
-        const WAVAXReserveJOE = (await getReserves(MIMAVAXContract))[1]
+        const WAVAXReservePNG = (await getReserves(MIMAVAXContract))[1]
         const totalSupplyMIMAVAX = toBN(await totalSupply(MIMAVAXContract))
-        const WAVAXAmtJOE = toBN(WAVAXReserveJOE).mul(MIMAVAXAmt).div(totalSupplyMIMAVAX)
-        const MIMAmt = toBN((await getAmountsOut(joeRouter, WAVAXAmtJOE.toString(), WAVAXAddr, MIMAddr))[1])
+        const WAVAXAmtPNG = toBN(WAVAXReservePNG).mul(MIMAVAXAmt).div(totalSupplyMIMAVAX)
+        const MIMAmt = toBN((await getAmountsOut(pngRouter, WAVAXAmtPNG.toString(), WAVAXAddr, MIMAddr))[1])
         const MIMAmtMin = MIMAmt.mul(amountOutMinPerc).div(denominator).toString()
 
         return [0, USDTAmtMin, USDCAmtMin, MIMAmtMin];
