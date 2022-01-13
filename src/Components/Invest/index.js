@@ -31,7 +31,7 @@ const useStyles = makeStyles((theme) => ({
     padding: "60px 0px 0px 240px",
     [theme.breakpoints.down("sm")]: {
       width: `96%`,
-      padding: "60px 0px 0px 0",
+      padding: "60px 0px 0px 0px",
     },
   },
 }));

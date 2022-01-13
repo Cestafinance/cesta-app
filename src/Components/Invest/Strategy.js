@@ -92,8 +92,12 @@ const TokenName = styled(Typography)((theme) => ({
     },
     ["@media (max-width:890px)"]: {
       // eslint-disable-line no-useless-computed-key
-      fontSize: "0.8rem",
+      fontSize: "0.75rem",
     },
+    // ["@media (max-width:500px)"]: {
+    //   // eslint-disable-line no-useless-computed-key
+    //   fontSize: "0.7rem",
+    // },
   },
 }));
 
@@ -109,6 +113,18 @@ const ValueLabel = styled(Typography)((theme) => ({
     top: "36%",
     marginLeft: "5px",
     color: "#FFFFFF",
+    ["@media (max-width:1200px)"]: {
+      // eslint-disable-line no-useless-computed-key
+      fontSize: "1.0rem",
+    },
+    ["@media (max-width:890px)"]: {
+      // eslint-disable-line no-useless-computed-key
+      fontSize: "0.8rem",
+    },
+    ["@media (max-width:500px)"]: {
+      // eslint-disable-line no-useless-computed-key
+      fontSize: "0.7rem",
+    },
   },
 }));
 
@@ -125,6 +141,18 @@ const LiquidityLabel = styled(Typography)((theme) => ({
     top: "36%",
     // left: "63%",
     color: "#FFFFFF",
+    ["@media (max-width:1200px)"]: {
+      // eslint-disable-line no-useless-computed-key
+      fontSize: "1.0rem",
+    },
+    ["@media (max-width:890px)"]: {
+      // eslint-disable-line no-useless-computed-key
+      fontSize: "0.8rem",
+    },
+    ["@media (max-width:500px)"]: {
+      // eslint-disable-line no-useless-computed-key
+      fontSize: "0.7rem",
+    },
   },
 }));
 
@@ -140,6 +168,18 @@ const RoiLabel = styled(Typography)((theme) => ({
     top: "36%",
     // right: "13%",
     color: "#15C73E",
+    ["@media (max-width:1200px)"]: {
+      // eslint-disable-line no-useless-computed-key
+      fontSize: "1.0rem",
+    },
+    ["@media (max-width:890px)"]: {
+      // eslint-disable-line no-useless-computed-key
+      fontSize: "0.8rem",
+    },
+    ["@media (max-width:500px)"]: {
+      // eslint-disable-line no-useless-computed-key
+      fontSize: "0.7rem",
+    },
   },
 }));
 

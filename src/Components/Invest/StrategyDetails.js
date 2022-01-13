@@ -164,7 +164,7 @@ function StrategyDetails({
             }}
           >
             <Grid container>
-              <Grid item xs={6}>
+              <Grid item xs={12}>
                 <Box
                   sx={{
                     padding: "20px",
@@ -175,7 +175,7 @@ function StrategyDetails({
                   </StrategyDescription>
                 </Box>
               </Grid>
-              <Grid item xs={6}>
+              <Grid item xs={12}>
                 <Box
                   sx={{
                     padding: "20px 20px 0 20px",
