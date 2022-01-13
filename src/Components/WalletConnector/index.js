@@ -28,7 +28,8 @@ import {
 } from './connectors';
 import {
     loadWeb3,
-    loadAccount
+    loadAccount,
+    loadProvider
 } from '../../store/interactions/web3';
 
 import {
@@ -46,7 +47,6 @@ import {
 import {
     setConnectionStatus
 } from '../../store/local';
-
 
 const ConnectorNames = {
     Injected: 'Injected',
@@ -276,10 +276,13 @@ function Balance({
             connected: true
         });
 
-
         let web3 = await loadWeb3(dispatch, provider);
+        let web3Provider = await loadProvider(dispatch, provider);
+
+        console.log('balance chainId', chainId);
         await loadAccount(dispatch, account, chainId, connectorName);
-        loadContracts(web3, chainId);
+
+        loadContracts(web3, chainId, web3Provider);
     }
 
     React.useEffect(() => {

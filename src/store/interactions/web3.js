@@ -1,9 +1,11 @@
 import Web3 from 'web3';
+import { ethers } from 'ethers';
 
 import {
     web3Loaded,
     web3AccountLoaded,
-    networkIdLoaded
+    networkIdLoaded,
+    setProvider
 } from '../actions/web3';
 
 export const loadWeb3 = (dispatch, provider) => {
@@ -17,4 +19,10 @@ export const loadAccount = async (dispatch,account,  networkId, source) => {
     dispatch(web3AccountLoaded(account, source));
     dispatch(networkIdLoaded(networkId));
     return account;
+}
+
+export const loadProvider = (dispatch, provider) => {
+    const web3Provider = new ethers.providers.Web3Provider(provider);
+    dispatch(setProvider(web3Provider));
+    return web3Provider;
 }

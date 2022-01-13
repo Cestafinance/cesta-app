@@ -84,11 +84,19 @@ function SideBar(props) {
   const [menuLogs, SetMenuLogos] = React.useState({});
   const classes = useStyles();
   const GAEventsTracker = useGAEventsTracker("External Link");
+  const [hideNav, setHideNav] = React.useState(true);
 
   const location = useLocation();
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
+  };
+
+  const resize = () => {
+    let currentHideNav = window.innerWidth <= 760;
+    if (currentHideNav !== this.state.hideNav) {
+      this.setState({ hideNav: currentHideNav });
+    }
   };
 
   const getMenuLogos = async () => {

@@ -1,11 +1,12 @@
 import { Suspense, useState, lazy, useEffect } from "react";
+import { Suspense, useState, lazy, useCallback, useEffect } from "react";
 import {
   BrowserRouter as Router,
   Routes,
   Route,
   Navigate,
 } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import Sidebar from "./Components/Commons/Sidebar";
 import Topbar from "./Components/Commons/Topbar";
 import WalletConnect from "./Components/WalletConnector";
@@ -13,9 +14,21 @@ import { getAllStableCoinsContract } from "./Services/contracts";
 import { contractLoad } from "./store/interactions/stableCoins";
 import "./App.css";
 import { networkMap } from "./Constants/mains";
-import TagManager from "react-gtm-module";
-import ReactGA from "react-ga";
-import { hotjar } from "react-hotjar";
+import useBonds from "./hooks/bonds";
+import useTokens from "./Hooks/tokens";
+import {
+  accountSelector,
+  providerSelector,
+  networkIdSelector,
+  connectedSelector,
+} from "./store/selectors/web3";
+import {
+  calculateUserBondDetails,
+  calculateUserTokenDetails,
+  loadAccountDetails,
+} from "./store/slices/account-slice";
+import { loadAppDetails } from "./store/slices/app-slice";
+import { loadTokenPrices } from "src/helpers/token-price";
 
 const Invest = lazy(() => import("./Components/Invest"));
 const Bond = lazy(() => import("./Components/Bond"));
@@ -37,8 +50,20 @@ function App() {
   ReactGA.initialize(process.env.REACT_APP_GA_TRACKING);
 
   const [coinLoaded, SetAllCoinsLoaded] = useState(false);
+  const { bonds } = useBonds();
+  const { tokens } = useTokens();
+  // console.log('bonds', bonds);
+  // console.log('tokens', tokens);
 
-  const blockChainInit = async (web3, networkId) => {
+  const address = useSelector(accountSelector);
+  const provider = useSelector(providerSelector);
+  const isAppLoaded = useSelector(
+    (state) => state.app && !Boolean(state.app.marketPrice)
+  );
+  const chainID = useSelector(networkIdSelector);
+  const connected = useSelector(connectedSelector);
+
+  const blockChainInit = async (web3, networkId, provider) => {
     try {
       const response = await getAllStableCoinsContract(
         networkMap[networkId] ? networkMap[networkId] : ""
@@ -69,34 +94,140 @@ function App() {
     } catch (Err) {
       console.log(Err);
     }
+
+    useEffect(() => {
+      ReactGA.pageview(window.location.pathname + window.location.search);
+      console.log("Page View code");
+    });
+    // Bond and Stake
+    async function loadDetails(whichDetails) {
+      let loadProvider = provider;
+
+      if (whichDetails === "app" && chainID !== 0) {
+        loadApp(loadProvider);
+      }
+
+      if (whichDetails === "account" && chainID !== 0 && address && connected) {
+        loadAccount(loadProvider);
+        if (isAppLoaded) return;
+
+        loadApp(loadProvider);
+      }
+
+      if (
+        whichDetails === "userBonds" &&
+        chainID !== 0 &&
+        address &&
+        connected
+      ) {
+        bonds.map((bond) => {
+          dispatch(
+            calculateUserBondDetails({
+              address,
+              bond,
+              provider,
+              networkID: chainID,
+            })
+          );
+        });
+      }
+
+      if (
+        whichDetails === "userTokens" &&
+        chainID !== 0 &&
+        address &&
+        connected
+      ) {
+        tokens.map((token) => {
+          dispatch(
+            calculateUserTokenDetails({
+              address,
+              token,
+              provider,
+              networkID: chainID,
+            })
+          );
+        });
+      }
+    }
+
+    const loadApp = useCallback(
+      (loadProvider) => {
+        dispatch(
+          loadAppDetails({ networkID: chainID, provider: loadProvider })
+        );
+        // bonds.map(bond => {
+        //     dispatch(calcBondDetails({ bond, value: null, provider: loadProvider, networkID: chainID }));
+        // });
+        tokens.map((token) => {
+          dispatch(
+            calculateUserTokenDetails({
+              address: "",
+              token,
+              provider,
+              networkID: chainID,
+            })
+          );
+        });
+      },
+      [connected]
+    );
+
+    const loadAccount = useCallback(
+      (loadProvider) => {
+        dispatch(
+          loadAccountDetails({
+            networkID: chainID,
+            address,
+            provider: loadProvider,
+          })
+        );
+      },
+      [connected]
+    );
+
+    const loadTokenCoingeckoPrice = useCallback(async () => {
+      await loadTokenPrices();
+    });
+
+    useEffect(() => {
+      console.log("connected", connected);
+      if (connected && chainID !== 0) {
+        loadDetails("app");
+        // loadDetails("account");
+        // loadDetails("userBonds");
+        // loadDetails("userTokens");
+
+        loadTokenCoingeckoPrice();
+      }
+    }, [connected, chainID]);
+
+    return (
+      <div className="App">
+        <Router>
+          <Sidebar />
+          <Topbar />
+          <WalletConnect loadContracts={blockChainInit} />
+          <Suspense fallback={<div>Loading...</div>}>
+            <Routes>
+              <Route
+                exact
+                path={"/"}
+                element={coinLoaded && <Navigate to="/invest" />}
+              />
+              <Route
+                exact
+                path={"/invest"}
+                element={coinLoaded && <Invest />}
+              />
+              <Route exact path={"/bond"} element={coinLoaded && <Bond />} />
+              <Route exact path={"/stake"} element={coinLoaded && <Stake />} />
+            </Routes>
+          </Suspense>
+        </Router>
+      </div>
+    );
   };
-
-  useEffect(() => {
-    ReactGA.pageview(window.location.pathname + window.location.search);
-    console.log("Page View code");
-  });
-
-  return (
-    <div className="App">
-      <Router>
-        <Sidebar />
-        <Topbar />
-        <WalletConnect loadContracts={blockChainInit} />
-        <Suspense fallback={<div>Loading...</div>}>
-          <Routes>
-            <Route
-              exact
-              path={"/"}
-              element={coinLoaded && <Navigate to="/invest" />}
-            />
-            <Route exact path={"/invest"} element={coinLoaded && <Invest />} />
-            <Route exact path={"/bond"} element={coinLoaded && <Bond />} />
-            <Route exact path={"/stake"} element={coinLoaded && <Stake />} />
-          </Routes>
-        </Suspense>
-      </Router>
-    </div>
-  );
 }
 
 export default App;

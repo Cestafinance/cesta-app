@@ -48,10 +48,18 @@ const useStyles = makeStyles((theme) => ({
     ["@media (max-width:1000px)"]: {
       // eslint-disable-line no-useless-computed-key
       width: "55px",
-      marginLeft: "10px",
+      marginLeft: "5px",
     },
     ["@media (max-width:800px)"]: {
       // eslint-disable-line no-useless-computed-key
+      height: "25px",
+      width: "50px",
+      marginLeft: "0px",
+    },
+    ["@media (max-width:500px)"]: {
+      // eslint-disable-line no-useless-computed-key
+      top: "34%",
+      height: "20px",
       width: "50px",
       marginLeft: "0px",
     },
@@ -216,14 +224,10 @@ function Strategy({ strategyData, strategyContract, vaultContract }) {
 
   const getShareAndUSDValue = async () => {
     try {
-
       const { contract } = vaultContract;
-      const userBalance = await calculateUserShareBalance({contract});
-     
-      const {
-        shares,
-        depositedAmountInUSD
-      } = userBalance;
+      const userBalance = await calculateUserShareBalance({ contract });
+
+      const { shares, depositedAmountInUSD } = userBalance;
 
       SetDepositedShares(shares);
       SetDepositedAmount(depositedAmountInUSD);

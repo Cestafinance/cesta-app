@@ -22,3 +22,9 @@ export const disconnectSelector = createSelector(disconnect, d => d);
 
 const changeWallet = state => get(state, 'web3.changeWallet');
 export const changeWalletSelector  = createSelector(changeWallet, cw => cw);
+
+const provider = state => get(state, 'web3.provider');
+export const providerSelector = createSelector(provider, p => p);
+
+const connected = state => get(state, 'web3.connected');
+export const connectedSelector = createSelector(connected, d => d);
