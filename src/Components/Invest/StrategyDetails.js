@@ -12,6 +12,7 @@ import { networkIdSelector, accountSelector } from "../../store/selectors/web3";
 import { GraphTimeRanges } from "../../Constants/mains";
 import { getStrategyCoinDistribution } from "../../Services/contracts";
 import StrategyChart from "./Chart";
+import useWeb3Util from "../../Hooks/useWeb3Util";
 
 const useStyles = makeStyles((theme) => ({
   roundBorder: {
@@ -79,6 +80,7 @@ function StrategyDetails({
   depositedAmount,
   getShareAndUSDValue,
   depositedShares,
+  sharesInfo
 }) {
   const classes = useStyles();
 
@@ -90,6 +92,8 @@ function StrategyDetails({
   const [coinBalances, SetCoinBalances] = useState({});
   const [stableCoinLogos, SetStableCoinLogo] = useState({});
   const [coinDistributionData, SetCoinDistributionData] = useState([]);
+
+  const { fromWei } = useWeb3Util();
 
   const onTimeRangeSelect = (value) => {
     setSelectedTimeRange(value);
@@ -109,14 +113,13 @@ function StrategyDetails({
       imgData = {};
     for (let i = 0; i < strategyData.erc20addresses.length; i++) {
       const address = strategyData.erc20addresses[i].toLowerCase();
-      const balance = await getWalletAmount(
+      let balance = await getWalletAmount(
         stableCoins[address].contract,
         account
       );
-      sbData[stableCoins[address].symbol] = (
-        balance /
-        10 ** stableCoins[address].decimals
-      ).toFixed(4);
+      balance = fromWei(balance,stableCoins[address].decimals);
+     
+      sbData[stableCoins[address].symbol] = Math.floor(balance * 10000) / 10000;
     }
     SetCoinBalances(sbData);
 
@@ -271,6 +274,7 @@ function StrategyDetails({
                 depositedShares={depositedShares}
                 getStableCoinWalletDetails={getStableCoinWalletDetails}
                 stableCoinLogos={stableCoinLogos}
+                sharesInfo={sharesInfo}
               />
             )}
           </Box>

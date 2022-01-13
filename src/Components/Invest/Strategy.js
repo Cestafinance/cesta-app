@@ -23,6 +23,7 @@ import {
 import { accountSelector } from "../../store/selectors/web3";
 import ArrowDown from "../../assets/commons/arrow-down.png";
 import useGAEventsTracker from "../../Analytics/useGAEventsTracker";
+import useShares from "../../Hooks/useShares";
 
 const StyledAccordion = styled(Accordion)(({ theme }) => ({
   "&.MuiPaper-root": {
@@ -196,7 +197,9 @@ function Strategy({ strategyData, strategyContract, vaultContract }) {
   const [strategyImage, SetStrategyImage] = useState(null);
   const [depositedShares, SetDepositedShares] = useState(0);
   const [depositedAmount, SetDepositedAmount] = useState(0);
+  const [sharesInfo, SetShareInfo] = useState(null);
   const GAEventsTracker = useGAEventsTracker("Strategy Dropdown");
+  const { calculateUserShareBalance } = useShares();
 
   const account = useSelector(accountSelector);
 
@@ -213,26 +216,41 @@ function Strategy({ strategyData, strategyContract, vaultContract }) {
 
   const getShareAndUSDValue = async () => {
     try {
-      let strategyBalance = await getWalletAmount(
-        vaultContract.contract,
-        account
-      );
-      strategyBalance = parseFloat(
-        strategyBalance / 10 ** strategyData.decimals
-      );
-      SetDepositedShares(strategyBalance);
 
-      let vaultPricePerFullShare = await getPricePerFullShare(
-        vaultContract.contract
-      );
+      const { contract } = vaultContract;
+      const userBalance = await calculateUserShareBalance({contract});
+     
+      const {
+        shares,
+        depositedAmountInUSD
+      } = userBalance;
 
-      let depositPendingAmount = await getDepositAmountFromContract(
-        vaultContract.contract,
-        account
-      );
-      let strategyBalanceInUSD = strategyBalance * vaultPricePerFullShare;
-      SetDepositedAmount(parseFloat(strategyBalanceInUSD.toFixed(4)));
-    } catch (Err) {}
+      SetDepositedShares(shares);
+      SetDepositedAmount(depositedAmountInUSD);
+      SetShareInfo(userBalance);
+
+      // let strategyBalance = await getWalletAmount(
+      //   vaultContract.contract,
+      //   account
+      // );
+      // strategyBalance = parseFloat(
+      //   strategyBalance / 10 ** strategyData.decimals
+      // );
+      // SetDepositedShares(strategyBalance);
+
+      // let vaultPricePerFullShare = await getPricePerFullShare(
+      //   vaultContract.contract
+      // );
+
+      // let depositPendingAmount = await getDepositAmountFromContract(
+      //   vaultContract.contract,
+      //   account
+      // );
+      // let strategyBalanceInUSD = strategyBalance * vaultPricePerFullShare;
+      // SetDepositedAmount(parseFloat(strategyBalanceInUSD.toFixed(4)));
+    } catch (Err) {
+      console.error(Err);
+    }
   };
 
   useEffect(() => {
@@ -318,6 +336,7 @@ function Strategy({ strategyData, strategyContract, vaultContract }) {
             strategyContract={strategyContract}
             depositedShares={depositedShares}
             vaultContract={vaultContract}
+            sharesInfo={sharesInfo}
           />
         </StyledAccordionDetails>
       </StyledAccordion>
