@@ -23,8 +23,13 @@
     "bignumber.js": "^9.0.1",
     "bn.js": "^5.2.0",
     "date-fns": "^2.27.0",
+<<<<<<< HEAD
     "dotenv": "^10.0.0",
     "ethers": "^5.5.2",
+=======
+    "ethers": "^5.5.2",
+    "dotenv": "^10.0.0",
+>>>>>>> db3222373157cbfa835fb33c32b27a3b3e979b1c
     "from-exponential": "^1.1.1",
     "lodash": "^4.17.21",
     "react": "^17.0.2",

@@ -117,13 +117,10 @@ function WithDraw({
   const { calculateSharesToWithdraw } = useShares();
 
   const selectPercentage = (value) => {
-    let amt = depositedAmount * (value / 100);
-    if(parseFloat(value) !== 100) {
-      // Make the amount as 4 decimals, 100 percent is excluded, since deposited amount are in 4 decimals already
-      amt = Math.floor(amt * 10000 ) / 10000; 
-    }
+    const amt = depositedAmount * (value / 100);
+    SetAmountToWithdraw(amt.toFixed(4));
     SetValueSelected(value);
-    validateWithdrawAmount(amt);
+    SetInputError(false);
   };
 
   const onInputChange = (value) => {

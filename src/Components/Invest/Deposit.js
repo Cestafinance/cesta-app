@@ -110,6 +110,10 @@ function Deposit({
     }
 
     validateDepositAmount(balance);
+    SetValueSelected(value);
+    let amount = (balance * (value / 100)).toFixed(4);
+    SetDepositAmount(amount);
+    SetInputError(false);
   };
 
   const confirmDeposit = () => {

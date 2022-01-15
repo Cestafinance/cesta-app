@@ -38,10 +38,9 @@ const useStyles = makeStyles((theme) => ({
   assetImages: {
     height: "30px",
     marginLeft: "25px",
-    top: "24%",
-    position: "absolute",
-    ["@media (max-width:1200px)"]: {
-      // eslint-disable-line no-useless-computed-key
+    top: '24%',
+    position: 'absolute',
+    ['@media (max-width:1200px)']: { // eslint-disable-line no-useless-computed-key
       width: "60px",
       marginLeft: "10px",
     },
