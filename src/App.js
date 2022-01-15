@@ -1,4 +1,3 @@
-import { Suspense, useState, lazy, useEffect } from "react";
 import { Suspense, useState, lazy, useCallback, useEffect } from "react";
 import {
   BrowserRouter as Router,
@@ -14,7 +13,7 @@ import { getAllStableCoinsContract } from "./Services/contracts";
 import { contractLoad } from "./store/interactions/stableCoins";
 import "./App.css";
 import { networkMap } from "./Constants/mains";
-import useBonds from "./hooks/bonds";
+import useBonds from "./Hooks/bonds";
 import useTokens from "./Hooks/tokens";
 import {
   accountSelector,
@@ -29,6 +28,9 @@ import {
 } from "./store/slices/account-slice";
 import { loadAppDetails } from "./store/slices/app-slice";
 import { loadTokenPrices } from "src/helpers/token-price";
+import hotjar from "react-hotjar";
+import TagManager from "react-gtm-module";
+import ReactGA from "react-ga";
 
 const Invest = lazy(() => import("./Components/Invest"));
 const Bond = lazy(() => import("./Components/Bond"));
@@ -38,10 +40,12 @@ function App() {
   const dispatch = useDispatch();
 
   //Analytics Initialization
-  hotjar.initialize(
-    process.env.REACT_APP_HOTJAR_HJID,
-    process.env.REACT_APP_HOTJAR_HJSV
-  );
+  useEffect(() => {
+    hotjar.initialize(
+      process.env.REACT_APP_HOTJAR_HJID,
+      process.env.REACT_APP_HOTJAR_HJSV
+    );
+  });
 
   const tagManagerArgs = {
     gtmId: process.env.REACT_APP_GTM_TRACKING,
@@ -63,7 +67,7 @@ function App() {
   const chainID = useSelector(networkIdSelector);
   const connected = useSelector(connectedSelector);
 
-  const blockChainInit = async (web3, networkId, provider) => {
+  const BlockChainInit = async (web3, networkId, provider) => {
     try {
       const response = await getAllStableCoinsContract(
         networkMap[networkId] ? networkMap[networkId] : ""
@@ -207,7 +211,7 @@ function App() {
         <Router>
           <Sidebar />
           <Topbar />
-          <WalletConnect loadContracts={blockChainInit} />
+          <WalletConnect loadContracts={BlockChainInit} />
           <Suspense fallback={<div>Loading...</div>}>
             <Routes>
               <Route

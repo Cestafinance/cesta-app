@@ -58,28 +58,27 @@ const TimerangeLabel = styled(Typography)(({ theme }) => ({
   },
 }));
 
-export const StyledTabs = styled(Tabs)(({theme}) => ({
-    '& .MuiTabs-indicator': {
-        borderBottom: '2px solid #FFFFFF !important'
-    }
-}))
-
-export const StyledTab = styled(Tab)(({theme}) => ({
-    '&.MuiTab-root': {
-        color: '#FFFFFF',
-        borderBottom: '2px solid rgba(255, 255, 255, 0.34)',
-        marginRight: '10px'
-    },
-
+export const StyledTabs = styled(Tabs)(({ theme }) => ({
+  "& .MuiTabs-indicator": {
+    borderBottom: "2px solid #FFFFFF !important",
+  },
 }));
 
-const StyledTab = styled(Tab)(({ theme }) => ({
+export const StyledTab = styled(Tab)(({ theme }) => ({
   "&.MuiTab-root": {
     color: "#FFFFFF",
     borderBottom: "2px solid rgba(255, 255, 255, 0.34)",
     marginRight: "10px",
   },
 }));
+
+// const StyledTab = styled(Tab)(({ theme }) => ({
+//   "&.MuiTab-root": {
+//     color: "#FFFFFF",
+//     borderBottom: "2px solid rgba(255, 255, 255, 0.34)",
+//     marginRight: "10px",
+//   },
+// }));
 
 function StrategyDetails({
   strategyData,
@@ -89,7 +88,7 @@ function StrategyDetails({
   depositedAmount,
   getShareAndUSDValue,
   depositedShares,
-  sharesInfo
+  sharesInfo,
 }) {
   const classes = useStyles();
 
@@ -126,8 +125,8 @@ function StrategyDetails({
         stableCoins[address].contract,
         account
       );
-      balance = fromWei(balance,stableCoins[address].decimals);
-     
+      balance = fromWei(balance, stableCoins[address].decimals);
+
       sbData[stableCoins[address].symbol] = Math.floor(balance * 10000) / 10000;
     }
     SetCoinBalances(sbData);
