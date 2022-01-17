@@ -33,7 +33,7 @@ const useStyles = makeStyles((theme) => ({
   logo: {
     width: "70%",
     height: "auto",
-    margin: "1rem 0.1rem 2rem 0.1rem",
+    margin: "1.5rem 0.1rem 1.5rem 0.1rem",
   },
   menuIcon: {
     width: "1.5rem",
@@ -80,23 +80,16 @@ const StyledListItem = styled(ListItem)(({ theme }) => ({
 }));
 
 function SideBar(props) {
+  const { window } = props;
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const [menuLogs, SetMenuLogos] = React.useState({});
   const classes = useStyles();
   const GAEventsTracker = useGAEventsTracker("External Link");
-  const [hideNav, setHideNav] = React.useState(true);
 
   const location = useLocation();
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
-  };
-
-  const resize = () => {
-    let currentHideNav = window.innerWidth <= 760;
-    if (currentHideNav !== this.state.hideNav) {
-      this.setState({ hideNav: currentHideNav });
-    }
   };
 
   const getMenuLogos = async () => {
@@ -211,7 +204,8 @@ function SideBar(props) {
     </div>
   );
 
-  const container = undefined;
+  const container =
+    window !== undefined ? () => window().document.body : undefined;
 
   return (
     <Box sx={{ display: "flex" }}>
