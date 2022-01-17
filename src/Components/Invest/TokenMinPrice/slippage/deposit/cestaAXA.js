@@ -77,7 +77,10 @@ class CestaAXADepositTokenMinPrice {
             LYDAmtMin = LYDAmt.mul(amountOutMinPerc).div(denominator).toString()
 
         } else {
-            let furthest, farmIndex, diff
+            let furthest = 0; 
+            let farmIndex;
+            let diff = 0;
+
             if (JOEAVAXTargetPool.gt(pool0)) {
                 diff = JOEAVAXTargetPool.sub(pool0)
                 furthest = diff
