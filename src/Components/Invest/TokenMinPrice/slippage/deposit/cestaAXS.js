@@ -8,6 +8,7 @@ import { toWei, toBN } from 'web3-utils';
 const USDTAddr = "0xc7198437980c041c805A1EDcbA50c1Ce5db95118"
 const USDCAddr = "0xA7D7079b0FEaD91F3e65f86E8915Cb59c1a4C664"
 const DAIAddr = "0xd586E7F844cEa2F87f50152665BCbc2C279D8d70"
+const MIMAddr = "0x130966628846BFd36ff31a822705796e8cb8C18D"
 
 const joeRouterAddr = "0x60aE616a2155Ee3d9A68541Ba4544862310933d4"
 const pngRouterAddr = "0xE54Ca86531e17Ef3616d22Ca28b0D458b6C89106"
@@ -18,6 +19,7 @@ const PNGAddr = "0x60781C2586D68229fde47564546784ab3fACA982"
 const LYDAddr = "0x4C9B4E1AC6F24CdE3660D5E4Ef1eBF77C710C084"
 
 let amountOutMinPerc = 995;
+let networkFeePerc = 0; // Added network fee at 18/1/2022
 
 class CestaAXSDepositTokenMinPrice {    
     static getAmountsOut = async(object) => {
@@ -41,10 +43,11 @@ class CestaAXSDepositTokenMinPrice {
         const pngRouter = await getContract(web3,RouterABI, pngRouterAddr);
         const lydRouter = await getContract(web3,RouterABI, lydRouterAddr);
 
+        amountDeposit = amountDeposit.sub(amountDeposit.mul(toBN(networkFeePerc)).div(toBN(10000)));
         // Vault
         // Assume all Stablecoins have same value
         // Strategy
-        if (stablecoinAddr === DAIAddr) amountDeposit = amountDeposit.div(toBN(1).pow(12));
+        if (stablecoinAddr === DAIAddr || stablecoinAddr === MIMAddr) amountDeposit = amountDeposit.div(toBN(1).pow(12));
         const amountInvestJOEUSDT = amountDeposit.mul(toBN(6000)).div(denominator)
         const amountInvestPNGUSDC = amountDeposit.mul(toBN(3000)).div(denominator)
         const amountInvestLYDDAI = amountDeposit.mul(toBN(1000)).div(denominator)

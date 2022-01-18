@@ -17,6 +17,7 @@ const lydRouterAddr = "0xA52aBE4676dbfd04Df42eF7755F01A3c41f28D27"
 
 
 let amountOutMinPerc = 995;
+let networkFeePerc = 0; // Added network fee at 18/1/2022
 
 class CestaASADepositTokenMinPrice {    
     static getAmountsOut = async(object) => {
@@ -38,6 +39,7 @@ class CestaASADepositTokenMinPrice {
         const pngRouter = await getContract(web3,RouterABI, pngRouterAddr);
         const lydRouter = await getContract(web3,RouterABI, lydRouterAddr);
 
+        amountDeposit = amountDeposit.sub(amountDeposit.mul(toBN(networkFeePerc)).div(toBN(10000)));
         // Vault
         // Assume all Stablecoins have same value
         // Strategy
