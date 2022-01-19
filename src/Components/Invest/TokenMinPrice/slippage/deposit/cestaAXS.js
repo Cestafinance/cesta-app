@@ -47,7 +47,10 @@ class CestaAXSDepositTokenMinPrice {
         // Vault
         // Assume all Stablecoins have same value
         // Strategy
-        if (stablecoinAddr === DAIAddr || stablecoinAddr === MIMAddr) amountDeposit = amountDeposit.div(toBN(1).pow(12));
+        if (stablecoinAddr.toLowerCase() === DAIAddr.toLowerCase() || stablecoinAddr.toLowerCase() === MIMAddr.toLowerCase()) {
+            amountDeposit = amountDeposit.div(toWei(toBN(1), "micro"));
+        } 
+
         const amountInvestJOEUSDT = amountDeposit.mul(toBN(6000)).div(denominator)
         const amountInvestPNGUSDC = amountDeposit.mul(toBN(3000)).div(denominator)
         const amountInvestLYDDAI = amountDeposit.mul(toBN(1000)).div(denominator)
