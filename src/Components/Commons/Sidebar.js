@@ -25,6 +25,7 @@ import Discord from "../../assets/platform/discord.png";
 import Gitbook from "../../assets/platform/gitbook.png";
 import Github from "../../assets/platform/github.png";
 import Medium from "../../assets/platform/medium.png";
+import Hacken from "../../assets/auditor/hacken.svg";
 import useGAEventsTracker from "../../Analytics/useGAEventsTracker";
 
 const drawerWidth = 240;
@@ -54,6 +55,17 @@ const useStyles = makeStyles((theme) => ({
   activeMenu: {
     background: "#375894 !important",
   },
+  auditedBy: {
+    "&.MuiTypography-root": {
+      fontFamily: "Inter",
+      fontStyle: "normal",
+      fontWeight: "normal",
+      fontSize: "14px",
+      lineHeight: "14px",
+      color: "#FFFFFF",
+      marginBottom: "8px"
+    },
+  }
 }));
 
 const StyledName = styled(Typography)(({ theme }) => ({
@@ -111,95 +123,84 @@ function SideBar(props) {
     getMenuLogos();
   }, []);
 
+  const Platforms = [
+    { icon: Twitter, link: "https://twitter.com/CestaFinance" },
+    { icon: Discord, link: "https://discord.gg/k39QEv2Xw5" },
+    { icon: Gitbook, link: "https://cesta.gitbook.io/intro/" },
+    { icon: Github, link: "https://github.com/Cestafinance" },
+    { icon: Medium, link: "https://cestafinance.medium.com/" },
+  ];
+
   const drawer = (
-    <div>
-      {/* <Toolbar /> */}
-      <Divider />
-      <img src={CestaLogo} alt="" className={classes.logo} />
-      <StyledList>
-        {MenuList.map((menu, index) => (
-          <NavLink
-            to={menu.path}
-            key={index}
-            style={{ textDecoration: "none" }}
-          >
-            <StyledListItem
-              button
+    <div style={{ display: "flex", flexDirection: "column", justifyContent:"space-between", height: "100%"}}>
+      <div>
+        <img src={CestaLogo} alt="" className={classes.logo} />
+        <StyledList>
+          {MenuList.map((menu, index) => (
+            <NavLink
+              to={menu.path}
               key={index}
-              className={
-                location.pathname === menu.path ? classes.activeMenu : ""
-              }
+              style={{ textDecoration: "none" }}
             >
-              <ListItemIcon>
-                {menuLogs[menu.name] && (
-                  <img
-                    src={menuLogs[menu.name]}
-                    alt={menu.name}
-                    className={classes.menuIcon}
-                  />
-                )}
-              </ListItemIcon>
-              <StyledName>{menu.label}</StyledName>
-            </StyledListItem>
-          </NavLink>
-        ))}
-      </StyledList>
-      <Box
-        sx={{
-          position: "fixed",
-          bottom: "0%",
-          height: "8%",
-          display: "flex",
-          direction: "column",
-        }}
-      >
-        <Box
-          onClick={() => openInNewTab("https://twitter.com/CestaFinance")}
-          sx={{
-            marginLeft: "50%",
-            padding: "5%",
-            cursor: "pointer",
-          }}
-        >
-          <img src={Twitter} className={classes.platformLogo} alt="" />
+              <StyledListItem
+                button
+                key={index}
+                className={
+                  location.pathname === menu.path ? classes.activeMenu : ""
+                }
+              >
+                <ListItemIcon>
+                  {menuLogs[menu.name] && (
+                    <img
+                      src={menuLogs[menu.name]}
+                      alt={menu.name}
+                      className={classes.menuIcon}
+                    />
+                  )}
+                </ListItemIcon>
+                <StyledName>{menu.label}</StyledName>
+              </StyledListItem>
+            </NavLink>
+          ))}
+        </StyledList>
+      </div>
+      <div style={{margin:"32px 0px"}}>
+        <Box  sx={{
+            display: "flex",
+            flexDirection: "column",
+            justifyItems: "center",
+            alignItems: "center",
+            margin: "16px"
+          }}>
+            <Typography variant={"h4"} className={classes.auditedBy}>Audited By</Typography>
+            <img src={Hacken} style={{height: "12px"}} alt="" />
         </Box>
         <Box
-          onClick={() => openInNewTab("https://discord.gg/k39QEv2Xw5")}
           sx={{
-            padding: "5%",
-            cursor: "pointer",
+            // position: "fixed",
+            bottom: "0%",
+            height: "8%",
+            display: "flex",
+            flexDirection: "row",
+            justifyItems: "center",
+            marginLeft: "16px"
           }}
         >
-          <img src={Discord} className={classes.platformLogo} alt="" />
+          {Platforms.map(p => {
+            return <>
+              <Box
+                onClick={() => openInNewTab(p.link)}
+                sx={{
+                  padding: "5%",
+                  cursor: "pointer",
+                }}
+              >
+                <img src={p.icon} className={classes.platformLogo} alt="" />
+              </Box>
+            </>
+          })}
         </Box>
-        <Box
-          onClick={() => openInNewTab("https://cesta.gitbook.io/intro/")}
-          sx={{
-            padding: "5%",
-            cursor: "pointer",
-          }}
-        >
-          <img src={Gitbook} className={classes.platformLogo} alt="" />
-        </Box>
-        <Box
-          onClick={() => openInNewTab("https://github.com/Cestafinance")}
-          sx={{
-            padding: "5%",
-            cursor: "pointer",
-          }}
-        >
-          <img src={Github} className={classes.platformLogo} alt="" />
-        </Box>
-        <Box
-          onClick={() => openInNewTab("https://cestafinance.medium.com/")}
-          sx={{
-            padding: "5%",
-            cursor: "pointer",
-          }}
-        >
-          <img src={Medium} className={classes.platformLogo} alt="" />
-        </Box>
-      </Box>
+      </div>
     </div>
   );
 
