@@ -21,6 +21,9 @@ import { getAllStrategies } from "../../Services/contracts";
 import { networkMap } from "../../Constants/mains";
 import { loadVaultContract } from "../../store/interactions/vaults";
 import { loadStrategyContract } from "../../store/interactions/strategies";
+import CestaHeader from "../../assets/commons/Cesta_Header.png";
+import Hacken from "../../assets/auditor/hacken.svg";
+import * as React from "react";
 
 const useStyles = makeStyles((theme) => ({
   mainContainer: {
@@ -35,6 +38,11 @@ const useStyles = makeStyles((theme) => ({
       margin: "0px 20px",
     },
   },
+  imgHead: {
+    height: "100px",
+    width: "96%",
+    margin: "20px",
+  }
 }));
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -59,13 +67,44 @@ const StyledTableContainer = styled(TableContainer)(({ theme }) => ({
 const StyledInvestLabel = styled(Typography)(({ theme }) => ({
   "&.MuiTypography-root": {
     float: "left",
-    marginLeft: "25px",
-    marginTop: "40px",
+    marginLeft: "80px",
+    marginTop: "-80px",
     fontFamily: "Inter",
     fontStyle: "normal",
     fontWeight: "bold",
     fontSize: "24px",
     lineHeight: "14px",
+    position: "relative",
+    color: "#FFFFFF",
+  },
+}));
+
+const StyledAuditLabel = styled(Typography)(({ theme }) => ({
+  "&.MuiTypography-root": {
+    float: "right",
+    marginRight: "90px",
+    marginTop: "-90px",
+    fontFamily: "Inter",
+    fontStyle: "normal",
+    fontWeight: "400",
+    fontSize: "14px",
+    lineHeight: "14px",
+    position: "relative",
+    color: "#FFFFFF",
+  },
+}));
+
+const StyledHackenLabel = styled(Typography)(({ theme }) => ({
+  "&.MuiTypography-root": {
+    float: "right",
+    marginLeft: "40px",
+    marginTop: "-80px",
+    fontFamily: "Inter",
+    fontStyle: "normal",
+    fontWeight: "bold",
+    fontSize: "24px",
+    lineHeight: "14px",
+    position: "relative",
     color: "#FFFFFF",
   },
 }));
@@ -161,17 +200,21 @@ function Invest() {
         </Grid>
         <Grid item xs={12}>
           <Box
-            sx={{
-              background:
-                "linear-gradient(134.64deg, #EF7B6E 6.08%, #AB4863 34.8%, #1F224D 71.27%, #152E64 98.89%)",
-              border: "1px solid  #152E64",
-              boxSizing: "border-box",
-              borderRadius: "26px",
-              height: "100px",
-              margin: "20px",
-            }}
+            // sx={{
+            //   background:
+            //     "linear-gradient(134.64deg, #EF7B6E 6.08%, #AB4863 34.8%, #1F224D 71.27%, #152E64 98.89%)",
+            //   border: "1px solid  #152E64",
+            //   boxSizing: "border-box",
+            //   borderRadius: "26px",
+            //   height: "100px",
+            //   margin: "20px",
+            // }}
           >
-            <StyledInvestLabel component={"span"}>Invest</StyledInvestLabel>
+            <img className={classes.imgHead} src={CestaHeader} alt=""/>
+            <StyledInvestLabel component={"span"}>INVEST</StyledInvestLabel>
+            <StyledAuditLabel component={"span"}>Audited By</StyledAuditLabel>
+            <img src={Hacken} style={{height: "12px", float: "right",    marginRight: "80px",
+              marginTop: "-70px", position: "relative"}} alt="" />
           </Box>
         </Grid>
         <Grid item xs={12}>

@@ -17,7 +17,7 @@ const PNGAddr = "0x60781C2586D68229fde47564546784ab3fACA982"
 const LYDAddr = "0x4C9B4E1AC6F24CdE3660D5E4Ef1eBF77C710C084"
 
 let amountOutMinPerc = 995;
-
+let networkFeePerc = 0; // Added network fee at 18/1/2022
 class CestaAXADepositTokenMinPrice {    
     static getAmountsOut = async(object) => {
         let {
@@ -30,6 +30,7 @@ class CestaAXADepositTokenMinPrice {
 
         // Convert amount deposit to big number
         amountDeposit = toBN(amountDeposit);
+        amountDeposit  = amountDeposit.sub(amountDeposit.mul(toBN(networkFeePerc)).div(toBN(10000)))
         amountOutMinPerc = toBN(amountOutMinPerc);
         const denominator = toBN(1000);
 
@@ -56,7 +57,6 @@ class CestaAXADepositTokenMinPrice {
         const PNGAVAXTargetPool = JOEAVAXTargetPool;
         const LYDAVAXTargetPool = pool.mul(toBN(1000)).div(toBN(10000))
 
-
         // Rebalancing
         let JOEAmtMin, PNGAmtMin, LYDAmtMin
         JOEAmtMin = PNGAmtMin = LYDAmtMin = 0
@@ -77,7 +77,10 @@ class CestaAXADepositTokenMinPrice {
             LYDAmtMin = LYDAmt.mul(amountOutMinPerc).div(denominator).toString()
 
         } else {
-            let furthest, farmIndex, diff
+            let furthest = 0; 
+            let farmIndex;
+            let diff = 0;
+
             if (JOEAVAXTargetPool.gt(pool0)) {
                 diff = JOEAVAXTargetPool.sub(pool0)
                 furthest = diff
