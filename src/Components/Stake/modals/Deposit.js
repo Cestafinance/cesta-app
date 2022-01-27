@@ -34,6 +34,28 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
+const StyledApproveButton = styled(Button)(({theme}) => ({
+    "&.MuiButton-root": {
+        background: theme.palette.primary.main,
+        width: "80%",
+        marginLeft: "25%",
+        boxShadow: "none",
+        borderRadius: "16px",
+        zIndex: 4,
+        color: "#FFFFFF",
+        padding: "12px 0px",
+        textTransform: "uppercase",
+        fontSize: "16px",
+        height: "35px",
+        "&:hover": {
+            background: "rgba(39, 62, 112, 0.5)",
+        },
+    },
+    "&.Mui-disabled": {
+        backgroundColor: "none",
+    },
+}));
+
 const StyledButton = styled(Button)(({theme}) => ({
     "&.MuiButton-root": {
         background: theme.palette.primary.main,
@@ -77,6 +99,19 @@ const TokenAmount = styled(Typography)(({theme}) => ({
         lineHeight: "25px",
         textAlign: "right",
         color: "rgba(255, 255, 255, 0.6)",
+    },
+}));
+
+const ApprovalMessage = styled(Typography)(({theme}) => ({
+    "&.MuiTypography-root": {
+        fontFamily: "Inter",
+        fontStyle: "normal",
+        fontWeight: "normal",
+        fontSize: "14px",
+        lineHeight: "34px",
+        position: "absolute",
+        textAlign: "left",
+        color: "#FFFFFF",
     },
 }));
 
@@ -146,9 +181,6 @@ function DepositStakeTemplate({
     }, []);
 
     return <Box>
-        {needApproval && <StyledButton onClick={approve} disabled={isApproving}>
-            {isApproving ? <CircularProgress color="secondary" size={20}/> : "Approve"}
-        </StyledButton>}
         <Grid container>
             <Grid xs={12}>
                 &nbsp;
@@ -162,7 +194,10 @@ function DepositStakeTemplate({
             }
             }>
                 <Grid container>
-                    <Grid xs={12}>
+                    <Grid xs={12} sx={{
+                        padding: "15px 0 0 0"
+                    }
+                    }>
                         <TokenAmountText>
                             Total Stake Amount
                         </TokenAmountText>
@@ -189,6 +224,18 @@ function DepositStakeTemplate({
                 &nbsp;
             </Grid>
         </Grid>
+        {needApproval && <Grid container>
+            <Grid xs={1}>
+            </Grid>
+            <Grid xs={6}>
+                <ApprovalMessage>Allow transaction in your wallet</ApprovalMessage>
+            </Grid>
+            <Grid xs={4}>
+                <StyledApproveButton onClick={approve} disabled={isApproving}>
+                    {isApproving ? <CircularProgress color="secondary" size={20}/> : "Approve"}
+                </StyledApproveButton>
+            </Grid>
+        </Grid>}
         {approveSuccessful && <Grid container>
             <Grid xs={12} sx={{
                 textAlign: "center"
@@ -218,8 +265,8 @@ function DepositStakeTemplate({
                 Failed to approve transaction. <br/>Please try again.
             </Grid>
         </Grid>}
-
-        {!needApproval && <StyledButton onClick={stakeNow} disabled={isStaking}>
+        <br/>
+        {<StyledButton onClick={stakeNow} disabled={isStaking || needApproval}>
             {isStaking ? <CircularProgress color="secondary" size={20}/> : "Stake"}
         </StyledButton>}
 

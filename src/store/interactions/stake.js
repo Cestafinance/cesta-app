@@ -43,6 +43,21 @@ export const loadStakingTokenContract = async (dispatch, web3, abi, address, {
     };
 }
 
+export const loadgCestaTokenContract = async (dispatch, web3, abi, address, {
+    name,
+    symbol,
+    decimals
+}) => {
+    let contract = new web3.eth.Contract(abi, address);
+    return {
+        contract,
+        address,
+        name,
+        symbol,
+        decimals
+    };
+}
+
 export const loadStakingContract = async (dispatch, web3, abi, address) => {
     let contract = new web3.eth.Contract(abi, address);
     await dispatch(strategyContractLoaded(contract, {
@@ -60,6 +75,21 @@ export const distributorContract = async (dispatch, web3, abi, address) => {
         address
     }));
     return {contract, address};
+}
+
+export const getNextRewardData = async (contract, account) => {
+    let nextRewardData = await contract.methods.nextRewardFor(account).call();
+    return nextRewardData;
+}
+
+export const getExchangeRate = async (contract) => {
+    try {
+        const rate = await contract.methods.balanceFrom((10**18).toString()).call();
+        return rate;
+    } catch (Err) {
+        console.log(Err);
+        debugger;
+    }
 }
 
 export const checkAllowance = async (tokenContract, stakeContractAddress, account, web3, amount) => {
@@ -156,4 +186,36 @@ export const unStakeToken = async (stakeContract, amount, web3, account) => {
                 })
             })
     });
+}
+
+export const getForceClaimInfo = async (stakeContract, account) => {
+    try {
+        const forceClaimInfo = await stakeContract.methods
+            .forceClaimInfo(account)
+            .call();
+
+        return forceClaimInfo;
+    } catch (Err) {
+
+    }
+}
+
+export const forceClaim = () => {
+
+}
+
+export const getSafeClaimInfo = async (stakeContract, account) => {
+    try {
+        const safeClaimInfo = await stakeContract.methods
+            .safeClaimInfo(account)
+            .call();
+
+        return safeClaimInfo;
+    } catch (Err) {
+
+    }
+}
+
+export const safeClaim = () => {
+
 }

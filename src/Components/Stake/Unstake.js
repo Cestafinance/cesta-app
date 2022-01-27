@@ -1,10 +1,16 @@
-import {Fragment, useState} from "react";
+import {Fragment, useEffect, useState} from "react";
 import {makeStyles, styled} from "@mui/styles";
 import {Box, Button, Grid, Tab, Tabs, TextField, Typography} from "@mui/material";
+import {
+    getForceClaimInfo,
+    getSafeClaimInfo
+} from '../../store/interactions/stake'
 import {scales} from "../../Constants/utils";
 import ActionConfirm from "./modals/Modal";
 import UnStakeTemplate from "./modals/Withdraw";
 import Decimal from "decimal.js";
+import {useSelector} from "react-redux";
+import {accountSelector} from "../../store/selectors/web3";
 
 
 const useStyles = makeStyles((theme) => ({}));
@@ -63,6 +69,7 @@ function Unstake({
     const [unstakeAmount, SetUnstakeAmount] = useState(0);
     const [valueSelected, SetValueSelected] = useState(0);
     const [open, SetOpen] = useState(false);
+    const account = useSelector(accountSelector);
 
 
     const onInputChange = (value) => {
@@ -83,6 +90,16 @@ function Unstake({
         SetUnstakeAmount(newVal);
     };
 
+    const getClaimInfoData = async () => {
+        if(!stakeContract) {
+            return;
+        }
+        const forceClaimData = await getForceClaimInfo(stakeContract.contract, account);
+    }
+
+    useEffect(() => {
+        getClaimInfoData();
+    }, [stakeContract]);
 
     const selectPercentage = (value) => {
         SetValueSelected(value);

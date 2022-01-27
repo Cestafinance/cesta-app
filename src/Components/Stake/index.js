@@ -14,7 +14,10 @@ import {
     loadCestaTokenContract,
     loadStakingTokenContract,
     loadStakingContract,
-    distributorContract
+    loadgCestaTokenContract,
+    distributorContract,
+    getExchangeRate,
+    getNextRewardData
 } from "../../store/interactions/stake";
 import {
     getWalletAmount
@@ -137,6 +140,8 @@ function Stake() {
     const [stakeTokenContract, SetStakeTokenContract] = useState(null);
     const [stakeContract, SetStakeContract] = useState(null);
     const [distributionContract, SetDistributionContract] = useState(null);
+    const [nextReward, SetNextReward] = useState('0');
+    const [exchangeRate, SetExchangeRate] = useState('X')
 
     const networkId = useSelector(networkIdSelector);
     const web3 = useSelector(web3Selector);
@@ -146,7 +151,7 @@ function Stake() {
         const response = await getStakeContracts(networkMap[networkId]);
         const contracts = response.data;
 
-        let cestaTokenInfo ,stakingToken , stakingContract, distributionContract;
+        let cestaTokenInfo ,stakingToken , stakingContract, distributionContract, gCestaContract;
 
         contracts.forEach((contract) => {
             if(contract.type === "TOKEN") {
@@ -157,10 +162,12 @@ function Stake() {
                 stakingContract = contract;
             } else if(contract.type === "DISTRIBUTOR-CONTRACT") {
                 distributionContract = contract;
+            } else if(contract.type === "GCESTA-TOKEN") {
+                gCestaContract = contract;
             }
         });
 
-        if(!cestaTokenInfo || !stakingToken || !stakingContract || !distributionContract) {
+        if(!cestaTokenInfo || !stakingToken || !stakingContract || !distributionContract || !gCestaContract) {
             return;
         }
 
@@ -176,6 +183,12 @@ function Stake() {
             decimals: stakingToken.decimal
         });
 
+        const gCestaTokenContractInfo = await loadgCestaTokenContract(dispatch, web3, gCestaContract.abi, gCestaContract.address, {
+            name: gCestaContract.name,
+            symbol: gCestaContract.symbol,
+            decimals: gCestaContract.decimal
+        })
+
         const stakingContractInfo = await loadStakingContract(dispatch, web3, stakingContract.abi, stakingContract.address);
 
         const distributionContractInfo = await distributorContract(dispatch, web3, distributionContract.abi, distributionContract.address);
@@ -183,6 +196,10 @@ function Stake() {
         const balance = await getWalletAmount(cestaTokenContractInfo.contract, account);
         const stakingTokenBalance = await getWalletAmount(stakingTokenContractInfo.contract, account);
         const TVL = await getWalletAmount(cestaTokenContractInfo.contract, stakingContract.address);
+        const exchangeRate = await getExchangeRate(gCestaTokenContractInfo.contract);
+        const nextReward = await getNextRewardData(distributionContractInfo.contract, account);
+        SetNextReward((nextReward/(10**18)).toFixed(4));
+        SetExchangeRate((exchangeRate/(10**18)).toFixed(4));
         SetCestaBalanceBN(new BN(balance));
         SetStakedBalanceBN(new BN(stakingTokenBalance));
         SetCestaDecimalBalance(new Decimal(balance).div(new Decimal(10).pow(cestaTokenContractInfo.decimals)))
@@ -355,7 +372,7 @@ function Stake() {
                                         textAlign: "end",
                                     }}>
                                         <DetailsText>
-                                            1 gCESTA = 123.389 CESTA
+                                            1 gCESTA = {exchangeRate} CESTA
                                         </DetailsText>
                                     </Grid>
                                     <Grid item xs={1}>
@@ -374,7 +391,7 @@ function Stake() {
                                         textAlign: "end",
                                     }}>
                                         <DetailsText>
-                                            1200 CESTA
+                                            {nextReward} CESTA
                                         </DetailsText>
                                     </Grid>
                                     <Grid item xs={1}>
