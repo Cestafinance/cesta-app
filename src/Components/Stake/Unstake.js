@@ -175,8 +175,8 @@ function Unstake({
                     <ActionConfirm
                         open={open}
                         handleClose={handleClose}
-                        titleMain={"Approve Stake"}
-                        subTitle={`in Cesta Stake(3,3)`}
+                        titleMain={"Confirm Unstake"}
+                        subTitle={``}
                         content={<UnStakeTemplate
                             amount={unstakeAmount}
                             stakeContractInfo={stakeContract}

@@ -1,10 +1,10 @@
 import {Fragment, useState} from "react";
 import {makeStyles, styled} from "@mui/styles";
 import {Box, Button, Grid, TextField, Typography} from "@mui/material";
+import Decimal from "decimal.js";
 import {scales} from "../../Constants/utils";
 import ActionConfirm from "./modals/Modal";
 import DepositStakeTemplate from "./modals/Deposit";
-import Decimal from "decimal.js";
 
 const useStyles = makeStyles((theme) => ({}));
 
@@ -178,7 +178,7 @@ function Deposit({
                         open={open}
                         handleClose={handleClose}
                         titleMain={"Approve Stake"}
-                        subTitle={`in Cesta Stake(3,3)`}
+                        subTitle={``}
                         content={<DepositStakeTemplate
                             amount={depositAmount}
                             stakeContractInfo={stakeContract}

@@ -1,4 +1,4 @@
-import {useEffect, useState} from "react";
+import {Fragment, useEffect, useState} from "react";
 import Web3 from "web3";
 import {makeStyles} from "@mui/styles";
 import {Box, Grid, Tab, Tabs, Typography} from "@mui/material";
@@ -341,6 +341,26 @@ function Stake() {
                                     <Grid item xs={12}>
                                         &nbsp;
                                     </Grid>
+
+                                    <Grid item xs={1}>
+                                    </Grid>
+                                    <Grid item xs={4} sx={{
+                                        textAlign: "start",
+                                    }}>
+                                        <DetailsText>
+                                            Exchange Rate
+                                        </DetailsText>
+                                    </Grid>
+                                    <Grid item xs={6} sx={{
+                                        textAlign: "end",
+                                    }}>
+                                        <DetailsText>
+                                            1 gCESTA = 123.389 CESTA
+                                        </DetailsText>
+                                    </Grid>
+                                    <Grid item xs={1}>
+                                    </Grid>
+
                                     <Grid item xs={1}>
                                     </Grid>
                                     <Grid item xs={5} sx={{
@@ -397,9 +417,49 @@ function Stake() {
                                     </Grid>
                                     <Grid item xs={1}>
                                     </Grid>
-                                    <Grid item xs={12}>
+                                    { selectedTab === 1 && <Grid item xs={12}>
                                         &nbsp;
-                                    </Grid>
+                                    </Grid>}
+                                    {selectedTab === 1 && <Fragment>
+                                        <Grid item xs={1}>
+                                        </Grid>
+                                        <Grid item xs={5} sx={{
+                                            textAlign: "start",
+                                        }}>
+                                            <DetailsText>
+                                                Unstake Reward Penalty
+                                            </DetailsText>
+                                        </Grid>
+                                        <Grid item xs={5} sx={{
+                                            textAlign: "end",
+                                        }}>
+                                            <DetailsText>
+                                                10345
+                                            </DetailsText>
+                                        </Grid>
+                                        <Grid item xs={1}>
+                                        </Grid>
+                                    </Fragment>}
+                                    {selectedTab === 1 && <Fragment>
+                                        <Grid item xs={1}>
+                                        </Grid>
+                                        <Grid item xs={5} sx={{
+                                            textAlign: "start",
+                                        }}>
+                                            <DetailsText>
+                                                Penalty Time Remaining
+                                            </DetailsText>
+                                        </Grid>
+                                        <Grid item xs={5} sx={{
+                                            textAlign: "end",
+                                        }}>
+                                            <DetailsText>
+                                                5 Days 4 Hours
+                                            </DetailsText>
+                                        </Grid>
+                                        <Grid item xs={1}>
+                                        </Grid>
+                                    </Fragment>}
                                     <Grid item xs={12}>
                                         &nbsp;
                                     </Grid>
@@ -416,10 +476,10 @@ function Stake() {
                                 border: "1px solid rgba(255, 255, 255, 0.2)",
                                 boxSizing: "border-box",
                                 borderRadius: "26px",
+                                height: "100%",
                             }}>
                                 <Box
                                     sx={{
-                                        border: "1px solid rgba(255, 255, 255, 0.2)",
                                         borderRadius: "20px",
                                         padding: "20px",
                                         height: "100%",
