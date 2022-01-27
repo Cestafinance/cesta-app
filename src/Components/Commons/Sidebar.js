@@ -63,9 +63,9 @@ const useStyles = makeStyles((theme) => ({
       fontSize: "14px",
       lineHeight: "14px",
       color: "#FFFFFF",
-      marginBottom: "8px"
+      marginBottom: "8px",
     },
-  }
+  },
 }));
 
 const StyledName = styled(Typography)(({ theme }) => ({
@@ -133,7 +133,14 @@ function SideBar(props) {
   ];
 
   const drawer = (
-    <div style={{ display: "flex", flexDirection: "column", justifyContent:"space-between", height: "100%"}}>
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "space-between",
+        height: "100%",
+      }}
+    >
       <div>
         <img src={CestaLogo} alt="" className={classes.logo} />
         <StyledList>
@@ -165,16 +172,20 @@ function SideBar(props) {
           ))}
         </StyledList>
       </div>
-      <div style={{margin:"32px 0px"}}>
-        <Box  sx={{
+      <div style={{ margin: "32px 0px" }}>
+        <Box
+          sx={{
             display: "flex",
             flexDirection: "column",
             justifyItems: "center",
             alignItems: "center",
-            margin: "16px"
-          }}>
-            <Typography variant={"h4"} className={classes.auditedBy}>Audited By</Typography>
-            <img src={Hacken} style={{height: "12px"}} alt="" />
+            margin: "16px",
+          }}
+        >
+          <Typography variant={"h4"} className={classes.auditedBy}>
+            Audited By
+          </Typography>
+          <img src={Hacken} style={{ height: "12px" }} alt="" />
         </Box>
         <Box
           sx={{
@@ -184,21 +195,23 @@ function SideBar(props) {
             display: "flex",
             flexDirection: "row",
             justifyItems: "center",
-            marginLeft: "16px"
+            marginLeft: "16px",
           }}
         >
-          {Platforms.map(p => {
-            return <>
-              <Box
-                onClick={() => openInNewTab(p.link)}
-                sx={{
-                  padding: "5%",
-                  cursor: "pointer",
-                }}
-              >
-                <img src={p.icon} className={classes.platformLogo} alt="" />
-              </Box>
-            </>
+          {Platforms.map((p) => {
+            return (
+              <>
+                <Box
+                  onClick={() => openInNewTab(p.link)}
+                  sx={{
+                    padding: "5%",
+                    cursor: "pointer",
+                  }}
+                >
+                  <img src={p.icon} className={classes.platformLogo} alt="" />
+                </Box>
+              </>
+            );
           })}
         </Box>
       </div>
@@ -211,13 +224,15 @@ function SideBar(props) {
   return (
     <Box sx={{ display: "flex" }}>
       <CssBaseline />
+      {/* <Box sx={{ display: "flex-wrap", alignItems: "flex-start" }}> */}
       <AppBar
-        position="fixed"
+        position="sticky"
         sx={{
           width: { md: `calc(100% - ${drawerWidth}px)` },
           ml: { md: `${drawerWidth}px` },
           background: "#110d16",
           boxShadow: "none",
+          display: { md: "none" },
         }}
       >
         <Toolbar>
@@ -232,6 +247,7 @@ function SideBar(props) {
           </IconButton>
         </Toolbar>
       </AppBar>
+      {/* </Box> */}
       <Box
         component="nav"
         sx={{

@@ -65,9 +65,24 @@ const useStyles = makeStyles((theme) => ({
       marginLeft: "0px",
     },
   },
+  arrowBox: {
+    background: "rgba(39, 62, 112, 0.25)",
+    borderRadius: "50%",
+    height: "24px",
+    width: "24px",
+    padding: "4px",
+    ["@media (max-width:500px)"]: {
+      // eslint-disable-line no-useless-computed-key
+      background: "none",
+    },
+  },
   downArrow: {
     height: "8px",
     marginBottom: "4px",
+    ["@media (max-width:500px)"]: {
+      // eslint-disable-line no-useless-computed-key
+      display: "none",
+    },
   },
 }));
 
@@ -77,6 +92,10 @@ const StyledAccordionSummary = styled(AccordionSummary)(({ theme }) => ({
     borderRadius: "1.5rem",
     border: 0,
     margin: "10px 0 10px 0",
+    ["@media (max-width:500px)"]: {
+      // eslint-disable-line no-useless-computed-key
+      margin: "2px",
+    },
   },
 }));
 
@@ -104,10 +123,11 @@ const TokenName = styled(Typography)((theme) => ({
       // eslint-disable-line no-useless-computed-key
       fontSize: "0.75rem",
     },
-    // ["@media (max-width:500px)"]: {
-    //   // eslint-disable-line no-useless-computed-key
-    //   fontSize: "0.7rem",
-    // },
+    ["@media (max-width:500px)"]: {
+      // eslint-disable-line no-useless-computed-key
+      marginLeft: "0.75rem",
+      fontSize: "0.6rem",
+    },
   },
 }));
 
@@ -121,19 +141,22 @@ const ValueLabel = styled(Typography)((theme) => ({
     alignItems: "right",
     position: "absolute",
     top: "36%",
-    marginLeft: "5px",
+    marginLeft: "20px",
     color: "#FFFFFF",
     ["@media (max-width:1200px)"]: {
       // eslint-disable-line no-useless-computed-key
       fontSize: "1.0rem",
+      marginLeft: "1.4rem",
     },
     ["@media (max-width:890px)"]: {
       // eslint-disable-line no-useless-computed-key
       fontSize: "0.8rem",
+      marginLeft: "1.4rem",
     },
-    ["@media (max-width:500px)"]: {
+    ["@media (max-width:600px)"]: {
       // eslint-disable-line no-useless-computed-key
-      fontSize: "0.7rem",
+      marginLeft: "1.8rem",
+      fontSize: "0.6rem",
     },
   },
 }));
@@ -147,21 +170,24 @@ const LiquidityLabel = styled(Typography)((theme) => ({
     lineHeight: "1.1rem",
     alignItems: "center",
     position: "absolute",
-    marginLeft: "-2px",
+    marginLeft: "5px",
     top: "36%",
     // left: "63%",
     color: "#FFFFFF",
     ["@media (max-width:1200px)"]: {
       // eslint-disable-line no-useless-computed-key
       fontSize: "1.0rem",
+      marginLeft: "1.1rem",
     },
     ["@media (max-width:890px)"]: {
       // eslint-disable-line no-useless-computed-key
       fontSize: "0.8rem",
+      marginLeft: "1.1rem",
     },
-    ["@media (max-width:500px)"]: {
+    ["@media (max-width:600px)"]: {
       // eslint-disable-line no-useless-computed-key
-      fontSize: "0.7rem",
+      marginLeft: "1.5rem",
+      fontSize: "0.6rem",
     },
   },
 }));
@@ -176,19 +202,22 @@ const RoiLabel = styled(Typography)((theme) => ({
     alignItems: "right",
     position: "absolute",
     top: "36%",
-    // right: "13%",
+    marginLeft: "1.2rem",
     color: "#15C73E",
     ["@media (max-width:1200px)"]: {
       // eslint-disable-line no-useless-computed-key
       fontSize: "1.0rem",
+      marginLeft: "1.4rem",
     },
     ["@media (max-width:890px)"]: {
       // eslint-disable-line no-useless-computed-key
       fontSize: "0.8rem",
+      marginLeft: "1.4rem",
     },
-    ["@media (max-width:500px)"]: {
+    ["@media (max-width:600px)"]: {
       // eslint-disable-line no-useless-computed-key
-      fontSize: "0.7rem",
+      marginLeft: "1.5rem",
+      fontSize: "0.6rem",
     },
   },
 }));
@@ -276,15 +305,7 @@ function Strategy({ strategyData, strategyContract, vaultContract }) {
       >
         <StyledAccordionSummary
           expandIcon={
-            <Box
-              sx={{
-                background: "rgba(39, 62, 112, 0.25)",
-                borderRadius: "50%",
-                height: "24px",
-                width: "24px",
-                padding: "4px",
-              }}
-            >
+            <Box className={classes.arrowBox}>
               <img src={ArrowDown} alt="" className={classes.downArrow} />
               {/*<ExpandMoreIcon />*/}
             </Box>

@@ -32,7 +32,7 @@ const useStyles = makeStyles((theme) => ({
     padding: "60px 0px 0px 240px",
     [theme.breakpoints.down("md")]: {
       width: `96%`,
-      padding: "60px 0px 0px 0",
+      padding: "0px",
     },
   },
   contentContainer: {
@@ -84,6 +84,9 @@ export const InfoContainer = styled(Box)(({ theme }) => ({
 export const UpperLabel = styled(Typography)(({ theme }) => ({
   fontFamily: "Inter",
   fontSize: "20px",
+  [theme.breakpoints.down("sm")]: {
+    fontSize: "1rem",
+  },
 }));
 
 export const LowerLabel = styled(Typography)(({ theme }) => ({
@@ -142,43 +145,50 @@ function Bond() {
         <Grid item xs={12} className={classes.contentContainer}>
           <MainInfoContainer>
             {/** Treasure Balance */}
-            <InfoContainer sx={{ margin: "0px 32px" }}>
-              <UpperLabel>Treasure Balance</UpperLabel>
-              <LowerLabel>
-                {bondAppDetailLoading ? (
-                  <LoadingPulse skeletonWidth={160} />
-                ) : (
-                  new Intl.NumberFormat("en-US", {
-                    style: "currency",
-                    currency: "USD",
-                    maximumFractionDigits: 3,
-                    minimumFractionDigits: 2,
-                  }).format(
-                    bondAppDetail ? Number(bondAppDetail.treasuryBalance) : 0
-                  )
-                )}
-              </LowerLabel>
-            </InfoContainer>
-
-            {/** CESTA Price */}
-            <InfoContainer sx={{ margin: "0px 32px" }}>
-              <UpperLabel>CESTA Price</UpperLabel>
-              <LowerLabel>
-                {" "}
-                {bondAppDetailLoading ? (
-                  <LoadingPulse skeletonWidth={160} />
-                ) : (
-                  new Intl.NumberFormat("en-US", {
-                    style: "currency",
-                    currency: "USD",
-                    maximumFractionDigits: 3,
-                    minimumFractionDigits: 2,
-                  }).format(
-                    bondAppDetail ? Number(bondAppDetail.marketPrice) : 0
-                  )
-                )}
-              </LowerLabel>
-            </InfoContainer>
+            <Grid container>
+              <Grid item xs={6}>
+                <InfoContainer sx={{ margin: "0px 32px" }}>
+                  <UpperLabel>Treasure Balance</UpperLabel>
+                  <LowerLabel>
+                    {bondAppDetailLoading ? (
+                      <LoadingPulse skeletonWidth={160} />
+                    ) : (
+                      new Intl.NumberFormat("en-US", {
+                        style: "currency",
+                        currency: "USD",
+                        maximumFractionDigits: 3,
+                        minimumFractionDigits: 2,
+                      }).format(
+                        bondAppDetail
+                          ? Number(bondAppDetail.treasuryBalance)
+                          : 0
+                      )
+                    )}
+                  </LowerLabel>
+                </InfoContainer>
+              </Grid>
+              <Grid item xs={6}>
+                {/** CESTA Price */}
+                <InfoContainer sx={{ margin: "0px 32px" }}>
+                  <UpperLabel>CESTA Price</UpperLabel>
+                  <LowerLabel>
+                    {" "}
+                    {bondAppDetailLoading ? (
+                      <LoadingPulse skeletonWidth={160} />
+                    ) : (
+                      new Intl.NumberFormat("en-US", {
+                        style: "currency",
+                        currency: "USD",
+                        maximumFractionDigits: 3,
+                        minimumFractionDigits: 2,
+                      }).format(
+                        bondAppDetail ? Number(bondAppDetail.marketPrice) : 0
+                      )
+                    )}
+                  </LowerLabel>
+                </InfoContainer>
+              </Grid>
+            </Grid>
           </MainInfoContainer>
 
           <StyledTableContainer component={Paper}>

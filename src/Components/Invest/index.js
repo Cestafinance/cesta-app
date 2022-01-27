@@ -34,7 +34,7 @@ const useStyles = makeStyles((theme) => ({
     padding: "60px 0px 0px 240px",
     [theme.breakpoints.down("md")]: {
       width: `96%`,
-      padding: "60px 0px 0px 0px",
+      padding: "0px",
       margin: "0px 20px",
     },
   },
@@ -42,7 +42,7 @@ const useStyles = makeStyles((theme) => ({
     height: "100px",
     width: "96%",
     margin: "20px",
-  }
+  },
 }));
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -61,6 +61,29 @@ const StyledTableContainer = styled(TableContainer)(({ theme }) => ({
     backgroundColor: theme.palette.app.main,
     padding: "40px",
     overflowY: "hidden",
+  },
+}));
+
+const HeadTypography = styled(Typography)(({ theme }) => ({
+  "&.MuiTypography-root": {
+    fontFamily: "Inter",
+    fontStyle: "normal",
+    fontWeight: "normal",
+    fontSize: "1.1rem",
+    lineHeight: "1.1rem",
+    alignItems: "center",
+    ["@media (max-width:1200px)"]: {
+      // eslint-disable-line no-useless-computed-key
+      fontSize: "1.0rem",
+    },
+    ["@media (max-width:890px)"]: {
+      // eslint-disable-line no-useless-computed-key
+      fontSize: "0.8rem",
+    },
+    ["@media (max-width:600px)"]: {
+      // eslint-disable-line no-useless-computed-key
+      fontSize: "0.8rem",
+    },
   },
 }));
 
@@ -200,6 +223,9 @@ function Invest() {
         </Grid>
         <Grid item xs={12}>
           <Box
+            sx={{
+              marginRight: "20px",
+            }}
             // sx={{
             //   background:
             //     "linear-gradient(134.64deg, #EF7B6E 6.08%, #AB4863 34.8%, #1F224D 71.27%, #152E64 98.89%)",
@@ -210,11 +236,20 @@ function Invest() {
             //   margin: "20px",
             // }}
           >
-            <img className={classes.imgHead} src={CestaHeader} alt=""/>
+            <img className={classes.imgHead} src={CestaHeader} alt="" />
             <StyledInvestLabel component={"span"}>INVEST</StyledInvestLabel>
             <StyledAuditLabel component={"span"}>Audited By</StyledAuditLabel>
-            <img src={Hacken} style={{height: "12px", float: "right",    marginRight: "80px",
-              marginTop: "-70px", position: "relative"}} alt="" />
+            <img
+              src={Hacken}
+              style={{
+                height: "12px",
+                float: "right",
+                marginRight: "80px",
+                marginTop: "-70px",
+                position: "relative",
+              }}
+              alt=""
+            />
           </Box>
         </Grid>
         <Grid item xs={12}>
@@ -228,16 +263,20 @@ function Invest() {
                   <StyledTableCell colSpan={4}>
                     <Grid container sx={{ padding: "0 20px 0 20px" }}>
                       <Grid item xs={6}>
-                        <Typography component={"span"}>Name</Typography>
+                        <HeadTypography component={"span"}>Name</HeadTypography>
                       </Grid>
                       <Grid item xs={2} sx={{ textAlign: "center" }}>
-                        <Typography component={"span"}>Staked</Typography>
+                        <HeadTypography component={"span"}>
+                          Staked
+                        </HeadTypography>
                       </Grid>
                       <Grid item xs={2} sx={{ textAlign: "center" }}>
-                        <Typography component={"span"}>Liquidity</Typography>
+                        <HeadTypography component={"span"}>
+                          Liquidity
+                        </HeadTypography>
                       </Grid>
                       <Grid item xs={2} sx={{ textAlign: "center" }}>
-                        <Typography component={"span"}>APY</Typography>
+                        <HeadTypography component={"span"}>APY</HeadTypography>
                       </Grid>
                     </Grid>
                   </StyledTableCell>

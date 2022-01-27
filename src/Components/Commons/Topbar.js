@@ -36,10 +36,11 @@ const useStyles = makeStyles((theme) => ({
     left: "240px",
     zIndex: "10",
     [theme.breakpoints.down("md")]: {
+      position: "sticky",
       width: "100%",
-      marginBottom: "20px",
-      left: "0px",
       padding: "0px",
+      height: "40px",
+      marginTop: "25px",
     },
   },
   header: {
@@ -152,6 +153,14 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: "column",
     justifyContent: "center",
     alignItems: "center",
+    // ["@media (max-width:900px)"]: {
+    //   // eslint-disable-line no-useless-computed-key
+
+    //   position: "absolute",
+    //   float: "right",
+    //   right: "82px",
+    //   top: "34%",
+    // },
   },
   optionsList: {
     color: "white",
@@ -205,7 +214,8 @@ function Topbar() {
   const [imageData, setImageData] = React.useState(null);
   const [networkImages, setNetworkImages] = React.useState({});
   const [isNetworkSelectOpen, SetNetworkSelectOpen] = React.useState(false);
-  const [networkFromSelectButton,  setNetworkFromSelectButton] = React.useState(null);
+  const [networkFromSelectButton, setNetworkFromSelectButton] =
+    React.useState(null);
 
   const classes = useStyles();
   const dispatch = useDispatch();
@@ -222,7 +232,7 @@ function Topbar() {
   }, [source]);
 
   useEffect(() => {
-    if(networkId === 1 && networkFromSelectButton === "avalanche") {
+    if (networkId === 1 && networkFromSelectButton === "avalanche") {
       setNetworkFromSelectButton(null);
       window.location.reload(false);
     }
@@ -231,11 +241,9 @@ function Topbar() {
     );
   }, [networkId, networkFromSelectButton]);
 
-  
   const handleNetworkChange = (network) => {
     setNetworkFromSelectButton(network);
-  }
-
+  };
 
   const handleNetworkSelectionOption = () => {
     SetNetworkSelectOpen(!isNetworkSelectOpen);
@@ -281,7 +289,6 @@ function Topbar() {
     window.open(`${url}address/${account}`, "_blank").focus();
   };
   // console.log(isNetworkSelectOpen, networkId, account);
-
 
   return (
     <Fragment>
@@ -344,19 +351,28 @@ function Topbar() {
               className={classes.networkDropDown}
               // onClick={handleNetworkSelectionOption}
             >
-              <div style={{display: "flex", flexDirection:"row", alignItems: "center"}}>
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                  alignItems: "center",
+                }}
+              >
                 <img
                   src={AvalancheImage}
                   alt=""
                   className={classes.networkLogo}
                 />
-                <Typography sx={{marginLeft:"8px", marginRight: "4px"}}>{CapitalizeFirstLetter(networkMap[networkId])} {networkMap[networkId] && <span>Network</span>}</Typography>
+                <Typography sx={{ marginLeft: "8px", marginRight: "4px" }}>
+                  {CapitalizeFirstLetter(networkMap[networkId])}{" "}
+                  {networkMap[networkId] && <span>Network</span>}
+                </Typography>
                 {/* <SelectedNetwork className={classes.networkName}>
                   &nbsp; &nbsp;{CapitalizeFirstLetter(networkMap[networkId])}
                   &nbsp;{networkMap[networkId] && <span>Network</span>}
                 </SelectedNetwork> */}
               </div>
-            
+
               {/* <ArrowDropDown className={classes.dropDownIcon} /> */}
             </NetworkSelectButton>
           )}
