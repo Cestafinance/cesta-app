@@ -42,6 +42,7 @@
     "web3": "^1.6.1"
   },
   "scripts": {
+    "preinstall": "npx npm-force-resolutions",
     "start": "react-scripts start",
     "build": "NODE_OPTIONS=--max_old_space_size=8192 react-scripts build",
     "test": "react-scripts test",
@@ -64,5 +65,11 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "resolutions": {
+    "url-parse": "^1.5.8"
+  },
+  "devDependencies": {
+    "npm-force-resolutions": "0.0.10"
   }
 }
